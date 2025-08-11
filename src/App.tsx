@@ -9,7 +9,7 @@ import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
 import StartPage from './pages/Start/StartPage';
 import LoginPage from './pages/Login/LoginPage';
-import VersionSelectPage from './pages/Login/VersionSelectPage';
+import VersionSelectPage from './pages/Tag/VersionSelectPage';
 
 const router = createBrowserRouter([
   {
