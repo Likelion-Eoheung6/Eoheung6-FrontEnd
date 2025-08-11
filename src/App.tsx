@@ -1,11 +1,14 @@
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import RootLayout from './layouts/RootLayout';
+import AuthLayout from './layouts/AuthLayout';
 import HomePage from './pages/Home/HomePage';
 import RecommendPage from './pages/Recommend/RecommendPage';
 import SearchPage from './pages/Search/SearchPage';
 import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
+import StartPage from './pages/Start/StartPage';
+import LoginPage from './pages/Auth/LoginPage';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +21,15 @@ const router = createBrowserRouter([
       { path: 'search', element: <SearchPage /> },
       { path: 'wishlist', element: <WishlistPage /> },
       { path: 'mypage', element: <MyPage /> },
+    ],
+  },
+  {
+    path: '/',
+    element: <AuthLayout />,
+    errorElement: <></>,
+    children: [
+      { path: 'start', element: <StartPage /> },
+      { path: 'login', element: <LoginPage /> },
     ],
   },
 ]);
