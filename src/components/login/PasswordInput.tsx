@@ -10,7 +10,7 @@ type PasswordInputProps = {
   error?: string;
 };
 
-const PasswordInput: React.FC<PasswordInputProps> = ({ value, onChange, show, onToggle, error }) => {
+export default function PasswordInput({ value, onChange, show, onToggle, error }: PasswordInputProps) {
   return (
     <div className="flex flex-col items-center">
       <div className="relative w-[301px] h-[34px]">
@@ -35,8 +35,6 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ value, onChange, show, on
       </div>
     </div>
   );
-};
-
-export default PasswordInput;
+}
 
 

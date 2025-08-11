@@ -6,7 +6,7 @@ type IdInputProps = {
   error?: string;
 };
 
-const IdInput: React.FC<IdInputProps> = ({ value, onChange, error }) => {
+export default function IdInput({ value, onChange, error }: IdInputProps) {
   return (
     <div className="flex flex-col items-center">
       <input
@@ -21,8 +21,6 @@ const IdInput: React.FC<IdInputProps> = ({ value, onChange, error }) => {
       </div>
     </div>
   );
-};
-
-export default IdInput;
+}
 
 

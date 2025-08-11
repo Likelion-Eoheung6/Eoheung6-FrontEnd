@@ -6,7 +6,7 @@ import IdInput from '../../components/login/IdInput';
 import PasswordInput from '../../components/login/PasswordInput';
 import KakaoLoginButton from '../../components/login/KakaoLoginButton';
 
-const LoginPage: React.FC = () => {
+export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
@@ -90,8 +90,6 @@ const LoginPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default LoginPage;
+}
 
 

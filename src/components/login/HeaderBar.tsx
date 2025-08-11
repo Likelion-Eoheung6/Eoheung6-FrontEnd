@@ -6,7 +6,7 @@ type HeaderBarProps = {
   backTo?: string;
 };
 
-const HeaderBar: React.FC<HeaderBarProps> = ({ backTo = '/start' }) => {
+export default function HeaderBar({ backTo = '/start' }: HeaderBarProps) {
   const navigate = useNavigate();
   return (
     <>
@@ -20,8 +20,6 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ backTo = '/start' }) => {
       </button>
     </>
   );
-};
-
-export default HeaderBar;
+}
 
 

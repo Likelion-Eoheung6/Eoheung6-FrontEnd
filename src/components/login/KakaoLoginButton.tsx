@@ -1,7 +1,7 @@
 import React from 'react';
 import KakaoIcon from '../../assets/login/kakao.svg';
 
-const KakaoLoginButton: React.FC = () => {
+export default function KakaoLoginButton() {
   return (
     <div className="mt-[5px] flex items-center justify-center">
       <button
@@ -13,8 +13,6 @@ const KakaoLoginButton: React.FC = () => {
       </button>
     </div>
   );
-};
-
-export default KakaoLoginButton;
+}
 
 
