@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import OnLogo from '../../assets/start/on.svg';
+import OnLogo from '../../assets/common/logo.svg';
 import HeaderBar from '../../components/login/HeaderBar';
 import IdInput from '../../components/login/IdInput';
 import PasswordInput from '../../components/login/PasswordInput';
@@ -29,7 +29,7 @@ export default function LoginPage() {
       hasError = true;
     }
     if (!hasError) {
-      navigate('/');
+      navigate('/version');
     }
   };
 

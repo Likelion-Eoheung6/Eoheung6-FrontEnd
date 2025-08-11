@@ -1,5 +1,4 @@
-import React from 'react';
-import OnLogo from '../../assets/start/on.svg';
+import OnLogo from '../../assets/common/logo.svg';
 
 export default function StartPage() {
   return (
@@ -12,7 +11,7 @@ export default function StartPage() {
         <button
           type="button"
           onClick={() => (window.location.href = '/login')}
-          className="mt-[12px] w-[301px] h-[34px] rounded-[20px] bg-[#009DFF] flex items-center justify-center border-0 outline-none focus:outline-none ring-0 focus:ring-0 shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] cursor-pointer"
+          className="mt-[30px] w-[301px] h-[34px] rounded-[20px] bg-[#009DFF] flex items-center justify-center border-0 outline-none focus:outline-none ring-0 focus:ring-0 shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] cursor-pointer"
         >
           <span className="text-[#FDFDFD] text-[14px] font-semibold leading-[1.2] tracking-[-0.025em]">
             시작하기
