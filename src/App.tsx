@@ -9,6 +9,8 @@ import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
 import StartPage from './pages/Start/StartPage';
 import LoginPage from './pages/Auth/LoginPage';
+import ClassPage from './pages/Class/ClassPage';
+import CreateClassPage from './pages/Class/CreateClassPage';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,18 @@ const router = createBrowserRouter([
     errorElement: <></>,
     children: [
       { index: true, element: <HomePage /> },
+      {
+        path: 'open-class',
+        element: <CreateClassPage />, // 여기가 상위 라우트
+        children: [
+          { path: 'myplace', element: <CreateClassPage /> },
+          { path: 'rent', element: <CreateClassPage /> },
+          { path: 'done', element: <CreateClassPage /> },
+          { path: 'apply/:classId', element: <CreateClassPage /> },
+          { path: 'apply/:classId/payment', element: <CreateClassPage /> },
+        ],
+      },
+      { path: 'request-class', element: <CreateClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'search', element: <SearchPage /> },
       { path: 'wishlist', element: <WishlistPage /> },
