@@ -15,6 +15,7 @@ import MyPageIcon from '../../assets/common/mypage.svg';
 
 export default function NavBar() {
   const location = useLocation();
+  const { pathname } = location;
 
   // 각 네비게이션 아이템을 배열로 관리하면 코드가 더 깔끔해집니다.
   const navItems = [
@@ -24,6 +25,7 @@ export default function NavBar() {
       selectedIcon: HomeSelectedIcon,
       label: '홈',
       alt: '홈',
+      activePaths: ['/', '/open-class', '/request-class'],
     },
     {
       path: '/recommend',
@@ -68,7 +70,8 @@ export default function NavBar() {
 "
     >
       {navItems.map(item => {
-        const isActive = location.pathname === item.path;
+        const isActive = item.activePaths?.some(p => pathname.startsWith(p));
+
         return (
           <Link
             to={item.path}

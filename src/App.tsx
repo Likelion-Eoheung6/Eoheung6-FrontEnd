@@ -23,7 +23,7 @@ const router = createBrowserRouter([
         path: 'open-class',
         element: <CreateClassPage />, // 여기가 상위 라우트
         children: [
-          { path: 'select-place', element: <CreateClassPage /> },
+          { path: 'myplace', element: <CreateClassPage /> },
           { path: 'rent', element: <CreateClassPage /> },
           { path: 'done', element: <CreateClassPage /> },
           { path: 'apply/:classId', element: <CreateClassPage /> },
