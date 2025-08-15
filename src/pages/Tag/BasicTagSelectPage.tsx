@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import TagGroup from '../../components/tags/TagGroup';
 import tagLogo from '../../assets/tag/tag-logo.svg';
 import NextIcon from '../../assets/tag/next.svg';
@@ -18,15 +18,33 @@ const TAGS = [
   '스마트뱅킹 기초', '성북역사알기', '영화 감상회', '컬러테라피'
 ];
 
+// 쉬운 버전용 태그들
+const EASY_TAGS = [
+  '전자기기활용',
+  '요리',
+  '베이커리',
+  '운동',
+  '건강',
+  '미술',
+  '언어',
+  '만들기',
+  '생활정보',
+];
+
 export default function BasicTagSelectPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  const isEasyVersion = searchParams.get('version') === 'easy';
+  const tags = isEasyVersion ? EASY_TAGS : TAGS;
+  const requiredCount = isEasyVersion ? 1 : 2;
 
   useEffect(() => {
-    if (selected.length === 2) setIsSheetOpen(true);
+    if (selected.length === requiredCount) setIsSheetOpen(true);
     else setIsSheetOpen(false);
-  }, [selected]);
+  }, [selected, requiredCount]);
 
   return (
     <div className="relative mx-auto min-h-screen">
@@ -41,7 +59,7 @@ export default function BasicTagSelectPage() {
       </div>
 
       {/* 본문 */}
-      <div className="absolute left-0 top-[120px] w-full pl-[16px] pr-[10px] z-10">
+      <div className="absolute left-0 top-[120px] w-full pl-[16px] pr-[16px] z-10">
         {/* 상단 행: 배너 + 홈으로 버튼 */}
         <div className="flex items-center justify-between">
           {/* 배너 카드: 무엇을 좋아하세요? */}
@@ -66,30 +84,33 @@ export default function BasicTagSelectPage() {
         </div>
 
         {/* 설명 문구 */}
-        <p className="mt-[10px] text-[#545454] text-[14px] font-medium leading-[1.2] tracking-[-0.025em]">
-          선택하신 태그에 맞춰서 딱 맞는 수업을 찾아드릴게요!
+        <p className={`mt-[10px] text-[#545454] font-medium leading-[1.2] tracking-[-0.025em] ${isEasyVersion ? 'text-[22px] whitespace-pre-line' : 'text-[14px]'}`}>
+          {isEasyVersion ? '선택하신 태그에 맞춰서\n딱 맞는 수업을 찾아드릴게요!' : '선택하신 태그에 맞춰서 딱 맞는 수업을 찾아드릴게요!'}
         </p>
-        <p className="mt-[45px] text-[#545454] text-[12px] font-normal leading-[1.2] tracking-[-0.025em] underline">
-          2가지 이상의 태그를 선택해 주세요
-        </p>
+        {!isEasyVersion && (
+          <p className="mt-[45px] text-[#545454] text-[12px] font-normal leading-[1.2] tracking-[-0.025em] underline">
+            2가지 이상의 태그를 선택해 주세요
+          </p>
+        )}
 
         {/* 태그 영역 */}
-        <div className="mt-[10px]">
+        <div className={isEasyVersion ? "mt-[28px]" : "mt-[10px]"}>
           <TagGroup
-            tags={TAGS}
+            tags={tags}
             multiple
             onChange={(v) => setSelected(Array.isArray(v) ? v : v ? [v] : [])}
+            isEasyVersion={isEasyVersion}
           />
         </div>
       
-      {/* 다음 버튼: 시트 열림 전만 노출 */}
-      {!isSheetOpen && (
-      <div className="mt-[97px] flex justify-end">
+      {/* 다음 버튼: 시트 열림 전만 노출 (쉬운 버전에서는 항상 표시) */}
+      {(!isSheetOpen || isEasyVersion) && (
+      <div className={`${isEasyVersion ? "mt-[283px]" : "mt-[97px]"} flex justify-end`}>
         <button
           type="button"
-          disabled={selected.length < 2}
+          disabled={selected.length < requiredCount}
           className={`${
-            selected.length >= 2
+            selected.length >= requiredCount
               ? 'bg-[#009DFF] cursor-pointer'
               : 'bg-[#B3B3B3] cursor-not-allowed'
           } rounded-[20px] w-[49px] h-[46px] flex items-center justify-center appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0`}
@@ -101,7 +122,8 @@ export default function BasicTagSelectPage() {
       )}
       </div>
 
-      {/* 오버레이 + 바텀 시트 */}
+      {/* 오버레이 + 바텀 시트 - 쉬운 버전에서는 표시하지 않음 */}
+      {!isEasyVersion && (
       <div className={`fixed inset-0 z-30 transition ${isSheetOpen ? 'pointer-events-auto' : 'pointer-events-none'} w-full`}>
         <div
           className={`absolute inset-0 bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 ${isSheetOpen ? 'opacity-100' : 'opacity-0'}`}
@@ -160,6 +182,7 @@ export default function BasicTagSelectPage() {
           </div>
         </div>
       </div>
+      )}
 
     </div>
   );

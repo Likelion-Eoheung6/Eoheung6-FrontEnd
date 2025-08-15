@@ -5,9 +5,10 @@ type TagGroupProps = {
   tags: string[];
   multiple?: boolean;
   onChange?: (selected: string[] | string) => void;
+  isEasyVersion?: boolean;
 };
 
-export default function TagGroup({ tags, multiple = true, onChange }: TagGroupProps) {
+export default function TagGroup({ tags, multiple = true, onChange, isEasyVersion = false }: TagGroupProps) {
   const [selected, setSelected] = useState<string[]>([]);
 
   const toggle = (label: string) => {
@@ -26,7 +27,7 @@ export default function TagGroup({ tags, multiple = true, onChange }: TagGroupPr
   return (
     <div className="flex flex-wrap gap-[8px]">
       {tags.map(tag => (
-        <TagChip key={tag} label={tag} selected={selected.includes(tag)} onClick={() => toggle(tag)} />
+        <TagChip key={tag} label={tag} selected={selected.includes(tag)} onClick={() => toggle(tag)} isEasyVersion={isEasyVersion} />
       ))}
     </div>
   );

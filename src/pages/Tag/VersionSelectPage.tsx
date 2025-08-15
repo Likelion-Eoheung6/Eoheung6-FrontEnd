@@ -19,6 +19,7 @@ export default function VersionSelectPage() {
         <div className="mt-[45px] flex items-center gap-[13px]">
           <button
             type="button"
+            onClick={() => navigate('/tags?version=easy')}
             className="rounded-[20px] bg-[#009DFF] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)] text-[#FDFDFD] text-[22px] font-semibold leading-[1.2] tracking-[-0.025em] px-[40px] py-[8px] appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 cursor-pointer"
           >
             쉬운 버전
