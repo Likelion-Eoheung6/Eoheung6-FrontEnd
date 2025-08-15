@@ -1,5 +1,10 @@
 import React from 'react';
 
 export default function HomePage() {
-  return <div>홈 화면입니다.</div>;
+  return (
+    <>
+      <div>홈 화면입니다.</div>
+      <div>홈 화면입니다.</div>
+    </>
+  );
 }

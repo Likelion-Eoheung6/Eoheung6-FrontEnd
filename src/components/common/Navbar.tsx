@@ -15,6 +15,7 @@ import MyPageIcon from '../../assets/common/mypage.svg';
 
 export default function NavBar() {
   const location = useLocation();
+  const { pathname } = location;
 
   // 각 네비게이션 아이템을 배열로 관리하면 코드가 더 깔끔해집니다.
   const navItems = [
@@ -24,13 +25,14 @@ export default function NavBar() {
       selectedIcon: HomeSelectedIcon,
       label: '홈',
       alt: '홈',
+      activePaths: ['/', '/open-class', '/request-class'],
     },
     {
       path: '/recommend',
       defaultIcon: AiRecommendIcon,
       selectedIcon: AiRecommendSelectedIcon,
-      label: 'Ai 추천',
-      alt: 'Ai 추천',
+      label: 'AI 추천',
+      alt: 'AI 추천',
     },
     {
       path: '/search',
@@ -59,49 +61,72 @@ export default function NavBar() {
   return (
     <nav
       className="
-        absolute bottom-0 left-0 right-0 z-[999]
-        w-full max-w-[420px] h-[9vh]
-        border-t border-[#B3B3B3] rounded-t-[20px] overflow-hidden
-        flex items-center justify-around
-        [-webkit-tap-highlight-color:transparent]
-    "
+    fixed bottom-0 left-0 right-0 z-50 bg-white 
+    w-full h-[9vh]
+    border-t border-[#B3B3B3] rounded-t-[20px] 
+    flex items-center justify-between box-border 
+    px-[20px] py-[14px]
+    [-webkit-tap-highlight-color:transparent]
+"
     >
       {navItems.map(item => {
-        const isActive = location.pathname === item.path;
+        const isActive = item.activePaths?.some(p => pathname.startsWith(p));
+
         return (
           <Link
             to={item.path}
             key={item.path}
-            className="no-underline relative h-full flex items-center"
+            className="flex-1 h-full flex flex-col items-center justify-center no-underline relative"
           >
-            {/* BottomNavItem */}
-            {/* {isActive && (
-              <div
-                className={`absolute bottom-0 left-0 h-[55px] w-full
-                         bg-[linear-gradient(0deg,rgb(1,85,103)_0%,rgb(147,245,255)_100%)]
-                         blur-sm origin-bottom
-                         transform-gpu
-                         transition-transform duration-1000 ease-out
-                         scale-y-100 opacity-20
-                         `}
-              />
-            )} */}
-            <div className="h-full px-3 flex flex-col items-center justify-evenly ">
-              <img
-                src={isActive ? item.selectedIcon : item.defaultIcon}
-                alt={item.alt}
-                className="block"
-              />
-              {/* 텍스트와 하단 바를 그룹화하고, 위치 기준점으로 설정 */}
-              <div
-                className={`w-full text-center text-[1rem] font-bold leading-none border-b-[3px] 
-                    ${isActive ? 'border-[#009DFF]' : 'border-transparent'} 
-                    ${isActive ? 'text-[#009DFF]' : 'text-[#B3B3B3]'}
-                `}
-              >
-                {item.label}
-              </div>
+            {/* 빛 애니메이션 */}
+            {isActive && (
+              <>
+                <style>
+                  {`
+        @keyframes lightGrow {
+          0% {
+            transform: scaleY(0);
+            opacity: 0;
+          }
+          100% {
+            transform: scaleY(1);
+            opacity: 1;
+          }
+        }
+      `}
+                </style>
+                <div
+                  className="absolute bottom-0 left-0 w-full h-[40%] rounded-t-full origin-bottom"
+                  style={{
+                    background:
+                      'linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(149, 227, 255, 0.80) 100%)',
+                    animation: 'lightGrow 0.6s ease-out forwards',
+                    filter: 'blur(8px)',
+                    pointerEvents: 'none',
+                  }}
+                />
+              </>
+            )}
+            <img
+              src={isActive ? item.selectedIcon : item.defaultIcon}
+              alt={item.alt}
+              className="block mb-[5px]object-cover"
+            />
+            {/* 텍스트 */}
+            <div
+              className={`text-center text-[12px] font-bold leading-none
+      ${isActive ? 'text-[#009DFF]' : 'text-[#B3B3B3]'}
+    `}
+            >
+              {item.label}
             </div>
+
+            {/* 밑줄 */}
+            <div
+              className={`mt-[4px] h-[3px] w-full border-b-[4px] rounded-full
+      ${isActive ? 'border-[#009DFF] ' : 'border-transparent'}
+    `}
+            />
           </Link>
         );
       })}
