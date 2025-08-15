@@ -5,7 +5,7 @@ interface ClassContainerBarProps {
 }
 
 const ClassContainer: React.FC<ClassContainerBarProps> = ({ children }) => {
-  return <div className="w-full">{children}</div>;
+  return <div className="relative w-full ">{children}</div>;
 };
 
 export default ClassContainer;
