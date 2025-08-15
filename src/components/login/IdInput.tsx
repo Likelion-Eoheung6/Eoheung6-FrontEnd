@@ -1,4 +1,4 @@
-import React from 'react';
+ 
 
 type IdInputProps = {
   value: string;
@@ -6,7 +6,7 @@ type IdInputProps = {
   error?: string;
 };
 
-export default function IdInput({ value, onChange, error }: IdInputProps) {
+export default function IdInput({ value, onChange, error = '' }: IdInputProps) {
   return (
     <div className="flex flex-col items-center">
       <input
@@ -16,8 +16,8 @@ export default function IdInput({ value, onChange, error }: IdInputProps) {
         value={value}
         onChange={e => onChange(e.target.value)}
       />
-      <div className="pt-[4px] w-[285px] text-left text-[10px] font-normal leading-[1.2] tracking-[-0.025em] text-[#FF0000] pl-[10px] min-h-[12px] pb-[4px]">
-        {error || ''}
+      <div className="pt-[4px] h-[18px] w-[301px] text-left text-[10px] font-normal leading-[1.2] tracking-[-0.025em] text-[#FF0000] [text-indent:10px] truncate">
+        {error}
       </div>
     </div>
   );

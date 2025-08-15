@@ -8,7 +8,9 @@ import SearchPage from './pages/Search/SearchPage';
 import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
 import StartPage from './pages/Start/StartPage';
-import LoginPage from './pages/Auth/LoginPage';
+import LoginPage from './pages/Login/LoginPage';
+import BasicTagSelectPage from './pages/Tag/BasicTagSelectPage';
+import VersionSelectPage from './pages/Tag/VersionSelectPage';
 import ClassPage from './pages/Class/ClassPage';
 import CreateClassPage from './pages/Class/CreateClassPage';
 
@@ -44,6 +46,8 @@ const router = createBrowserRouter([
     children: [
       { path: 'start', element: <StartPage /> },
       { path: 'login', element: <LoginPage /> },
+      { path: 'version', element: <VersionSelectPage /> },
+      { path: 'tags', element: <BasicTagSelectPage /> },
     ],
   },
 ]);
