@@ -1,8 +1,11 @@
 import Logo from '../../assets/common/logo.svg';
+import { useNavigate } from 'react-router-dom';
 
 export default function VersionSelectPage() {
+  const navigate = useNavigate();
   return (
-    <div className="relative mx-auto">
+    <div className="relative mx-auto min-h-screen">
+      <div className="absolute inset-0 w-full min-h-screen bg-[linear-gradient(180deg,_#FDFDFD_28.75%,_#FFF6CC_100%)]" />
 
       {/* 본문 */}
       <div className="absolute left-0 top-[158px] w-full flex flex-col items-center">
@@ -23,6 +26,7 @@ export default function VersionSelectPage() {
           <button
             type="button"
             className="rounded-[20px] bg-[#009DFF] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)] text-[#FDFDFD] text-[22px] font-semibold leading-[1.2] tracking-[-0.025em] px-[40px] py-[8px] appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 cursor-pointer"
+            onClick={() => navigate('/tags')}
           >
             기본 버전
           </button>

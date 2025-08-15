@@ -1,4 +1,4 @@
-import React from 'react';
+ 
 import EyeOff from '../../assets/login/off.svg';
 import EyeOn from '../../assets/login/on.svg';
 
@@ -10,7 +10,7 @@ type PasswordInputProps = {
   error?: string;
 };
 
-export default function PasswordInput({ value, onChange, show, onToggle, error }: PasswordInputProps) {
+export default function PasswordInput({ value, onChange, show, onToggle, error = '' }: PasswordInputProps) {
   return (
     <div className="flex flex-col items-center">
       <div className="relative w-[301px] h-[34px]">
@@ -30,8 +30,8 @@ export default function PasswordInput({ value, onChange, show, onToggle, error }
           <img src={show ? EyeOn : EyeOff} alt="toggle-password" className="w-[18px] h-[12px]" />
         </button>
       </div>
-      <div className="pt-[4px] w-[285px] text-left text-[10px] font-normal leading-[1.2] tracking-[-0.025em] text-[#FF0000] pl-[10px] min-h-[12px]">
-        {error || ''}
+      <div className="pt-[4px] h-[16px] w-[301px] text-left text-[10px] font-normal leading-[1.2] tracking-[-0.025em] text-[#FF0000] [text-indent:10px] truncate">
+        {error}
       </div>
     </div>
   );

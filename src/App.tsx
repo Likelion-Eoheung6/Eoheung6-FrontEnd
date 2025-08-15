@@ -9,6 +9,7 @@ import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
 import StartPage from './pages/Start/StartPage';
 import LoginPage from './pages/Login/LoginPage';
+import BasicTagSelectPage from './pages/Tag/BasicTagSelectPage';
 import VersionSelectPage from './pages/Tag/VersionSelectPage';
 
 const router = createBrowserRouter([
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: 'start', element: <StartPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'version', element: <VersionSelectPage /> },
+      { path: 'tags', element: <BasicTagSelectPage /> },
     ],
   },
 ]);

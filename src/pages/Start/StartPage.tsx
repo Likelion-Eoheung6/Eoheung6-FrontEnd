@@ -2,7 +2,8 @@ import OnLogo from '../../assets/common/logo.svg';
 
 export default function StartPage() {
   return (
-    <div className="relative mx-auto">
+    <div className="relative mx-auto min-h-screen">
+      <div className="absolute inset-0 w-full min-h-screen bg-[linear-gradient(180deg,_#FDFDFD_28.75%,_#FFF6CC_100%)]" />
       <div className="absolute left-0 top-[202px] w-full flex flex-col items-center">
         <img src={OnLogo} alt="start-logo" className="w-[256px] h-[251px]" />
         <p className="mt-[30px] w-[324px] m-0 text-center text-[rgba(84,84,84,1)] font-medium text-[18px] leading-[1.2] tracking-[-0.025em] whitespace-pre-line">

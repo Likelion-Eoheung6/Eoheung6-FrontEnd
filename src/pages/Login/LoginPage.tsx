@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OnLogo from '../../assets/common/logo.svg';
-import HeaderBar from '../../components/login/HeaderBar';
 import IdInput from '../../components/login/IdInput';
 import PasswordInput from '../../components/login/PasswordInput';
 import KakaoLoginButton from '../../components/login/KakaoLoginButton';
@@ -34,9 +33,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative mx-auto">
-      {/* 페이지 상단 헤더 */}
-      <HeaderBar backTo="/start" />
+    <div className="relative mx-auto min-h-screen">
+        <div className="absolute inset-0 w-full min-h-screen bg-[linear-gradient(180deg,_#FDFDFD_28.75%,_#FFF6CC_100%)]" />
         {/* 로고 */}
       <div className="absolute left-0 top-[137px] w-full flex flex-col items-center">
         <img src={OnLogo} alt="logo" className="w-[180px] h-[176px]" />
@@ -63,7 +61,7 @@ export default function LoginPage() {
           type="button"
           disabled={!userId.trim() || !password.trim()}
           onClick={handleLogin}
-          className={`mt-[25px] rounded-[20px] text-[#FDFDFD] text-[14px] font-semibold tracking-[-0.025em] px-[133px] py-[10px] transition-colors appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 ${
+          className={`mt-[22px] rounded-[20px] text-[#FDFDFD] text-[14px] font-semibold tracking-[-0.025em] px-[133px] py-[10px] transition-colors appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 ${
             userId.trim() && password.trim()
               ? 'bg-[rgba(0,157,255,1)] cursor-pointer hover:brightness-105'
               : 'bg-[rgba(179,179,179,1)] cursor-not-allowed'
@@ -81,7 +79,7 @@ export default function LoginPage() {
         </div>
 
         {/* SNS 안내 텍스트 */}
-        <p className="mt-[87px] text-center text-[12px] font-light leading-[1.2] tracking-[-0.025em] text-[rgba(179,179,179,1)] align-middle">
+        <p className="mt-[87px] text-center text-[12px] font-light leading-[1.2] tracking-[-0.025em] text-[#B3B3B3] align-middle">
           SNS계정으로 로그인하기
         </p>
 
