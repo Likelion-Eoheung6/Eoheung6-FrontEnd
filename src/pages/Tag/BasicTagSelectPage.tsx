@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TagGroup from '../../components/tags/TagGroup';
 import tagLogo from '../../assets/tag/tag-logo.svg';
 import NextIcon from '../../assets/tag/next.svg';
+import ClassCard from '../../components/common/ClassCard';
 
 const TAGS = [
   '영어 회화', '꽃꽂이', '도예체험', '천연비누 만들기',
@@ -19,7 +20,13 @@ const TAGS = [
 
 export default function BasicTagSelectPage() {
   const [selected, setSelected] = useState<string[]>([]);
+  const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (selected.length === 2) setIsSheetOpen(true);
+    else setIsSheetOpen(false);
+  }, [selected]);
 
   return (
     <div className="relative mx-auto min-h-screen">
@@ -75,7 +82,8 @@ export default function BasicTagSelectPage() {
           />
         </div>
       
-      {/* 다음 버튼: 태그 영역과 간격 97, 오른쪽 정렬 */}
+      {/* 다음 버튼: 시트 열림 전만 노출 */}
+      {!isSheetOpen && (
       <div className="mt-[97px] flex justify-end">
         <button
           type="button"
@@ -90,6 +98,67 @@ export default function BasicTagSelectPage() {
           <img src={NextIcon} alt="다음" className="w-[15px] h-[20px]" />
         </button>
       </div>
+      )}
+      </div>
+
+      {/* 오버레이 + 바텀 시트 */}
+      <div className={`fixed inset-0 z-30 transition ${isSheetOpen ? 'pointer-events-auto' : 'pointer-events-none'} w-full`}>
+        <div
+          className={`absolute inset-0 bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 ${isSheetOpen ? 'opacity-100' : 'opacity-0'}`}
+          onClick={() => setIsSheetOpen(false)}
+        />
+        <div className="absolute inset-x-0 bottom-0 flex justify-center">
+          <div className={`w-full max-w-[420px] h-[650px] transform transition-transform duration-300 ease-out ${isSheetOpen ? 'translate-y-0' : 'translate-y-[120%]'} rounded-t-[20px] bg-[#FDFDFD] shadow-[0_-4px_16px_rgba(0,0,0,0.1)] mx-[16px]`}>
+            <div className="pt-[12px] px-[16px]">
+              <div className="mx-auto h-[4px] w-[120px] rounded-full bg-[#C7C7C7]" />
+              <div className="mt-[12px] flex items-start justify-center relative">
+                <div className="inline-flex items-center rounded-[20px] bg-[#009DFF] px-[14px] py-[8px] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)] mt-[7px] ml-[22px]">
+                  <span className="text-white text-[14px] font-semibold tracking-[-0.01em]">"선택하신 태그에 딱 맞는 클래스를 모아봤어요!"</span>
+                </div>
+                <button type="button" onClick={() => setIsSheetOpen(false)} className="absolute -right-[20px] -mt-[20px] w-[36px] h-[36px] relative" aria-label="닫기">
+                  <span className="absolute left-1/2 top-1/2 block h-[24px] w-[2px] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#545454]" />
+                  <span className="absolute left-1/2 top-1/2 block h-[24px] w-[2px] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-[#545454]" />
+                </button>
+              </div>
+            </div>
+            <div className="mt-[8px] px-[16px] pb-[50px] max-h-[60vh] overflow-y-auto">
+              <ClassCard
+                title="한성대 영문과 학생과 함께하는 영어교.."
+                location="성북구성북구성북구성북구성북구성북구..."
+                maxParticipants={5}
+                currentParticipants={4}
+                price={5000}
+                tags={['영어 회화', '편안한 분위기', '초보환영']}
+              />
+              <ClassCard
+                title="전직 영어 교사와 함께하는 영어교실"
+                location="성북구성북구성북구성북구성북구성북구..."
+                maxParticipants={10}
+                currentParticipants={4}
+                price={10000}
+                tags={['영어 회화', '재밌는 수업', '초보 환영']}
+              />
+              <ClassCard
+                title="한성대 사진동아리 PIG와 함께하는 사..."
+                location="성북구성북구성북구성북구성북구성북구..."
+                maxParticipants={5}
+                currentParticipants={4}
+                price={5000}
+                tags={['사진찍기', '편안한 분위기', '초보환영']}
+                isRecommended={true}
+              />
+              <ClassCard
+                title="증명사진 잘 찍는법!"
+                location="성북구성북구성북구성북구성북구성북구..."
+                maxParticipants={10}
+                currentParticipants={4}
+                price={10000}
+                tags={['사진찍기', '재밌는 수업', '초보 환영']}
+                isRecommended={true}
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
