@@ -6,7 +6,6 @@ import LocationIcon from '../../assets/class/location.svg';
 import QestionIcon from '../../assets/class/question.svg';
 import CharacterBlue from '../../assets/class/character-blue.svg';
 import CharacterYellow from '../../assets/class/character-yellow.svg';
-import dayjs from 'dayjs';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -90,11 +89,11 @@ export default function CreateClassPage() {
     updateReq({ date: formattedDate });
   };
 
-  const [capacity, setCapacity] = useState(0);
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
-  const [startTime, setStartTime] = useState('00:00');
-  const [endTime, setEndTime] = useState('00:00');
-  const [duration, setDuration] = useState('00시간 00분');
+  // const [capacity, setCapacity] = useState(0);
+  // const [isPickerOpen, setIsPickerOpen] = useState(false);
+  // const [startTime, setStartTime] = useState('00:00');
+  // const [endTime, setEndTime] = useState('00:00');
+  // const [duration, setDuration] = useState('00시간 00분');
 
   // const handleTogglePicker = () => {
   //   setIsPickerOpen(!isPickerOpen);
@@ -221,19 +220,19 @@ export default function CreateClassPage() {
                 </div>
               </button>
               <div className="w-px bg-[#E0E0E0] mx-6 self-stretch" />
-              <button
-                onClick={() => navigate('/rental-place')}
-                className="flex flex-col items-center flex-1 bg-transparent border-none"
-              >
+              <div className="flex flex-col items-center flex-1 bg-transparent border-none">
                 <img
                   src={CharacterYellow}
                   alt="빈집 대여하기"
                   className="mb-[25px] w-16 h-16"
                 />
-                <div className="bg-[#009DFF] text-[white] text-[16px] font-semibold px-[14px] py-[8px] rounded-full">
+                <div
+                  className="bg-[#009DFF] text-[white] text-[16px] font-semibold px-[14px] py-[8px] rounded-full"
+                  onClick={() => navigate('/open-class/rent')}
+                >
                   빈집 대여하기
                 </div>
-              </button>
+              </div>
             </div>
             <div className="flex flex-col gap-[10px] mt-4">
               <PriceComponent

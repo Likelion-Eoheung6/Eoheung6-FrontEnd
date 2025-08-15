@@ -9,8 +9,9 @@ import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
 import StartPage from './pages/Start/StartPage';
 import LoginPage from './pages/Auth/LoginPage';
-import ClassPage from './pages/Class/ClassPage';
 import CreateClassPage from './pages/Class/CreateClassPage';
+import RentalPlacePage from './pages/Class/RentalPlacePage';
+import RentalPlaceDetailPage from './pages/Class/RentalPlaceDetailPage';
 
 const router = createBrowserRouter([
   {
@@ -21,14 +22,16 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       {
         path: 'open-class',
-        element: <CreateClassPage />, // 여기가 상위 라우트
-        children: [
-          { path: 'myplace', element: <CreateClassPage /> },
-          { path: 'rent', element: <CreateClassPage /> },
-          { path: 'done', element: <CreateClassPage /> },
-          { path: 'apply/:classId', element: <CreateClassPage /> },
-          { path: 'apply/:classId/payment', element: <CreateClassPage /> },
-        ],
+        element: <CreateClassPage />,
+      },
+      { path: 'open-class/myplace', element: <CreateClassPage /> },
+      { path: 'open-class/rent', element: <RentalPlacePage /> },
+      { path: 'open-class/rent/:placeId', element: <RentalPlaceDetailPage /> },
+      { path: 'open-class/done', element: <CreateClassPage /> },
+      { path: 'open-class/apply/:classId', element: <CreateClassPage /> },
+      {
+        path: 'open-class/apply:classId/payment',
+        element: <CreateClassPage />,
       },
       { path: 'request-class', element: <CreateClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
