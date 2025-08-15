@@ -31,7 +31,7 @@ export default function ClassCard({
         </div>
         <div className="flex-1">
           <div className="text-[#111111] text-[12px] font-medium leading-[120%] tracking-[-0.025em] mb-[4px] bg-[#FDFDFD] border border-[#E0E0E0] rounded-[10px] px-[8px] py-[4px] h-[24px] flex items-center justify-between">
-            <span>{title}</span>
+            <span className="truncate max-w-[160px]">{title}</span>
             {isRecommended && (
               <div className="bg-[#009DFF] text-[#FDFDFD] text-[10px] font-bold px-[2px] py-[2px] rounded-[6px] leading-[120%] tracking-[-0.025em]">
                 추천!
@@ -45,7 +45,7 @@ export default function ClassCard({
                 장소
               </span>
               <div className="w-[1px] h-[12px] bg-[#E0E0E0]"></div>
-              <span className="text-[#111111] text-[10px] font-medium leading-[120%] tracking-[-0.025em]">{location}</span>
+              <span className="text-[#111111] text-[10px] font-medium leading-[120%] tracking-[-0.025em] truncate max-w-[150px]">{location}</span>
             </div>
             <div className="w-full h-[1px] bg-[#E0E0E0]"></div>
             <div className="flex items-center gap-[4px] text-[10px] text-[#545454]">

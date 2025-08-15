@@ -108,7 +108,7 @@ export default function BasicTagSelectPage() {
           onClick={() => setIsSheetOpen(false)}
         />
         <div className="absolute inset-x-0 bottom-0 flex justify-center">
-          <div className={`w-full max-w-[420px] h-[650px] transform transition-transform duration-300 ease-out ${isSheetOpen ? 'translate-y-0' : 'translate-y-[120%]'} rounded-t-[20px] bg-[#FDFDFD] shadow-[0_-4px_16px_rgba(0,0,0,0.1)] mx-[16px]`}>
+          <div className={`w-full max-w-[420px] h-[650px] transform transition-transform duration-300 ease-out ${isSheetOpen ? 'translate-y-0' : 'translate-y-[120%]'} rounded-t-[20px] bg-[#FDFDFD] shadow-[0_-4px_16px_rgba(0,0,0,0.1)]`}>
             <div className="pt-[12px] px-[16px]">
               <div className="mx-auto h-[4px] w-[120px] rounded-full bg-[#C7C7C7]" />
               <div className="mt-[12px] flex items-start justify-center relative">
@@ -121,26 +121,26 @@ export default function BasicTagSelectPage() {
                 </button>
               </div>
             </div>
-            <div className="mt-[8px] px-[16px] pb-[50px] max-h-[60vh] overflow-y-auto">
+            <div className="mt-[8px] px-[16px] pb-[45px] max-h-[60vh] overflow-y-auto">
               <ClassCard
-                title="한성대 영문과 학생과 함께하는 영어교.."
-                location="성북구성북구성북구성북구성북구성북구..."
+                title="한성대 영문과 학생과 함께하는 영어교실교실교실"
+                location="성북구성북구성북구성북구성북구성북구"
                 maxParticipants={5}
                 currentParticipants={4}
                 price={5000}
                 tags={['영어 회화', '편안한 분위기', '초보환영']}
               />
               <ClassCard
-                title="전직 영어 교사와 함께하는 영어교실"
-                location="성북구성북구성북구성북구성북구성북구..."
+                title="전직 영어 교사와 함께하는 영어교실교실교실"
+                location="성북구성북구성북구성북구성북구성북구"
                 maxParticipants={10}
                 currentParticipants={4}
                 price={10000}
                 tags={['영어 회화', '재밌는 수업', '초보 환영']}
               />
               <ClassCard
-                title="한성대 사진동아리 PIG와 함께하는 사..."
-                location="성북구성북구성북구성북구성북구성북구..."
+                title="한성대 사진동아리 PIG와 함께하는 사람여기붙어라"
+                location="성북구성북구성북구성북구성북구성북구"
                 maxParticipants={5}
                 currentParticipants={4}
                 price={5000}
@@ -149,7 +149,7 @@ export default function BasicTagSelectPage() {
               />
               <ClassCard
                 title="증명사진 잘 찍는법!"
-                location="성북구성북구성북구성북구성북구성북구..."
+                location="성북구성북구성북구성북구성북구성북구"
                 maxParticipants={10}
                 currentParticipants={4}
                 price={10000}
