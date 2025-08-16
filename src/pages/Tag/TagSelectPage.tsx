@@ -15,7 +15,7 @@ const TAGS = [
 // 쉬운 버전용 태그들
 const EASY_TAGS = ['전자기기활용', '요리', '베이커리', '운동', '건강', '미술', '언어', '만들기', '생활정보'];
 
-export default function BasicTagSelectPage() {
+export default function TagSelectPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
   const navigate = useNavigate();
