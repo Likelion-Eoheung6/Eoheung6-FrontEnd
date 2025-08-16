@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 const AuthLayout = () => {
   return (
     <div className="relative w-screen min-h-screen bg-[#111]">
-      <div className="relative mx-auto w-full max-w-[420px] min-w[375px] min-h-screen">
+      <div className="relative mx-auto w-full max-w-[430px] min-w[375px] min-h-screen">
         <main className="relative w-full min-h-screen overflow-y-auto h-[calc(100vh-9vh)]">
           <Outlet />
         </main>
