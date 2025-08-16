@@ -40,7 +40,7 @@ export default function RentalPlaceDetailPage() {
 
     const formattedDate = `${year}-${month}-${day}`;
 
-    updateReq({ date: formattedDate });
+    updateReq({ openAt: formattedDate });
     console.log('selected date: ' + formattedDate);
   };
   const unavailableDates = useMemo(() => {
@@ -84,7 +84,7 @@ export default function RentalPlaceDetailPage() {
 
   const isFormComplete = useMemo(() => {
     return (
-      req.date.trim() !== '' &&
+      req.openAt.trim() !== '' &&
       req.price > 0 &&
       req.capacity > 0 &&
       req.startTime !== '00:00' &&
@@ -126,7 +126,7 @@ export default function RentalPlaceDetailPage() {
             </span>
             <CalendarComponent
               variant="availability"
-              selectedDate={req.date ? new Date(req.date) : null}
+              selectedDate={req.openAt ? new Date(req.openAt) : null}
               onDateChange={handleDateChange}
               unavailableDates={unavailableDates}
             />

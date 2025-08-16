@@ -75,8 +75,9 @@ export default function CreateClassPage() {
       images.length > 0 &&
       req.title.trim() !== '' &&
       req.content.trim() !== '' &&
-      req.date !== '' &&
-      req.placeId !== null &&
+      req.openAt !== '' &&
+      req.mentorPlaceId !== null &&
+      req.govReservationId !== null &&
       req.price > 0 &&
       req.capacity > 0
     );
@@ -86,7 +87,7 @@ export default function CreateClassPage() {
   const handleDateChange = (newDate: Date) => {
     // Format date to "YYYY-MM-DD" string before saving to store
     const formattedDate = newDate.toISOString().split('T')[0];
-    updateReq({ date: formattedDate });
+    updateReq({ openAt: formattedDate });
   };
 
   // const [capacity, setCapacity] = useState(0);
@@ -185,7 +186,7 @@ export default function CreateClassPage() {
               </span>
               <CalendarComponent
                 variant="selectionOnly"
-                selectedDate={req.date ? new Date(req.date) : null}
+                selectedDate={req.openAt ? new Date(req.openAt) : null}
                 onDateChange={handleDateChange}
               />{' '}
             </div>
