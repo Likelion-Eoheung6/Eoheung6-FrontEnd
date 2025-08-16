@@ -2,14 +2,14 @@ import React from 'react';
 import SelectedRadioButtonIcon from '../../assets/class/radio-btn.svg';
 
 interface PlaceInfoCardProps {
-  id: string;
+  id: number;
   name: string;
   address: string;
   area: string;
   capacity: number;
   imageUrl?: string;
   isSelected: boolean;
-  onSelect: (id: string) => void;
+  onSelect: (id: number) => void;
 }
 
 const PlaceInfoCardComponent: React.FC<PlaceInfoCardProps> = ({
@@ -24,7 +24,7 @@ const PlaceInfoCardComponent: React.FC<PlaceInfoCardProps> = ({
 }) => {
   return (
     <label
-      htmlFor={id}
+      htmlFor={id.toString()}
       className={`
         flex max-w-[420px] items-stretch gap-[12px] rounded-[24px] bg-white p-[12px]
         border-[2px] transition-all duration-200 cursor-pointer
@@ -37,7 +37,7 @@ const PlaceInfoCardComponent: React.FC<PlaceInfoCardProps> = ({
     >
       <input
         type="radio"
-        id={id}
+        id={id.toString()}
         name={name}
         checked={isSelected}
         onChange={() => onSelect(id)}

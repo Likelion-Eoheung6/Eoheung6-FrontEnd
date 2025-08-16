@@ -10,10 +10,12 @@ import NextIcon from '../../assets/common/next.svg';
 
 interface ImageSwiperComponentProps {
   slides: string[]; // 이미지 URL 배열
-  setImageFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  images: File[];
+  setImageFiles: (files: File[]) => void;
 }
 export default function ImageSwiperComponent({
   slides,
+  images,
   setImageFiles,
 }: ImageSwiperComponentProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -27,18 +29,14 @@ export default function ImageSwiperComponent({
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      if (reader.result) {
-        setImageFiles(prev => {
-          const newFiles = [...prev];
-          newFiles[idx] = reader.result as string; // 해당 인덱스 이미지 교체
-          return newFiles.filter(Boolean); // 빈 값 제거
-        });
-      }
-    };
+    const newFile = files[0];
+
+    // Create a new array based on the current files from the store
+    const newFiles = [...images];
+    newFiles[idx] = newFile; // Replace or add the new file at the specified index
+
+    // Call the store's update function with the new array of File objects
+    setImageFiles(newFiles);
   };
   return (
     <div className="w-full mb-[20px] relative">

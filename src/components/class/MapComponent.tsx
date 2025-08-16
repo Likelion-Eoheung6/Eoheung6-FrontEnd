@@ -10,8 +10,8 @@ interface VacantPlace {
 
 interface MapComponentProps {
   places: VacantPlace[];
-  selectedPlaceId: string | null;
-  onMarkerClick: (placeId: string) => void;
+  selectedPlaceId: number | null;
+  onMarkerClick?: (placeId: number) => void;
 }
 
 export default function MapComponent({
@@ -24,9 +24,7 @@ export default function MapComponent({
 
   useEffect(() => {
     if (map && selectedPlaceId) {
-      const selectedPlace = places.find(
-        p => p.id.toString() === selectedPlaceId
-      );
+      const selectedPlace = places.find(p => p.id === selectedPlaceId);
       if (selectedPlace) {
         const newCenter = new window.kakao.maps.LatLng(
           selectedPlace.latitude,
@@ -49,7 +47,7 @@ export default function MapComponent({
           key={place.id}
           position={{ lat: place.latitude, lng: place.longitude }}
           title={place.detailAddress}
-          onClick={() => onMarkerClick(place.id.toString())} // ✅ 3. Tell the parent when a marker is clicked
+          onClick={() => onMarkerClick && onMarkerClick(place.id)}
         />
       ))}
     </Map>

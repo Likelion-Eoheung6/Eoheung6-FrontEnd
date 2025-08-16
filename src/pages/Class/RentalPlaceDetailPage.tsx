@@ -100,7 +100,6 @@ export default function RentalPlaceDetailPage() {
 
   useEffect(() => {
     setAvailability(samplePlaceDetailData.data.days);
-    console.log(thumbnail);
   }, [placeId]);
   return (
     <ClassContainer>

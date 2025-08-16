@@ -5,6 +5,7 @@ interface CalendarProps {
   onDateChange: (date: Date) => void;
   variant?: 'selectionOnly' | 'availability';
   unavailableDates?: string[];
+  disabled?: boolean;
 }
 
 const CalendarComponent: React.FC<CalendarProps> = ({
@@ -12,6 +13,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   onDateChange,
   variant = 'availability',
   unavailableDates = [],
+  disabled = false,
 }) => {
   const [currentDate, setCurrentDate] = useState<Date>(
     selectedDate || new Date()
@@ -37,6 +39,8 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   }
 
   const handleDateClick = (day: Date) => {
+    if (disabled) return; // 클래스 생성 첫화면은 터치 못하게
+
     const dateString = `${day.getFullYear()}-${String(
       day.getMonth() + 1
     ).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;

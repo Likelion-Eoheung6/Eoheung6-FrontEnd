@@ -94,7 +94,7 @@ const sampleApiData = {
 
 export default function RentalPlacePage() {
   const [places, setPlaces] = useState<VacantPlace[]>([]);
-  const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<number | null>(null);
   const navigate = useNavigate();
   const { updateReq } = useCreateClassStore();
   const { setReservation } = useGovReservationStore();
@@ -106,10 +106,10 @@ export default function RentalPlacePage() {
   const handleApply = () => {
     if (!selectedPlaceId) return;
 
-    const selectedPlace = places.find(p => p.id.toString() === selectedPlaceId);
+    const selectedPlace = places.find(p => p.id === selectedPlaceId);
 
     if (selectedPlace) {
-      updateReq({ govReservationId: selectedPlace.id });
+      updateReq({ govReservationId: selectedPlaceId });
       setReservation({
         placeId: selectedPlace.id,
         latitude: selectedPlace.latitude,
@@ -145,13 +145,13 @@ export default function RentalPlacePage() {
                 {places.map(place => (
                   <PlaceInfoCardComponent
                     key={place.id}
-                    id={place.id.toString()}
+                    id={place.id}
                     name="rental-place-selection"
                     address={`${place.roadAddress} ${place.detailAddress}`}
                     area={`${place.areaUsableSqm}m²`}
                     capacity={place.capacity}
                     imageUrl={place.thumbnail}
-                    isSelected={selectedPlaceId === place.id.toString()}
+                    isSelected={selectedPlaceId === place.id}
                     onSelect={setSelectedPlaceId}
                   />
                 ))}
