@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import TagGroup from '../../components/tags/TagGroup';
-import tagLogo from '../../assets/tag/tag-logo.svg';
+import tagLogo from '../../assets/common/logo2.svg';
 import NextIcon from '../../assets/tag/next.svg';
 import ClassCard from '../../components/common/ClassCard';
 
@@ -45,15 +45,13 @@ export default function BasicTagSelectPage() {
     <div className="relative mx-auto min-h-screen">     
       {/* 배경 */}
       <div className="absolute inset-0 w-full min-h-screen bg-[#FDFDFD]" />
-
-      {/* 헤더: 로고 중앙 배치 (393x38, top:58px) */}
-      <div className="absolute left-0 top-[8px] w-full flex items-center justify-center">
-        <div className="w-[123px] h-[22px] flex items-center justify-center">
+      <div className="absolute left-0 top-0 w-full flex items-center justify-center">
+        <div className="w-full h-[38px] flex items-center justify-center">
           <img src={tagLogo} alt="태그 로고" className="h-[38px] opacity-100 rotate-0" />
         </div>
       </div>
-      {/* 본문 */}
-        <div className="absolute left-0 top-[78px] w-full pl-[16px] pr-[16px] z-10">
+              {/* 본문 */}
+        <div className="absolute left-0 top-[62px] w-full pl-[16px] pr-[16px] z-10">
         {/* 상단 행: 배너 + 홈으로 버튼 */}
         <div className="flex items-center justify-between">
           {/* 배너 카드: 무엇을 좋아하세요? */}
