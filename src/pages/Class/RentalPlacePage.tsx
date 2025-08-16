@@ -32,7 +32,8 @@ const sampleApiData = {
       areaTotalSqm: 17.0,
       areaUsableSqm: 17.0,
       capacity: 7,
-      thumbnail: 'https://...',
+      thumbnail:
+        'https://lh6.googleusercontent.com/proxy/eZB4ridglUytmGNKEJdMXBG3vxPIABxHPorn3S2NImWk4VgDmiNNt6gDbwJGlFMnHCRyCojGQRFqXaQZZtUcV03ztwWpjTFnnvEvN2zlEAE',
     },
     {
       id: 8,
@@ -66,7 +67,11 @@ export default function RentalPlacePage() {
 
     if (selectedPlace) {
       updateReq({ placeId: selectedPlace.id });
-      navigate(`/open-class/rent/${selectedPlaceId}`);
+      navigate(`/open-class/rent/${selectedPlaceId}`, {
+        state: {
+          thumbnail: selectedPlace.thumbnail,
+        },
+      });
     }
   };
   return (

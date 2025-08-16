@@ -1,18 +1,5 @@
 import { useState } from 'react';
 
-const defaultUnavailableDates = [
-  '2025-08-04',
-  '2025-08-05',
-  '2025-08-06',
-  '2025-08-07',
-  '2025-08-13',
-  '2025-08-14',
-  '2025-08-25',
-  '2025-08-26',
-  '2025-08-27',
-  '2025-08-31',
-];
-
 interface CalendarProps {
   selectedDate: Date | null;
   onDateChange: (date: Date) => void;
@@ -24,10 +11,10 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   selectedDate,
   onDateChange,
   variant = 'availability',
-  unavailableDates = defaultUnavailableDates,
+  unavailableDates = [],
 }) => {
   const [currentDate, setCurrentDate] = useState<Date>(
-    selectedDate || new Date('2025-08-15')
+    selectedDate || new Date()
   );
 
   const year = currentDate.getFullYear();
@@ -78,15 +65,15 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   return (
     <div className=" max-w-md bg-white  rounded-[16px] shadow-lg font-sans">
       <div className="flex justify-start items-center gap-[4px]">
-        <h2 className="text-[14px] font-semibold text-[black] mr-[8px]">
-          {`${year}년 ${month + 1}월`}
-        </h2>
         <button
           onClick={() => changeMonth(-1)}
           className="bg-transparent border-none text-[20px] text-gray-500 hover:text-gray-800"
         >
           &lt;
         </button>
+        <h2 className="text-[14px] font-semibold text-[black] mr-[8px]">
+          {`${year}년 ${month + 1}월`}
+        </h2>
         <button
           onClick={() => changeMonth(1)}
           className="bg-transparent border-none text-[20px] text-gray-500 hover:text-gray-800"
@@ -131,12 +118,11 @@ const CalendarComponent: React.FC<CalendarProps> = ({
                 stateClasses = 'text-[#d1d5db] cursor-default';
               } else if (isSelected) {
                 stateClasses =
-                  'bg-[#fefcbf] text-[#b45309] border-[2px] border-[#fcd34d] font-[700]';
+                  'bg-[#FFEFA1]  border-[2px] border-[#FFD400] font-[500]';
               } else if (isUnavailable) {
-                stateClasses =
-                  'bg-[#fee2e2] text-[#f87171] line-through cursor-not-allowed';
+                stateClasses = 'bg-[#FFCECE]  cursor-not-allowed';
               } else {
-                stateClasses = 'bg-[#dcfce7] text-[#15803d] hover:bg-[#bbf7d0]';
+                stateClasses = 'bg-[#DEFFC9] text-[#15803d] hover:bg-[#bbf7d0]';
               }
             }
 

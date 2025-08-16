@@ -1,6 +1,7 @@
 import PeopleIcon from '../../assets/class/people.svg';
 import PlusIcon from '../../assets/class/plus.svg';
 import MinusIcon from '../../assets/class/minus.svg';
+import MinusBoldIcon from '../../assets/class/minus-bold.svg';
 
 // Props 인터페이스 정의
 interface CapacityComponentProps {
@@ -27,7 +28,7 @@ export default function CapacityComponent({
 
   return (
     <div
-      className={`flex items-center rounded-[1.25rem] bg-[#FAFAFA] px-[14px] py-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.04)] ${disabledClasses}`}
+      className={`flex items-center rounded-[1.25rem] bg-[#FDFDFD] px-[14px] py-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.04)] ${disabledClasses}`}
     >
       <div className="flex items-center gap-[8px] pr-[12px] border-r border-[#C0B6B0]">
         <img src={PeopleIcon} alt="모집 인원" className="w-[20px] h-[20px]" />
@@ -42,7 +43,11 @@ export default function CapacityComponent({
           disabled={disabled}
           className="p-0 bg-transparent border-none"
         >
-          <img src={MinusIcon} alt="마이너스" className="w-[24px] h-[24px]" />
+          {capacity > 0 ? (
+            <img src={MinusBoldIcon} alt="마이너스" />
+          ) : (
+            <img src={MinusIcon} alt="마이너스" />
+          )}
         </button>
         <span className="text-[14px] text-[#5A4B45] w-[20px] text-center">
           {capacity}
@@ -52,7 +57,7 @@ export default function CapacityComponent({
           disabled={disabled}
           className="p-0 bg-transparent border-none"
         >
-          <img src={PlusIcon} alt="플러스" className="w-[24px] h-[24px]" />
+          <img src={PlusIcon} alt="플러스" />
         </button>
       </div>
     </div>

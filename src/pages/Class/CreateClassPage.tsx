@@ -123,12 +123,6 @@ export default function CreateClassPage() {
   // useEffect(() => {
   //   setForm(f => ({ ...f, startTime, endTime }));
   // }, [startTime, endTime]);
-
-  const [isOpenModal, setOpenModal] = useState<boolean>(false);
-  const onClickToggleModal = useCallback(() => {
-    setOpenModal(!isOpenModal);
-    console.log('ismodal: ' + isOpenModal);
-  }, [isOpenModal]);
   return (
     <>
       <ClassContainer>
@@ -252,7 +246,6 @@ export default function CreateClassPage() {
                 endTime={req.endTime}
                 onStartTimeChange={newTime => updateReq({ startTime: newTime })}
                 onEndTimeChange={newTime => updateReq({ endTime: newTime })}
-                onClick={onClickToggleModal}
                 disabled={true}
               />
             </div>
@@ -263,37 +256,10 @@ export default function CreateClassPage() {
             onClick={() => {
               if (isFormComplete) {
                 console.log('Submitting form:', { req, images });
-                // Add your API submission logic here
               }
             }}
-          />{' '}
+          />
         </BodyContainer>
-
-        <Drawer.Root
-          shouldScaleBackground
-          open={isOpenModal}
-          onOpenChange={setOpenModal}
-        >
-          <Drawer.Portal>
-            <Drawer.Overlay className="fixed top-[0] right-[0] bottom-[0] left-[0] bg-[rgba(0,0,0,0.4)]" />
-            <Drawer.Content className="bg-[#f4f4f5] flex flex-col rounded-t-[10px] h-[96%] mt-[6rem] fixed bottom-[0] left-[0] right-[0]">
-              <div className="p-[1rem] bg-[#ffffff] rounded-t-[10px] grow shrink basis-0">
-                <div className="mx-auto w-[3rem] h-[0.375rem] flex-shrink-0 rounded-full bg-[#d4d4d8] mb-[2rem]" />
-                <div className="max-w-[32rem] mx-auto  ">
-                  <div className="flex flex-row w-full justify-center items-center ">
-                    <div className="flex-1 text-center">시작시간</div>
-                    <TimeWheelComponent />
-                  </div>
-                  <div className="flex flex-row w-full justify-center items-center ">
-                    <div className="flex-1 text-center">종료시간</div>
-                    <TimeWheelComponent />
-                  </div>
-                  <div></div>
-                </div>
-              </div>
-            </Drawer.Content>
-          </Drawer.Portal>
-        </Drawer.Root>
       </ClassContainer>
     </>
   );
