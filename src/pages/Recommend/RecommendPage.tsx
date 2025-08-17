@@ -76,7 +76,7 @@ const ClassCardWrapper: React.FC<{ classData: ClassData }> = ({ classData }) => 
 
 const RecommendPage: React.FC = () => {
   const navigate = useNavigate();
-  const [hasSelectedTags, setHasSelectedTags] = useState(true); // 태그 선택 여부 상태
+  const [hasSelectedTags, setHasSelectedTags] = useState(false); // 태그 선택 여부 상태
 
   return (
     <div>
