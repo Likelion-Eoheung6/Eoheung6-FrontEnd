@@ -145,17 +145,15 @@ export default function TagSelectPage() {
             <div className={`w-full max-w-[430px] h-[650px] rounded-t-[20px] bg-[#FDFDFD] shadow-[0_-4px_16px_rgba(0,0,0,0.1)] transform transition-all duration-500 ease-out ${isSheetOpen ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
               <div className="pt-[12px] px-[16px]">
                 <div className="mx-auto h-[4px] w-[120px] rounded-full bg-[#C7C7C7]" />
-                <div className="mt-[12px] flex items-start justify-center relative">
-                  <div className="inline-flex items-center rounded-[20px] bg-[#009DFF] px-[14px] py-[8px] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)] mt-[7px] ml-[22px]">
+                <div className="items-start justify-center">
+                  <div className="px-[56px] mt-[35px]">
+                  <div className="inline-flex items-center rounded-[20px] bg-[#009DFF] px-[14px] py-[8px] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)]">
                     <span className="text-white text-[14px] font-semibold tracking-[-0.01em]">"선택하신 태그에 딱 맞는 클래스를 모아봤어요!"</span>
                   </div>
-                  <button type="button" onClick={handleCloseSheet} className="absolute -right-[20px] -mt-[20px] w-[36px] h-[36px] relative" aria-label="닫기">
-                    <span className="absolute left-1/2 top-1/2 block h-[24px] w-[2px] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#545454]" />
-                    <span className="absolute left-1/2 top-1/2 block h-[24px] w-[2px] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-[#545454]" />
-                  </button>
+                  </div>
                 </div>
               </div>
-              <div className="mt-[8px] px-[16px] pb-[45px] max-h-[60vh] overflow-y-auto">
+              <div className="mt-[20px] px-[16px] pb-[45px] space-y-[18px] max-h-[60vh] overflow-y-auto">
                 <ClassCard
                   title="한성대 영문과 학생과 함께하는 영어교실교실교실"
                   location="성북구성북구성북구성북구성북구성북구"
