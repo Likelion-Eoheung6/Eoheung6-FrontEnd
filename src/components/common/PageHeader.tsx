@@ -30,7 +30,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, message, onBack }) => {
 
       {/* 메시지 (선택적) */}
       {message && (
-        <div className="px-[16px] mt-[24px]">
+        <div className="px-[16px] mt-[14px]">
           <div className="w-full h-[38px] bg-[#FAFAFA] rounded-[20px] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] flex items-center justify-center">
             <span className="text-[#545454] text-[16px] font-medium leading-[120%] tracking-[-0.025em]">
               {message}
