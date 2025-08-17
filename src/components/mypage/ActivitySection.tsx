@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import arrowRightIcon from '../../assets/mypage/arrow-right.svg';
 
 interface ActivityItemProps {
@@ -21,6 +22,16 @@ function ActivityItem({ title, onClick }: ActivityItemProps) {
 }
 
 export default function ActivitySection() {
+  const navigate = useNavigate();
+
+  const handleMyActivity = () => {
+    navigate('/my-activity');
+  };
+
+  const handleReview = () => {
+    navigate('/review');
+  };
+
   return (
     <div className="px-[32px]">
       <div className="w-full bg-[#FAFAFA] rounded-[20px] p-[12px]">
@@ -37,7 +48,7 @@ export default function ActivitySection() {
         </div>
         
         {/* 내 활동 확인하기 */}
-        <ActivityItem title="내 활동 확인하기" />
+        <ActivityItem title="내 활동 확인하기" onClick={handleMyActivity} />
         <div className="mb-[20px]"></div>
         
         {/* 리뷰 제목 */}
@@ -53,7 +64,7 @@ export default function ActivitySection() {
         </div>
         
         {/* 리뷰 남기기 */}
-        <ActivityItem title="리뷰 남기기" />
+        <ActivityItem title="리뷰 남기기" onClick={handleReview} />
         <div className="mb-[20px]"></div>
         
         {/* 로그인 / 회원정보 제목 */}
