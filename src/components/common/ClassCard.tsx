@@ -24,7 +24,7 @@ export default function ClassCard({
   imageUrl
 }: ClassCardProps) {
   return (
-          <div className="rounded-[16px] bg-white pt-[12px] pr-[12px] pb-[12px] relative">
+    <div className="rounded-[16px] relative">
       <div className="flex gap-[5px]">
         <div className="w-[130px] h-[130px] bg-[#B3B3B3] rounded-[20px]">
           {imageUrl && <img src={imageUrl} alt={title} className="w-full h-full object-cover rounded-[20px]" />}

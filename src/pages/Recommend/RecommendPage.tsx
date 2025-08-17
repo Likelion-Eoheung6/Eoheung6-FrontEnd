@@ -89,7 +89,7 @@ const RecommendPage: React.FC = () => {
         {hasSelectedTags ? (
           <>
             {/* 클래스 목록 */}
-            <div>
+            <div className="space-y-[18px] mt-[30px]">
               {mockClasses.map((classData) => (
                 <ClassCardWrapper key={classData.id} classData={classData} />
               ))}
