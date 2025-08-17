@@ -62,16 +62,16 @@ export default function EasyHomePage() {
   ];
 
   return (
-    <div className="bg-[#FDFDFD] flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* 헤더 */}
-      <div className="flex items-center justify-center py-2">
-        <img src={logo} alt="로고" className="h-[38px]" />
+      <div className="flex items-center justify-center mb-4">
+        <img src={logo} alt="로고" className="h-16" />
       </div>
 
       {/* 메인 콘텐츠 */}
       <div className="flex-1 flex flex-col">
         {/* 클래스 검색하기 버튼 - 로고 아래 24px 간격 */}
-        <div className="mt-6 mb-4 px-8">
+        <div className="mb-4 px-8">
           <ClassSearchButton onClick={handleClassSearch} />
         </div>
 

@@ -48,8 +48,8 @@ export default function NormalHomePage() {
   return (
     <div className="flex flex-col">
       {/* 헤더 */}
-      <div className="flex items-center justify-center mb-[24px]">
-        <img src={logo} alt="로고" className="h-[38px]" />
+      <div className="flex items-center justify-center mb-4">
+        <img src={logo} alt="로고" className="h-16" />
       </div>
     {/* 이미지 스와이퍼 - 로고 아래 24px 간격 */}
     <div className="mb-[25px]">

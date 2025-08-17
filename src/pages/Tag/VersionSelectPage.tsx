@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function VersionSelectPage() {
   const navigate = useNavigate();
   return (
-    <div className="relative mx-auto min-h-screen">
+    <div className="relative mx-auto">
       <div className="absolute inset-0 w-full min-h-screen bg-[linear-gradient(180deg,_#FDFDFD_28.75%,_#FFF6CC_100%)]" />
 
       {/* 본문 */}

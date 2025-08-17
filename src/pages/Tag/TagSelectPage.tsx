@@ -46,12 +46,10 @@ export default function TagSelectPage() {
       {/* 배경 */}
       <div className="absolute inset-0 w-full min-h-screen bg-[#FDFDFD]" />
       <div className="absolute left-0 top-0 w-full flex items-center justify-center">
-        <div className="w-full h-[38px] flex items-center justify-center">
-          <img src={tagLogo} alt="태그 로고" className="h-[38px] opacity-100 rotate-0" />
-        </div>
+          <img src={tagLogo} alt="태그 로고" className="h-16 opacity-100 rotate-0" />
       </div>
               {/* 본문 */}
-        <div className="absolute left-0 top-[62px] w-full pl-[16px] pr-[16px] z-10">
+        <div className="absolute left-0 top-[88px] w-full pl-[16px] pr-[16px] z-10">
         {/* 상단 행: 배너 + 홈으로 버튼 */}
         <div className="flex items-center justify-between">
           {/* 배너 카드: 무엇을 좋아하세요? */}
