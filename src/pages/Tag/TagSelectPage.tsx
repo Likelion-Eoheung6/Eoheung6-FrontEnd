@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import TagGroup from '../../components/tags/TagGroup';
-import tagLogo from '../../assets/tag/tag-logo.svg';
+import tagLogo from '../../assets/common/logo2.svg';
 import NextIcon from '../../assets/tag/next.svg';
 import ClassCard from '../../components/common/ClassCard';
 
@@ -15,7 +15,7 @@ const TAGS = [
 // 쉬운 버전용 태그들
 const EASY_TAGS = ['전자기기활용', '요리', '베이커리', '운동', '건강', '미술', '언어', '만들기', '생활정보'];
 
-export default function BasicTagSelectPage() {
+export default function TagSelectPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -45,15 +45,13 @@ export default function BasicTagSelectPage() {
     <div className="relative mx-auto min-h-screen">     
       {/* 배경 */}
       <div className="absolute inset-0 w-full min-h-screen bg-[#FDFDFD]" />
-
-      {/* 헤더: 로고 중앙 배치 (393x38, top:58px) */}
-      <div className="absolute left-0 top-[8px] w-full flex items-center justify-center">
-        <div className="w-[123px] h-[22px] flex items-center justify-center">
+      <div className="absolute left-0 top-0 w-full flex items-center justify-center">
+        <div className="w-full h-[38px] flex items-center justify-center">
           <img src={tagLogo} alt="태그 로고" className="h-[38px] opacity-100 rotate-0" />
         </div>
       </div>
-      {/* 본문 */}
-        <div className="absolute left-0 top-[78px] w-full pl-[16px] pr-[16px] z-10">
+              {/* 본문 */}
+        <div className="absolute left-0 top-[62px] w-full pl-[16px] pr-[16px] z-10">
         {/* 상단 행: 배너 + 홈으로 버튼 */}
         <div className="flex items-center justify-between">
           {/* 배너 카드: 무엇을 좋아하세요? */}
@@ -66,7 +64,7 @@ export default function BasicTagSelectPage() {
           {/* 홈으로 버튼 */}
           <button
             type="button"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(isEasyVersion ? '/easy' : '/')}
             className="flex flex-col items-center justify-center appearance-none border-0 bg-transparent cursor-pointer pr-[2px]"
           >
             <div className="relative w-[36px] h-[36px]">
