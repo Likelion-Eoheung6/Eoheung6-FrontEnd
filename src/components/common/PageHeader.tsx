@@ -16,7 +16,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, message, onBack }) => {
           <img 
             src={backIcon} 
             alt="뒤로가기" 
-            className="w-[30px] h-[30px] cursor-pointer" 
+            className="w-[30px] h-[30px] cursor-pointer pl-[8px]" 
             onClick={onBack}
           />
         )}

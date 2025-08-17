@@ -6,6 +6,7 @@ import HomePage from './pages/Home/HomePage';
 import EasyHomePage from './pages/Home/EasyHomePage';
 import RecommendPage from './pages/Recommend/RecommendPage';
 import SearchPage from './pages/Search/SearchPage';
+import SearchResultsPage from './pages/Search/SearchResultsPage';
 import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
 import MyActivityPage from './pages/MyPage/MyActivityPage';
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
       { path: 'request-class', element: <CreateClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'search', element: <SearchPage /> },
+      { path: 'search-results', element: <SearchResultsPage /> },
       { path: 'wishlist', element: <WishlistPage /> },
       { path: 'mypage', element: <MyPage /> },
       { path: 'my-activity', element: <MyActivityPage /> },
