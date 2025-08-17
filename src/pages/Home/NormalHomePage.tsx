@@ -112,7 +112,7 @@ export default function NormalHomePage() {
       </div>
 
       {/* 클래스 요청 카드들 */}
-      <div className="flex flex-col items-center gap-[14px] px-[31px] w-full">
+      <div className="flex flex-col items-center gap-[14px] pb-[31px] px-[31px] w-full">
         <ClassRequestCard 
           title="마카롱만들기마카롱만들기만들기만들기만들기"
           currentParticipants={30}
