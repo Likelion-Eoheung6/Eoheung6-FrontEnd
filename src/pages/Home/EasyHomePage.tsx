@@ -21,7 +21,7 @@ export default function EasyHomePage() {
   };
 
   const handleCreateClass = () => {
-    navigate('/class/create');
+    navigate('/open-class');
   };
 
   const handleRequestClass = () => {

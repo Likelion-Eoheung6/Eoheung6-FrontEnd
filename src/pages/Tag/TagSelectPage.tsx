@@ -64,7 +64,7 @@ export default function TagSelectPage() {
           {/* 홈으로 버튼 */}
           <button
             type="button"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(isEasyVersion ? '/easy' : '/')}
             className="flex flex-col items-center justify-center appearance-none border-0 bg-transparent cursor-pointer pr-[2px]"
           >
             <div className="relative w-[36px] h-[36px]">

@@ -25,7 +25,7 @@ export default function NormalHomePage() {
   };
 
   const handleCreateClass = () => {
-    navigate('/class/create');
+    navigate('/open-class');
   };
 
   const handleRequestClass = () => {
