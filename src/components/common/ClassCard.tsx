@@ -72,9 +72,9 @@ export default function ClassCard({
                 </button>
             </div>
           </div>
-          <div className="mt-[4px] flex gap-[8px]">
+          <div className="mt-[4px] flex gap-[8px] flex-nowrap overflow-x-auto scrollbar-hide">
             {tags.map((tag, index) => (
-              <span key={index} className="px-[8px] py-[8px] text-[10px] font-medium leading-[100%] tracking-[-0.025em] rounded-full bg-[#FAFAFA] text-[#545454] border border-[#E0E0E0]">
+              <span key={index} className="px-[8px] py-[8px] text-[10px] font-medium leading-[100%] tracking-[-0.025em] rounded-full bg-[#FAFAFA] text-[#545454] border border-[#E0E0E0] flex-shrink-0">
                 #{tag}
               </span>
             ))}
