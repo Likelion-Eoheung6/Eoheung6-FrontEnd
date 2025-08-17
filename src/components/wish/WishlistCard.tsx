@@ -19,7 +19,6 @@ export default function WishlistCard({
   location,
   imageUrl,
   onRemove,
-  onClick
 }: WishlistCardProps) {
   const [isWished, setIsWished] = useState(true); // 위시리스트에 있으므로 true로 시작
 
@@ -32,9 +31,7 @@ export default function WishlistCard({
 
   return (
     <div 
-      className="w-full flex items-center gap-[7px] cursor-pointer"
-      onClick={onClick}
-    >
+      className="w-full flex items-center gap-[7px]">
       {/* 이미지 */}
       <div className="w-[88px] h-[88px] bg-[#B3B3B3] rounded-[21px] flex-shrink-0">
         {imageUrl && (
@@ -55,8 +52,8 @@ export default function WishlistCard({
       </div>
 
       {/* 위시 아이콘 */}
-      <div 
-        className="w-[22px] h-[22px] rounded-full flex items-center justify-center flex-shrink-0"
+      <button 
+        className="w-[22px] h-[22px] rounded-full flex items-center justify-center flex-shrink-0 bg-transparent border-none p-0"
         onClick={handleWishClick}
       >
         <img 
@@ -64,7 +61,7 @@ export default function WishlistCard({
           alt="위시리스트" 
           className="w-[22px] h-[22px]" 
         />
-      </div>
+      </button>
     </div>
   );
 }
