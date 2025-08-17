@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import WishIcon from '../../assets/home/wish-n.svg';
-import WishSelectedIcon from '../../assets/home/wish.svg';
+import WishIcon from '../../assets/common/wish-n.svg';
+import WishSelectedIcon from '../../assets/common/wish.svg';
 
 interface ClassRequestCardProps {
   title: string;

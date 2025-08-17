@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import downIcon from '../../assets/mypage/down.svg';
 import upIcon from '../../assets/mypage/up.svg';
 import notIcon from '../../assets/common/not-icon.svg';
@@ -10,6 +11,7 @@ interface ActivitySectionHeaderProps {
 }
 
 export default function ActivitySectionHeader({ title, onToggle }: ActivitySectionHeaderProps) {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -73,6 +75,11 @@ export default function ActivitySectionHeader({ title, onToggle }: ActivitySecti
 
   const handleButtonClick = (classId: string) => {
     console.log(`${title} 버튼 클릭:`, classId);
+    
+    // 수강한 클래스의 리뷰 남기기 버튼 클릭 시 리뷰 페이지로 이동
+    if (title === '수강한 클래스') {
+      navigate('/review');
+    }
   };
 
   // 섹션별 빈 상태 메시지

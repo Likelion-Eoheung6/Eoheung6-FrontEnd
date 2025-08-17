@@ -1,0 +1,15 @@
+/* 모든 버튼에 커서 포인터 적용 */
+button {
+  cursor: pointer;
+}
+
+/* 클릭 가능한 요소들에도 커서 포인터 적용 */
+[onClick] {
+  cursor: pointer;
+}
+
+/* 커스텀 버튼 클래스에도 커서 포인터 적용 */
+.btn,
+.button {
+  cursor: pointer;
+}
