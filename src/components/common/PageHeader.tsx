@@ -11,7 +11,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, message, onBack }) => {
   return (
     <>
       {/* 헤더 */}
-      <div className="h-[38px] flex items-center justify-between px-[8px] relative">
+      <div className="h-16 flex items-center justify-between relative">
         {onBack && (
           <img 
             src={backIcon} 
@@ -21,7 +21,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, message, onBack }) => {
           />
         )}
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <h1 className="text-[#111111] text-[16px] font-medium leading-[120%] tracking-[-0.025em]">
+          <h1 className="text-[#111111] text-[16px] font-medium leading-[120%] tracking-[-0.025em] text-center">
             {title}
           </h1>
         </div>
