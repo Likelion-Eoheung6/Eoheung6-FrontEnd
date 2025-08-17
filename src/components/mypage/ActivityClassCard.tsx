@@ -1,7 +1,8 @@
-import React from 'react';
 import placeIcon from '../../assets/common/place.svg';
 import moneyIcon from '../../assets/common/money.svg';
 import peopleIcon from '../../assets/common/people.svg';
+import ReviewRatingDisplay from './ReviewRatingDisplay';
+
 
 type ActivityClassCardProps = {
   title: string;
@@ -13,6 +14,8 @@ type ActivityClassCardProps = {
   buttonColor?: string;
   imageUrl?: string;
   onButtonClick?: () => void;
+  hasReview?: boolean;
+  reviewRating?: number;
 };
 
 export default function ActivityClassCard({
@@ -24,7 +27,9 @@ export default function ActivityClassCard({
   buttonText,
   buttonColor = '#009DFF',
   imageUrl,
-  onButtonClick
+  onButtonClick,
+  hasReview = false,
+  reviewRating = 0
 }: ActivityClassCardProps) {
   return (
     <div className="rounded-[16px] relative">
@@ -72,13 +77,19 @@ export default function ActivityClassCard({
           </div>
           {/* 버튼 영역 */}
           <div className="mt-[4px]">
-            <button 
-              onClick={onButtonClick}
-              className="w-full h-[22px] rounded-[20px] text-[#FDFDFD] text-[14px] font-semibold leading-[120%] tracking-[-0.025em]"
-              style={{ backgroundColor: buttonColor }}
-            >
-              {buttonText}
-            </button>
+            {hasReview ? (
+              <div className="w-full h-[22px] flex items-center justify-start">
+                <ReviewRatingDisplay rating={reviewRating} />
+              </div>
+            ) : (
+              <button 
+                onClick={onButtonClick}
+                className="w-full h-[22px] rounded-[20px] text-[#FDFDFD] text-[14px] font-semibold leading-[120%] tracking-[-0.025em]"
+                style={{ backgroundColor: buttonColor }}
+              >
+                {buttonText}
+              </button>
+            )}
           </div>
         </div>
       </div>

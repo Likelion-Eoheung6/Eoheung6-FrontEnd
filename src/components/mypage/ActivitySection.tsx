@@ -28,6 +28,10 @@ export default function ActivitySection() {
     navigate('/my-activity');
   };
 
+  const handleReview = () => {
+    navigate('/review');
+  };
+
   return (
     <div className="px-[32px]">
       <div className="w-full bg-[#FAFAFA] rounded-[20px] p-[12px]">
@@ -60,7 +64,7 @@ export default function ActivitySection() {
         </div>
         
         {/* 리뷰 남기기 */}
-        <ActivityItem title="리뷰 남기기" />
+        <ActivityItem title="리뷰 남기기" onClick={handleReview} />
         <div className="mb-[20px]"></div>
         
         {/* 로그인 / 회원정보 제목 */}

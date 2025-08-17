@@ -9,6 +9,7 @@ import SearchPage from './pages/Search/SearchPage';
 import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
 import MyActivityPage from './pages/MyPage/MyActivityPage';
+import ReviewPage from './pages/MyPage/ReviewPage';
 import StartPage from './pages/Start/StartPage';
 import LoginPage from './pages/Login/LoginPage';
 import VersionSelectPage from './pages/Tag/VersionSelectPage';
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: 'wishlist', element: <WishlistPage /> },
       { path: 'mypage', element: <MyPage /> },
       { path: 'my-activity', element: <MyActivityPage /> },
+      { path: 'review', element: <ReviewPage /> },
     ],
   },
   {

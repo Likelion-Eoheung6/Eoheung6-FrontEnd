@@ -26,7 +26,7 @@ export default function ActivitySectionHeader({ title, onToggle }: ActivitySecti
       case '개설한 클래스':
         return '취소하기';
       case '수강한 클래스':
-        return '리뷰작성 >';
+        return '리뷰 남기기 >';
       default:
         return '상세보기';
     }
@@ -109,9 +109,9 @@ export default function ActivitySectionHeader({ title, onToggle }: ActivitySecti
       
       {/* 토글 시 클래스 카드들 또는 빈 상태 */}
       {isExpanded && (
-        <div className="mt-[10px] max-h-[280px] overflow-y-auto absolute w-[361px] h-[298px] bg-[#FAFAFA] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] rounded-[20px]">
+        <div className="mt-[10px] max-h-[280px] overflow-y-auto absolute w-full h-[298px] bg-[#FAFAFA] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] rounded-[20px]">
           {sampleClasses.length > 0 ? (
-            <div className="space-y-[10px]">
+            <div className="space-y-[10px] pl-[5px] pr-[13px] py-[10px]">
               {sampleClasses.map((classItem) => (
                 <ActivityClassCard
                   key={classItem.id}
