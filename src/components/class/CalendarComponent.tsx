@@ -1,33 +1,22 @@
 import { useState } from 'react';
 
-const defaultUnavailableDates = [
-  '2025-08-04',
-  '2025-08-05',
-  '2025-08-06',
-  '2025-08-07',
-  '2025-08-13',
-  '2025-08-14',
-  '2025-08-25',
-  '2025-08-26',
-  '2025-08-27',
-  '2025-08-31',
-];
-
 interface CalendarProps {
   selectedDate: Date | null;
   onDateChange: (date: Date) => void;
   variant?: 'selectionOnly' | 'availability';
   unavailableDates?: string[];
+  disabled?: boolean;
 }
 
 const CalendarComponent: React.FC<CalendarProps> = ({
   selectedDate,
   onDateChange,
   variant = 'availability',
-  unavailableDates = defaultUnavailableDates,
+  unavailableDates = [],
+  disabled = false,
 }) => {
   const [currentDate, setCurrentDate] = useState<Date>(
-    selectedDate || new Date('2025-08-15')
+    selectedDate || new Date()
   );
 
   const year = currentDate.getFullYear();
@@ -50,6 +39,8 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   }
 
   const handleDateClick = (day: Date) => {
+    if (disabled) return; // 클래스 생성 첫화면은 터치 못하게
+
     const dateString = `${day.getFullYear()}-${String(
       day.getMonth() + 1
     ).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
@@ -78,15 +69,15 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   return (
     <div className=" max-w-md bg-white  rounded-[16px] shadow-lg font-sans">
       <div className="flex justify-start items-center gap-[4px]">
-        <h2 className="text-[14px] font-semibold text-[black] mr-[8px]">
-          {`${year}년 ${month + 1}월`}
-        </h2>
         <button
           onClick={() => changeMonth(-1)}
           className="bg-transparent border-none text-[20px] text-gray-500 hover:text-gray-800"
         >
           &lt;
         </button>
+        <h2 className="text-[14px] font-semibold text-[black] mr-[8px]">
+          {`${year}년 ${month + 1}월`}
+        </h2>
         <button
           onClick={() => changeMonth(1)}
           className="bg-transparent border-none text-[20px] text-gray-500 hover:text-gray-800"
@@ -118,11 +109,18 @@ const CalendarComponent: React.FC<CalendarProps> = ({
               'flex items-center justify-center w-[40px] h-[40px] rounded-[9999px] cursor-pointer transition-colors mx-auto';
             let stateClasses = '';
 
-            if (variant === 'selectionOnly') {
+            if (variant === 'availability') {
               if (!isCurrentMonth) {
                 stateClasses = 'text-[#d1d5db] cursor-default';
               } else if (isSelected) {
-                stateClasses = 'bg-[#fefcbf] text-[#b45309] font-[700]';
+                stateClasses =
+                  'bg-[#FFEFA1] border-[2px] border-[#FFD400] font-[500]';
+              } else if (unavailableDates.length > 0) {
+                if (isUnavailable) {
+                  stateClasses = 'bg-[#FFCECE] cursor-not-allowed';
+                } else {
+                  stateClasses = 'bg-[#DEFFC9] hover:bg-[#bbf7d0]';
+                }
               } else {
                 stateClasses = 'text-[#111111] hover:bg-[#f3f4f6]';
               }
@@ -130,13 +128,9 @@ const CalendarComponent: React.FC<CalendarProps> = ({
               if (!isCurrentMonth) {
                 stateClasses = 'text-[#d1d5db] cursor-default';
               } else if (isSelected) {
-                stateClasses =
-                  'bg-[#fefcbf] text-[#b45309] border-[2px] border-[#fcd34d] font-[700]';
-              } else if (isUnavailable) {
-                stateClasses =
-                  'bg-[#fee2e2] text-[#f87171] line-through cursor-not-allowed';
+                stateClasses = 'bg-[#fefcbf] text-[#b45309] font-[700]';
               } else {
-                stateClasses = 'bg-[#dcfce7] text-[#15803d] hover:bg-[#bbf7d0]';
+                stateClasses = 'text-[#111111] hover:bg-[#f3f4f6]';
               }
             }
 

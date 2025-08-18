@@ -6,15 +6,8 @@ import LocationIcon from '../../assets/class/location.svg';
 import QestionIcon from '../../assets/class/question.svg';
 import CharacterBlue from '../../assets/class/character-blue.svg';
 import CharacterYellow from '../../assets/class/character-yellow.svg';
-import dayjs from 'dayjs';
-
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
 
 import ImageSwiperComponent from '../../components/class/ImageSwiperComponent';
-import TimeWheelComponent from '../../components/class/TimeWheelComponent';
-import { Drawer } from 'vaul';
 import CalendarComponent from '../../components/class/CalendarComponent';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import PriceComponent from '../../components/class/PriceComponent';
@@ -22,6 +15,8 @@ import CapacityComponent from '../../components/class/CapacityComponent';
 import ClassTimeComponent from '../../components/class/ClassTimeComponent';
 import { useCreateClassStore } from '../../stores/useCreateClassStore';
 import { useNavigate } from 'react-router-dom';
+import { useGovReservationStore } from '../../stores/useGovReservationStore';
+import MapComponent from '../../components/class/MapComponent';
 
 export interface CreateClassPayload {
   infoId: number | null;
@@ -39,25 +34,49 @@ export interface CreateClassPayload {
 
 export default function CreateClassPage() {
   const navigate = useNavigate();
-  const { req, images, updateReq, setImages, setOrders } =
-    useCreateClassStore();
+  const { req, images, updateReq, setImages } = useCreateClassStore();
+  const { reservation } = useGovReservationStore();
 
   // 클래스 사진
   const [imageFiles, setImageFiles] = useState<string[]>([]); // 클래스 사진
+  const imageUrls = useMemo(() => {
+    return images.map(file => URL.createObjectURL(file));
+  }, [images]);
+  useEffect(() => {
+    return () => {
+      imageUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [imageUrls]); // This effect depends on the imageUrls array
+
   const slides = [
-    ...imageFiles,
-    ...Array(Math.max(0, 5 - imageFiles.length)).fill(null),
+    ...imageUrls,
+    ...Array(Math.max(0, 5 - imageUrls.length)).fill(null),
   ];
 
   // 태그
   const [tagInput, setTagInput] = useState('');
 
   const addTag = (raw: string) => {
-    const tag = raw.trim().replace(/^#/, '');
-    if (tag && !req.tags.includes(tag)) {
-      updateReq({ tags: [...req.tags, tag] });
+    // 스페이스바 또는 콤마로 여러 태그를 한 번에 분리
+    const potentialTags = raw.split(/[\s,]+/).filter(Boolean);
+
+    if (potentialTags.length === 0) return;
+
+    // 중복되지 않은 새 태그만 필터링
+    const newTags = potentialTags.filter(
+      tag => tag.trim() && !req.tags.includes(tag.trim())
+    );
+
+    if (newTags.length > 0) {
+      updateReq({ tags: [...req.tags, ...newTags.map(t => t.trim())] });
     }
+
     setTagInput('');
+  };
+
+  // ✅ 태그 삭제를 위한 함수
+  const removeTag = (tagToRemove: string) => {
+    updateReq({ tags: req.tags.filter(tag => tag !== tagToRemove) });
   };
   const onTagKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
     if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
@@ -68,68 +87,29 @@ export default function CreateClassPage() {
       tagInput === '' &&
       req.tags.length > 0
     ) {
-      updateReq({ tags: req.tags.slice(0, -1) });
+      // 가장 마지막 태그를 삭제
+      removeTag(req.tags[req.tags.length - 1]);
     }
   };
   const isFormComplete = useMemo(() => {
     return (
-      images.length > 0 &&
-      req.title.trim() !== '' &&
-      req.content.trim() !== '' &&
-      req.date !== '' &&
-      req.placeId !== null &&
-      req.price > 0 &&
-      req.capacity > 0
+      (images.length > 0 &&
+        req.title.trim() !== '' &&
+        req.content.trim() !== '' &&
+        req.openAt !== '' &&
+        req.mentorPlaceId !== null) ||
+      (req.govReservationId !== null && req.price > 0 && req.capacity > 0)
     );
   }, [req, images]);
 
+  useEffect(() => {
+    console.log(req);
+  }, [req]);
   // 날짜
   const handleDateChange = (newDate: Date) => {
-    // Format date to "YYYY-MM-DD" string before saving to store
     const formattedDate = newDate.toISOString().split('T')[0];
-    updateReq({ date: formattedDate });
+    updateReq({ openAt: formattedDate });
   };
-
-  const [capacity, setCapacity] = useState(0);
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
-  const [startTime, setStartTime] = useState('00:00');
-  const [endTime, setEndTime] = useState('00:00');
-  const [duration, setDuration] = useState('00시간 00분');
-
-  // const handleTogglePicker = () => {
-  //   setIsPickerOpen(!isPickerOpen);
-  //   console.log('toggle picker ->', !isPickerOpen); // 눌렀는지 로그 확인
-  // };
-
-  // useEffect(() => {
-  //   const start = dayjs(`2000-01-01T${startTime}`);
-  //   let end = dayjs(`2000-01-01T${endTime}`);
-
-  //   if (end.isBefore(start)) {
-  //     end = end.add(1, 'day');
-  //   }
-
-  //   const diffMinutes = end.diff(start, 'minute');
-  //   const hours = Math.floor(diffMinutes / 60);
-  //   const minutes = diffMinutes % 60;
-
-  //   setDuration(
-  //     `${String(hours).padStart(2, '0')}시간 ${String(minutes).padStart(
-  //       2,
-  //       '0'
-  //     )}분`
-  //   );
-  // }, [startTime, endTime]);
-
-  // useEffect(() => {
-  //   setForm(f => ({ ...f, startTime, endTime }));
-  // }, [startTime, endTime]);
-
-  const [isOpenModal, setOpenModal] = useState<boolean>(false);
-  const onClickToggleModal = useCallback(() => {
-    setOpenModal(!isOpenModal);
-    console.log('ismodal: ' + isOpenModal);
-  }, [isOpenModal]);
   return (
     <>
       <ClassContainer>
@@ -137,7 +117,11 @@ export default function CreateClassPage() {
 
         <BodyContainer>
           {/* 사진 등록/수정하기 */}
-          <ImageSwiperComponent slides={slides} setImageFiles={setImageFiles} />
+          <ImageSwiperComponent
+            slides={slides}
+            images={images}
+            setImageFiles={setImages}
+          />
           {/* 클래스 제목 */}
           <div
             className={`w-full h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[20px]`}
@@ -170,6 +154,24 @@ export default function CreateClassPage() {
 
               <div className="mt-2 border-b border-[#E0E0E0]" />
               <div className="mt-3">
+                <div className="flex flex-wrap gap-[8px] mb-[8px]">
+                  {req.tags.map(tag => (
+                    <div
+                      key={tag}
+                      className="flex items-center bg-[#e0e7ff] rounded-full px-[12px] py-[4px]"
+                    >
+                      <span className="text-[12px] font-medium text-[#4338ca]">
+                        {tag}
+                      </span>
+                      <button
+                        onClick={() => removeTag(tag)}
+                        className="ml-[4px] text-[16px] leading-none text-[#6366f1] hover:text-[#4338ca]"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
                 <div>
                   <input
                     value={tagInput}
@@ -192,8 +194,9 @@ export default function CreateClassPage() {
               </span>
               <CalendarComponent
                 variant="selectionOnly"
-                selectedDate={req.date ? new Date(req.date) : null}
+                selectedDate={req.openAt ? new Date(req.openAt) : null}
                 onDateChange={handleDateChange}
+                disabled={true}
               />{' '}
             </div>
           </div>
@@ -206,7 +209,53 @@ export default function CreateClassPage() {
               </span>
               <img src={QestionIcon} alt="도움말" className="h-5 w-5" />
             </div>
-            <div className="flex justify-between items-center rounded-[1rem] border border-[#E0E0E0] bg-[#FAFAFA] pt-[22px] pb-[22px]">
+            {reservation ? (
+              // If a reservation exists, show the map
+              <div className="mt-4">
+                <MapComponent
+                  selectedPlaceId={req.govReservationId || req.mentorPlaceId}
+                  places={[
+                    {
+                      id: reservation.placeId,
+                      latitude: reservation.latitude,
+                      longitude: reservation.longitude,
+                      detailAddress: '선택된 장소',
+                    },
+                  ]}
+                />
+              </div>
+            ) : (
+              <div className="flex justify-between items-center rounded-[1rem] border border-[#E0E0E0] bg-[#FAFAFA] pt-[22px] pb-[22px] mt-4">
+                <button
+                  onClick={() => navigate('/open-class/myplace')}
+                  className="flex flex-col items-center flex-1 bg-transparent border-none"
+                >
+                  <img
+                    src={CharacterBlue}
+                    alt="내 장소"
+                    className="mb-[25px] w-16 h-16"
+                  />
+                  <div className="bg-[#009DFF] text-[white] text-[16px] font-semibold px-[14px] py-[8px] rounded-full">
+                    내 장소
+                  </div>
+                </button>
+                <div className="w-px bg-[#E0E0E0] mx-6 self-stretch" />
+                <button
+                  onClick={() => navigate('/open-class/rent')}
+                  className="flex flex-col items-center flex-1 bg-transparent border-none"
+                >
+                  <img
+                    src={CharacterYellow}
+                    alt="빈집 대여하기"
+                    className="mb-[25px] w-16 h-16"
+                  />
+                  <div className="bg-[#009DFF] text-[white] text-[16px] font-semibold px-[14px] py-[8px] rounded-full">
+                    빈집 대여하기
+                  </div>
+                </button>
+              </div>
+            )}
+            {/* <div className="flex justify-between items-center rounded-[1rem] border border-[#E0E0E0] bg-[#FAFAFA] pt-[22px] pb-[22px]">
               <button
                 onClick={() => navigate('/my-place')}
                 className="flex flex-col items-center flex-1 bg-transparent border-none"
@@ -221,20 +270,20 @@ export default function CreateClassPage() {
                 </div>
               </button>
               <div className="w-px bg-[#E0E0E0] mx-6 self-stretch" />
-              <button
-                onClick={() => navigate('/rental-place')}
-                className="flex flex-col items-center flex-1 bg-transparent border-none"
-              >
+              <div className="flex flex-col items-center flex-1 bg-transparent border-none">
                 <img
                   src={CharacterYellow}
                   alt="빈집 대여하기"
                   className="mb-[25px] w-16 h-16"
                 />
-                <div className="bg-[#009DFF] text-[white] text-[16px] font-semibold px-[14px] py-[8px] rounded-full">
+                <div
+                  className="bg-[#009DFF] text-[white] text-[16px] font-semibold px-[14px] py-[8px] rounded-full"
+                  onClick={() => navigate('/open-class/rent')}
+                >
                   빈집 대여하기
                 </div>
-              </button>
-            </div>
+              </div>
+            </div> */}
             <div className="flex flex-col gap-[10px] mt-4">
               <PriceComponent
                 price={req.price}
@@ -253,7 +302,6 @@ export default function CreateClassPage() {
                 endTime={req.endTime}
                 onStartTimeChange={newTime => updateReq({ startTime: newTime })}
                 onEndTimeChange={newTime => updateReq({ endTime: newTime })}
-                onClick={onClickToggleModal}
                 disabled={true}
               />
             </div>
@@ -263,38 +311,12 @@ export default function CreateClassPage() {
             isActive={isFormComplete}
             onClick={() => {
               if (isFormComplete) {
+                navigate('done');
                 console.log('Submitting form:', { req, images });
-                // Add your API submission logic here
               }
             }}
-          />{' '}
+          />
         </BodyContainer>
-
-        <Drawer.Root
-          shouldScaleBackground
-          open={isOpenModal}
-          onOpenChange={setOpenModal}
-        >
-          <Drawer.Portal>
-            <Drawer.Overlay className="fixed top-[0] right-[0] bottom-[0] left-[0] bg-[rgba(0,0,0,0.4)]" />
-            <Drawer.Content className="bg-[#f4f4f5] flex flex-col rounded-t-[10px] h-[96%] mt-[6rem] fixed bottom-[0] left-[0] right-[0]">
-              <div className="p-[1rem] bg-[#ffffff] rounded-t-[10px] grow shrink basis-0">
-                <div className="mx-auto w-[3rem] h-[0.375rem] flex-shrink-0 rounded-full bg-[#d4d4d8] mb-[2rem]" />
-                <div className="max-w-[32rem] mx-auto  ">
-                  <div className="flex flex-row w-full justify-center items-center ">
-                    <div className="flex-1 text-center">시작시간</div>
-                    <TimeWheelComponent />
-                  </div>
-                  <div className="flex flex-row w-full justify-center items-center ">
-                    <div className="flex-1 text-center">종료시간</div>
-                    <TimeWheelComponent />
-                  </div>
-                  <div></div>
-                </div>
-              </div>
-            </Drawer.Content>
-          </Drawer.Portal>
-        </Drawer.Root>
       </ClassContainer>
     </>
   );

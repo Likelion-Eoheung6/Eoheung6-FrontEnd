@@ -7,7 +7,7 @@ interface ClassTimeComponentProps {
   endTime: string;
   onStartTimeChange: (newTime: string) => void;
   onEndTimeChange: (newTime: string) => void;
-  onClick: () => void;
+  onClick?: () => void;
   disabled?: boolean;
 }
 
@@ -36,8 +36,7 @@ export default function ClassTimeComponent({
 
   return (
     <div
-      onClick={!disabled ? onClick : undefined} // disabled가 true이면 onClick 비활성화
-      className={`flex items-center bg-[#ffffff] rounded-[9999px] p-[12px] shadow-[0_4px_12px_rgba(0,0,0,0.08)] ${disabledClasses}`}
+      className={`flex items-center bg-[#FDFDFD] rounded-[9999px] p-[12px] shadow-[0_4px_12px_rgba(0,0,0,0.08)] ${disabledClasses}`}
     >
       <div className="flex items-center gap-[8px]">
         <img
@@ -55,6 +54,16 @@ export default function ClassTimeComponent({
           {startTime} ~ {endTime}
         </span>
       </div>
+      <button
+        onClick={!disabled ? onClick : undefined}
+        disabled={disabled}
+        className={`
+          flex-shrink-0 text-[white] bg-[#545454] text-[12px] font-bold 
+          px-[7px] py-[5px] border-none rounded-[9999px] cursor-pointer
+        `}
+      >
+        시간 등록
+      </button>
     </div>
   );
 }

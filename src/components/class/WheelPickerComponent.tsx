@@ -82,6 +82,14 @@ const WheelPickerComponent = ({
         if (div) {
           div.style.transform = `rotateX(${Math.asin(sin)}rad) scale(${cos})`;
           div.style.transformOrigin = 'center';
+          div.style.fontSize = '25px';
+          if (realIndex === selectedElement) {
+            div.style.color = '#111111'; // Dark color for selected text
+            div.style.fontWeight = '600'; // Make it bold
+          } else {
+            div.style.color = '#a1a1aa'; // Gray color for unselected text
+            div.style.fontWeight = '400'; // Normal weight
+          }
         }
       });
   }
@@ -105,6 +113,14 @@ const WheelPickerComponent = ({
         if (div) {
           div.style.transform = `rotateX(${Math.asin(sin)}rad) scale(${cos})`;
           div.style.transformOrigin = 'left';
+          div.style.fontSize = '25px';
+          if (realIndex === selectedElement) {
+            div.style.color = '#111111'; // Dark color for selected text
+            div.style.fontWeight = '600'; // Make it bold
+          } else {
+            div.style.color = '#a1a1aa'; // Gray color for unselected text
+            div.style.fontWeight = '400'; // Normal weight
+          }
         }
       });
   }
@@ -173,7 +189,6 @@ const WheelPickerComponent = ({
     ) {
       hourItemsContRef.current?.scrollTo({
         top: index * itemHeight,
-        behavior: 'smooth',
       });
     }
   }, [hourValue, hourItemsMap, itemHeight]);
@@ -187,12 +202,9 @@ const WheelPickerComponent = ({
     ) {
       minuteItemsContRef.current?.scrollTo({
         top: index * itemHeight,
-        behavior: 'smooth',
       });
     }
-  }, [minuteValue, minuteItemsMap, itemHeight]);
-
-  // --- JSX rendering (date and ampm versions removed) ---
+  }, [minuteValue, minuteItemsMap, itemHeight]); // --- JSX rendering (date and ampm versions removed) ---
   return (
     <div className="container" style={{ height: `${containerHeight}px` }}>
       <ul className="items hour-items" ref={hourItemsContRef}>
@@ -234,7 +246,10 @@ const WheelPickerComponent = ({
             key={item.value}
             ref={node => (minuteRefs.current[index] = node)}
             className="item"
-            style={{ height: `${itemHeight}px`, lineHeight: `${itemHeight}px` }}
+            style={{
+              height: `${itemHeight}px`,
+              lineHeight: `${itemHeight}px`,
+            }}
           >
             <div>{item.label}</div>
           </li>

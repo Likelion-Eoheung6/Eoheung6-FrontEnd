@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 
 interface ReqData {
+  infoId: number | null;
   title: string;
   content: string;
   tags: string[];
-  placeId: number | null;
-  date: string;
+  mentorPlaceId: number | null;
+  govReservationId: number | null;
+  openAt: string;
   price: number;
   capacity: number;
   startTime: string;
@@ -24,11 +26,13 @@ interface CreateClassState {
 
 const initialState = {
   req: {
+    infoId: null,
     title: '',
     content: '',
     tags: [],
-    placeId: null,
-    date: '',
+    mentorPlaceId: null,
+    govReservationId: null,
+    openAt: '',
     price: 0,
     capacity: 0,
     startTime: '00:00',

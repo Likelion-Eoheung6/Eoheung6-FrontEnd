@@ -6,7 +6,6 @@
   perspective: 500px; /* Reduced perspective for a less intense tilt */
   position: relative;
   max-width: 150px; /* Adjusted max width */
-  background-color: #e0f7fa; /* 파스텔톤 배경색 */
   border-radius: 8px;
   overflow: hidden; /* Clip the rounded corners */
 }
@@ -20,7 +19,6 @@
   right: 0;
   height: 32px; /* Should match itemHeight */
   transform: translateY(-50%);
-  background-color: rgba(0, 159, 253, 0.2); /* Highlight color */
   border-radius: 4px;
   z-index: 1;
   pointer-events: none; /* Ensure it doesn't interfere with scrolling */

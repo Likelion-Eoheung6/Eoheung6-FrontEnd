@@ -30,8 +30,8 @@ export default function ButtonComponent({
   }
 
   const activeClasses = isActive
-    ? 'bg-[#009DFF] text-[#ffffff] border-none' // Active: Gray background, white text
-    : 'bg-[#B3B3B3] text-[#ffffff] border-none'; // Inactive: Light gray background, muted text
+    ? 'bg-[#009DFF] text-[#ffffff] border-none'
+    : 'bg-[#B3B3B3] text-[#ffffff] border-none';
 
   return (
     <button
@@ -42,6 +42,7 @@ export default function ButtonComponent({
         ${sizeClasses}
         ${activeClasses}
         rounded-[${radius}]
+
       `}
     >
       {text}

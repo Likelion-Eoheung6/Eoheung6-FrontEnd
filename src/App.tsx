@@ -12,10 +12,14 @@ import MyPage from './pages/MyPage/MyPage';
 import MyActivityPage from './pages/MyPage/MyActivityPage';
 import ReviewPage from './pages/MyPage/ReviewPage';
 import StartPage from './pages/Start/StartPage';
+import CreateClassPage from './pages/Class/CreateClassPage';
+import RentalPlacePage from './pages/Class/RentalPlacePage';
+import RentalPlaceDetailPage from './pages/Class/RentalPlaceDetailPage';
+import MyPlacePage from './pages/Class/MyPlacePage';
+import RegisterMyPlacePage from './pages/Class/RegisterMyPlacePage';
+import DoneCreateClassPage from './pages/Class/DoneCreateClassPage';
 import LoginPage from './pages/Login/LoginPage';
 import VersionSelectPage from './pages/Tag/VersionSelectPage';
-import ClassPage from './pages/Class/ClassPage';
-import CreateClassPage from './pages/Class/CreateClassPage';
 import TagSelectPage from './pages/Tag/TagSelectPage';
 import LoadingScreen from './components/common/LoadingScreen';
 
@@ -29,14 +33,17 @@ const router = createBrowserRouter([
       { path: 'easy', element: <EasyHomePage /> },
       {
         path: 'open-class',
-        element: <CreateClassPage />, // 여기가 상위 라우트
-        children: [
-          { path: 'myplace', element: <CreateClassPage /> },
-          { path: 'rent', element: <CreateClassPage /> },
-          { path: 'done', element: <CreateClassPage /> },
-          { path: 'apply/:classId', element: <CreateClassPage /> },
-          { path: 'apply/:classId/payment', element: <CreateClassPage /> },
-        ],
+        element: <CreateClassPage />,
+      },
+      { path: 'open-class/myplace', element: <MyPlacePage /> },
+      { path: 'open-class/myplace/register', element: <RegisterMyPlacePage /> },
+      { path: 'open-class/rent', element: <RentalPlacePage /> },
+      { path: 'open-class/rent/:placeId', element: <RentalPlaceDetailPage /> },
+      { path: 'open-class/done', element: <DoneCreateClassPage /> },
+      { path: 'open-class/apply/:classId', element: <CreateClassPage /> },
+      {
+        path: 'open-class/apply:classId/payment',
+        element: <CreateClassPage />,
       },
       { path: 'request-class', element: <CreateClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },

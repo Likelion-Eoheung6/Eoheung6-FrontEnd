@@ -27,7 +27,7 @@ export default function PriceComponent({
   };
 
   return (
-    <div className="flex items-center justify-between rounded-[1.25rem] bg-[#FAFAFA] px-[14px] py-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.04)]">
+    <div className="flex items-center justify-between rounded-[1.25rem] bg-[#FDFDFD] px-[14px] py-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.04)]">
       <div className="flex items-center gap-[8px]">
         <img src={MoneyIcon} alt="결제금액" className="w-[20px] h-[20px]" />
         <span className="text-[12px] font-semibold text-[#5A4B45]">
