@@ -225,10 +225,9 @@ export default function CreateClassPage() {
                 />
               </div>
             ) : (
-              // Otherwise, show the selection buttons
               <div className="flex justify-between items-center rounded-[1rem] border border-[#E0E0E0] bg-[#FAFAFA] pt-[22px] pb-[22px] mt-4">
                 <button
-                  onClick={() => navigate('/my-place')}
+                  onClick={() => navigate('/open-class/myplace')}
                   className="flex flex-col items-center flex-1 bg-transparent border-none"
                 >
                   <img
@@ -312,6 +311,7 @@ export default function CreateClassPage() {
             isActive={isFormComplete}
             onClick={() => {
               if (isFormComplete) {
+                navigate('done');
                 console.log('Submitting form:', { req, images });
               }
             }}

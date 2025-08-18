@@ -12,6 +12,9 @@ import LoginPage from './pages/Auth/LoginPage';
 import CreateClassPage from './pages/Class/CreateClassPage';
 import RentalPlacePage from './pages/Class/RentalPlacePage';
 import RentalPlaceDetailPage from './pages/Class/RentalPlaceDetailPage';
+import MyPlacePage from './pages/Class/MyPlacePage';
+import RegisterMyPlacePage from './pages/Class/RegisterMyPlacePage';
+import DoneCreateClassPage from './pages/Class/DoneCreateClassPage';
 
 const router = createBrowserRouter([
   {
@@ -24,10 +27,11 @@ const router = createBrowserRouter([
         path: 'open-class',
         element: <CreateClassPage />,
       },
-      { path: 'open-class/myplace', element: <CreateClassPage /> },
+      { path: 'open-class/myplace', element: <MyPlacePage /> },
+      { path: 'open-class/myplace/register', element: <RegisterMyPlacePage /> },
       { path: 'open-class/rent', element: <RentalPlacePage /> },
       { path: 'open-class/rent/:placeId', element: <RentalPlaceDetailPage /> },
-      { path: 'open-class/done', element: <CreateClassPage /> },
+      { path: 'open-class/done', element: <DoneCreateClassPage /> },
       { path: 'open-class/apply/:classId', element: <CreateClassPage /> },
       {
         path: 'open-class/apply:classId/payment',

@@ -109,11 +109,18 @@ const CalendarComponent: React.FC<CalendarProps> = ({
               'flex items-center justify-center w-[40px] h-[40px] rounded-[9999px] cursor-pointer transition-colors mx-auto';
             let stateClasses = '';
 
-            if (variant === 'selectionOnly') {
+            if (variant === 'availability') {
               if (!isCurrentMonth) {
                 stateClasses = 'text-[#d1d5db] cursor-default';
               } else if (isSelected) {
-                stateClasses = 'bg-[#fefcbf] text-[#b45309] font-[700]';
+                stateClasses =
+                  'bg-[#FFEFA1] border-[2px] border-[#FFD400] font-[500]';
+              } else if (unavailableDates.length > 0) {
+                if (isUnavailable) {
+                  stateClasses = 'bg-[#FFCECE] cursor-not-allowed';
+                } else {
+                  stateClasses = 'bg-[#DEFFC9] hover:bg-[#bbf7d0]';
+                }
               } else {
                 stateClasses = 'text-[#111111] hover:bg-[#f3f4f6]';
               }
@@ -121,12 +128,9 @@ const CalendarComponent: React.FC<CalendarProps> = ({
               if (!isCurrentMonth) {
                 stateClasses = 'text-[#d1d5db] cursor-default';
               } else if (isSelected) {
-                stateClasses =
-                  'bg-[#FFEFA1]  border-[2px] border-[#FFD400] font-[500]';
-              } else if (isUnavailable) {
-                stateClasses = 'bg-[#FFCECE]  cursor-not-allowed';
+                stateClasses = 'bg-[#fefcbf] text-[#b45309] font-[700]';
               } else {
-                stateClasses = 'bg-[#DEFFC9] text-[#15803d] hover:bg-[#bbf7d0]';
+                stateClasses = 'text-[#111111] hover:bg-[#f3f4f6]';
               }
             }
 

@@ -42,6 +42,7 @@ export default function ButtonComponent({
         ${sizeClasses}
         ${activeClasses}
         rounded-[${radius}]
+
       `}
     >
       {text}
