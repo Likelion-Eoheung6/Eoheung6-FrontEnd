@@ -61,7 +61,7 @@ export default function NavBar() {
   return (
     <nav
       className="
-    fixed bottom-0 left-0 right-0 z-50 bg-white 
+    absolute bottom-0 left-0 right-0 z-50 bg-white 
     w-full h-[9vh]
     border-t border-[#B3B3B3] rounded-t-[20px] 
     flex items-center justify-between box-border 
@@ -70,7 +70,9 @@ export default function NavBar() {
 "
     >
       {navItems.map(item => {
-        const isActive = item.activePaths?.some(p => pathname.startsWith(p));
+        const isActive = item.activePaths
+          ? item.activePaths.includes(pathname)
+          : pathname === item.path;
 
         return (
           <Link
