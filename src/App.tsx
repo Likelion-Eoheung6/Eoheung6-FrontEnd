@@ -13,12 +13,12 @@ import MyActivityPage from './pages/MyPage/MyActivityPage';
 import ReviewPage from './pages/MyPage/ReviewPage';
 import StartPage from './pages/Start/StartPage';
 import LoginPage from './pages/Login/LoginPage';
-import SignupPage from './pages/Auth/SignupPage';
 import VersionSelectPage from './pages/Tag/VersionSelectPage';
 import ClassPage from './pages/Class/ClassPage';
 import CreateClassPage from './pages/Class/CreateClassPage';
 import TagSelectPage from './pages/Tag/TagSelectPage';
 import LoadingScreen from './components/common/LoadingScreen';
+import SignupPage from './pages/Auth/SignupPage';
 
 const router = createBrowserRouter([
   {
