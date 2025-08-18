@@ -3,18 +3,25 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import RootLayout from './layouts/RootLayout';
 import AuthLayout from './layouts/AuthLayout';
 import HomePage from './pages/Home/HomePage';
+import EasyHomePage from './pages/Home/EasyHomePage';
 import RecommendPage from './pages/Recommend/RecommendPage';
 import SearchPage from './pages/Search/SearchPage';
+import SearchResultsPage from './pages/Search/SearchResultsPage';
 import WishlistPage from './pages/Wishlist/WishlistPage';
 import MyPage from './pages/MyPage/MyPage';
+import MyActivityPage from './pages/MyPage/MyActivityPage';
+import ReviewPage from './pages/MyPage/ReviewPage';
 import StartPage from './pages/Start/StartPage';
-import LoginPage from './pages/Auth/LoginPage';
 import CreateClassPage from './pages/Class/CreateClassPage';
 import RentalPlacePage from './pages/Class/RentalPlacePage';
 import RentalPlaceDetailPage from './pages/Class/RentalPlaceDetailPage';
 import MyPlacePage from './pages/Class/MyPlacePage';
 import RegisterMyPlacePage from './pages/Class/RegisterMyPlacePage';
 import DoneCreateClassPage from './pages/Class/DoneCreateClassPage';
+import LoginPage from './pages/Login/LoginPage';
+import VersionSelectPage from './pages/Tag/VersionSelectPage';
+import TagSelectPage from './pages/Tag/TagSelectPage';
+import LoadingScreen from './components/common/LoadingScreen';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +30,7 @@ const router = createBrowserRouter([
     errorElement: <></>,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'easy', element: <EasyHomePage /> },
       {
         path: 'open-class',
         element: <CreateClassPage />,
@@ -40,8 +48,11 @@ const router = createBrowserRouter([
       { path: 'request-class', element: <CreateClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'search', element: <SearchPage /> },
+      { path: 'search-results', element: <SearchResultsPage /> },
       { path: 'wishlist', element: <WishlistPage /> },
       { path: 'mypage', element: <MyPage /> },
+      { path: 'my-activity', element: <MyActivityPage /> },
+      { path: 'review', element: <ReviewPage /> },
     ],
   },
   {
@@ -51,6 +62,8 @@ const router = createBrowserRouter([
     children: [
       { path: 'start', element: <StartPage /> },
       { path: 'login', element: <LoginPage /> },
+      { path: 'version', element: <VersionSelectPage /> },
+      { path: 'tags', element: <TagSelectPage /> },
     ],
   },
 ]);
@@ -58,6 +71,8 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
+      {/* 로딩 화면 테스트 */}
+      <LoadingScreen isVisible={false} />
       <RouterProvider router={router} />
     </>
   );
