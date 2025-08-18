@@ -17,6 +17,7 @@ import VersionSelectPage from './pages/Tag/VersionSelectPage';
 import ClassPage from './pages/Class/ClassPage';
 import CreateClassPage from './pages/Class/CreateClassPage';
 import TagSelectPage from './pages/Tag/TagSelectPage';
+import LoadingScreen from './components/common/LoadingScreen';
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,8 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
+      {/* 로딩 화면 테스트 */}
+      <LoadingScreen isVisible={false} />
       <RouterProvider router={router} />
     </>
   );
