@@ -13,6 +13,7 @@ interface InputWithButtonProps {
   disabled?: boolean;
   children?: React.ReactNode; // 타이머 등 추가 요소를 위한 children
   isValid?: boolean; // 유효성 검사 결과
+  inputPattern?: string; // 입력 패턴 (정규식)
 }
 
 const InputWithButton: React.FC<InputWithButtonProps> = ({
@@ -27,7 +28,8 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
   buttonClassName = '',
   disabled = false,
   children,
-  isValid = false
+  isValid = false,
+  inputPattern
 }) => {
   return (
     <div className="flex gap-[5px]">
@@ -36,7 +38,18 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
           type={type}
           placeholder={placeholder}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            if (inputPattern) {
+              const regex = new RegExp(inputPattern);
+              // 하이픈이 두 개 연속으로 있는지 확인
+              const hasConsecutiveHyphens = e.target.value.includes('--');
+              if ((regex.test(e.target.value) || e.target.value === '') && !hasConsecutiveHyphens) {
+                onChange(e.target.value);
+              }
+            } else {
+              onChange(e.target.value);
+            }
+          }}
           disabled={disabled}
           className={`w-full h-[34px] bg-[#FDFDFD] border border-[#E0E0E0] rounded-[20px] px-[10px] text-[14px] font-normal leading-[120%] tracking-[-0.025em] text-[#545454] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] placeholder:text-[#B3B3B3] ${inputClassName}`}
         />

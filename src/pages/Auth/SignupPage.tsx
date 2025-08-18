@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/common/logo2.svg';
 import backIcon from '../../assets/common/back.svg';
@@ -28,6 +28,9 @@ export default function SignupPage() {
     phone: ' ',
     verificationCode: ' '
   });
+
+  const [countdown, setCountdown] = useState(0);
+  const [isCountdownActive, setIsCountdownActive] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -70,6 +73,18 @@ export default function SignupPage() {
     return usernameRegex.test(formData.username);
   };
 
+  const isPhoneValid = () => {
+    // 휴대폰 번호가 완벽한 형식(010-1234-5678)이고 에러가 없으면 유효
+    const phoneRegex = /^010-\d{4}-\d{4}$/;
+    return phoneRegex.test(formData.phone) && !errorMessages.phone.trim();
+  };
+
+  const isVerificationCodeValid = () => {
+    // 인증번호가 6자리 숫자이고 에러가 없으면 유효
+    const codeRegex = /^\d{6}$/;
+    return codeRegex.test(formData.verificationCode) && !errorMessages.verificationCode.trim();
+  };
+
   const setErrorMessage = (field: string, message: string) => {
     setErrorMessages(prev => ({
       ...prev,
@@ -83,6 +98,45 @@ export default function SignupPage() {
       [field]: ''
     }));
   };
+
+  const startCountdown = () => {
+    setCountdown(180); // 3분 = 180초
+    setIsCountdownActive(true);
+  };
+
+  const resetCountdown = () => {
+    setCountdown(180); // 3분 = 180초
+    setIsCountdownActive(true);
+  };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  // 카운트다운 useEffect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (isCountdownActive && countdown > 0) {
+      interval = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            setIsCountdownActive(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isCountdownActive, countdown]);
   
   return (
     <div className="flex flex-col min-h-screen bg-[#FDFDFD]">
@@ -125,7 +179,7 @@ export default function SignupPage() {
         <FormField 
           title="비밀번호" 
           description="영문 소문자와 숫자의 조합으로 4~12자 이내로 입력해 주세요."
-          marginBottom="mb-[20px]"
+          marginBottom="mb-[6px]"
           errorMessage={errorMessages.password}
         >
           <input
@@ -141,7 +195,7 @@ export default function SignupPage() {
         <FormField 
           title="비밀번호 확인" 
           description="영문 소문자와 숫자의 조합으로 4~12자 이내로 입력해 주세요."
-          marginBottom="mb-[20px]"
+          marginBottom="mb-[16px]"
           errorMessage={errorMessages.confirmPassword}
         >
           <input
@@ -182,7 +236,7 @@ export default function SignupPage() {
               <select
                 value={formData.emailDomain}
                 onChange={(e) => handleInputChange('emailDomain', e.target.value)}
-                className="w-[123px] h-[34px] bg-[#FAFAFA] border border-[#E0E0E0] rounded-[20px] px-[10px] text-[14px] font-normal leading-[120%] tracking-[-0.025em] text-[#545454] appearance-none"
+                className="w-[123px] h-[34px] bg-[#FAFAFA] border border-[#E0E0E0] rounded-[20px] px-[10px] text-[14px] font-normal leading-[120%] tracking-[-0.025em] text-[#545454] appearance-none cursor-pointer relative z-10"
               >
                 <option value="">선택</option>
                 <option value="gmail.com">gmail.com</option>
@@ -190,7 +244,7 @@ export default function SignupPage() {
                 <option value="daum.net">daum.net</option>
                 <option value="hanmail.net">hanmail.net</option>
               </select>
-              <img src={downIcon} alt="아래 화살표" className="absolute right-[10px] top-[2px] w-[30px] h-[30px]" />
+              <img src={downIcon} alt="아래 화살표" className="absolute right-[10px] top-[2px] w-[30px] h-[30px] pointer-events-none z-20" />
             </div>
           </div>
         </FormField>
@@ -208,8 +262,11 @@ export default function SignupPage() {
               placeholder="010-0000-0000"
               value={formData.phone}
               onChange={(value) => handleInputChange('phone', value)}
-              buttonText="인증 요청"
-              buttonPadding="px-[13px] py-[9px]"
+              buttonText={isCountdownActive ? "다시받기" : "인증 요청"}
+              buttonPadding={isCountdownActive ? "px-[14px] py-[9px]" : "px-[13px] py-[9px]"}
+              inputPattern="^[0-9-]*$"
+              isValid={isPhoneValid()}
+              onButtonClick={isCountdownActive ? resetCountdown : startCountdown}
             />
             <InputWithButton
               type="text"
@@ -218,10 +275,14 @@ export default function SignupPage() {
               onChange={(value) => handleInputChange('verificationCode', value)}
               buttonText="인증"
               buttonPadding="px-[26px] py-[9px]"
+              inputPattern="^[0-9]*$"
+              isValid={isVerificationCodeValid()}
             >
               <div className="absolute right-[10px] top-[7px] flex items-center gap-[1px]">
                 <img src={timeIcon} alt="시간" className="w-[20px] h-[20px]" />
-                <span className="text-[#545454] text-[14px] font-normal leading-[120%] tracking-[-0.025em]">03:00</span>
+                <span className="text-[#545454] text-[14px] font-normal leading-[120%] tracking-[-0.025em]">
+                  {isCountdownActive ? formatTime(countdown) : '03:00'}
+                </span>
               </div>
             </InputWithButton>
           </div>
