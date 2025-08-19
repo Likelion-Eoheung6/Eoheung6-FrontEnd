@@ -75,7 +75,16 @@ export default function LoginPage() {
           <span aria-hidden className="mx-[15px] inline-block align-middle w-px h-[14px] bg-[rgba(255,239,161,1)]"></span>
           <a href="#" className="align-middle no-underline text-[rgba(84,84,84,1)] visited:text-[rgba(84,84,84,1)] hover:no-underline">비밀번호 찾기</a>
           <span aria-hidden className="mx-[15px] inline-block align-middle w-px h-[14px] bg-[rgba(255,239,161,1)]"></span>
-          <a href="#" className="align-middle no-underline text-[rgba(84,84,84,1)] visited:text-[rgba(84,84,84,1)] hover:no-underline">회원가입</a>
+          <a 
+            href="/signup" 
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/signup');
+            }}
+            className="align-middle no-underline text-[rgba(84,84,84,1)] visited:text-[rgba(84,84,84,1)] hover:no-underline cursor-pointer"
+          >
+            회원가입
+          </a>
         </div>
 
         {/* SNS 안내 텍스트 */}
@@ -89,5 +98,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-

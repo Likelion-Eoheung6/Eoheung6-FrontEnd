@@ -22,6 +22,7 @@ import LoginPage from './pages/Login/LoginPage';
 import VersionSelectPage from './pages/Tag/VersionSelectPage';
 import TagSelectPage from './pages/Tag/TagSelectPage';
 import LoadingScreen from './components/common/LoadingScreen';
+import SignupPage from './pages/Auth/SignupPage';
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,7 @@ const router = createBrowserRouter([
     children: [
       { path: 'start', element: <StartPage /> },
       { path: 'login', element: <LoginPage /> },
+      { path: 'signup', element: <SignupPage /> },
       { path: 'version', element: <VersionSelectPage /> },
       { path: 'tags', element: <TagSelectPage /> },
     ],
