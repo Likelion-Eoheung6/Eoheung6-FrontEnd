@@ -95,7 +95,7 @@ export default function SignupPage() {
   const clearErrorMessage = (field: string) => {
     setErrorMessages(prev => ({
       ...prev,
-      [field]: ''
+      [field]: ' '
     }));
   };
 
