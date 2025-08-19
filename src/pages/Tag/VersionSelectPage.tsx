@@ -1,8 +1,10 @@
 import Logo from '../../assets/common/logo.svg';
 import { useNavigate } from 'react-router-dom';
+import { useVersionMutation } from '../../hooks/version/useVersionMutation';
 
 export default function VersionSelectPage() {
   const navigate = useNavigate();
+  const versionMutation = useVersionMutation();
   return (
     <div className="relative mx-auto">
       <div className="absolute inset-0 w-full min-h-screen bg-[linear-gradient(180deg,_#FDFDFD_28.75%,_#FFF6CC_100%)]" />
@@ -19,15 +21,26 @@ export default function VersionSelectPage() {
         <div className="mt-[45px] flex items-center gap-[13px]">
           <button
             type="button"
-            onClick={() => navigate('/tags?version=easy')}
-            className="rounded-[20px] bg-[#009DFF] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)] text-[#FDFDFD] text-[22px] font-semibold leading-[1.2] tracking-[-0.025em] px-[40px] py-[8px] appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 cursor-pointer"
+            disabled={versionMutation.isPending}
+            onClick={() => {
+              console.log('쉬운 버전 버튼 클릭');
+              versionMutation.mutate({ chooseEasyVer: true });
+            }}
+            className={`rounded-[20px] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)] text-[#FDFDFD] text-[22px] font-semibold leading-[1.2] tracking-[-0.025em] px-[40px] py-[8px] appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 ${
+              versionMutation.isPending ? 'bg-[#B3B3B3] cursor-not-allowed' : 'bg-[#009DFF] cursor-pointer'
+            }`}
           >
             쉬운 버전
           </button>
           <button
             type="button"
-            className="rounded-[20px] bg-[#009DFF] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)] text-[#FDFDFD] text-[22px] font-semibold leading-[1.2] tracking-[-0.025em] px-[40px] py-[8px] appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 cursor-pointer"
-            onClick={() => navigate('/tags')}
+            disabled={versionMutation.isPending}
+            className={`rounded-[20px] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)] text-[#FDFDFD] text-[22px] font-semibold leading-[1.2] tracking-[-0.025em] px-[40px] py-[8px] appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 ${
+              versionMutation.isPending ? 'bg-[#B3B3B3] cursor-not-allowed' : 'bg-[#009DFF] cursor-pointer'
+            }`}
+            onClick={() => {
+              versionMutation.mutate({ chooseEasyVer: false });
+            }}
           >
             기본 버전
           </button>
