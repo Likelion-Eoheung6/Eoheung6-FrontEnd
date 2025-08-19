@@ -50,17 +50,19 @@ export default function SignupPage() {
       {
         onSuccess: (data) => {
           if (data.data) {
-            updateSignupState({
-              isIdChecked: true,
-              isIdAvailable: true
-            });
-            clearErrorMessage('username');
-          } else {
+            // data: true = 중복 아이디 (사용 불가)
             updateSignupState({
               isIdChecked: true,
               isIdAvailable: false
             });
             setErrorMessage('username', '이미 사용 중인 아이디입니다.');
+          } else {
+            // data: false = 사용 가능한 아이디
+            updateSignupState({
+              isIdChecked: true,
+              isIdAvailable: true
+            });
+            clearErrorMessage('username');
           }
         },
         onError: () => {
@@ -115,7 +117,8 @@ export default function SignupPage() {
       },
       {
         onSuccess: (data) => {
-          if (data.data) {
+          // API 응답이 성공이면 인증 완료로 처리
+          if (data.isSuccess) {
             updateSignupState({ isCodeVerified: true });
             clearErrorMessage('verificationCode');
           } else {

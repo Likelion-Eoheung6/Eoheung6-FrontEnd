@@ -12,7 +12,7 @@ import type {
 
 // 회원가입 API
 export const signup = async (data: SignupRequest): Promise<SignupResponse> => {
-  const response = await API.post('/auth/signup', data);
+  const response = await API.post('/users/signup', data);
   return response.data;
 };
 

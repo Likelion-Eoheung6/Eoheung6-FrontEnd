@@ -6,7 +6,7 @@ export const useSendCodeMutation = () => {
   return useMutation({
     mutationFn: (data: SendCodeRequest) => sendCode(data),
     onSuccess: (data) => {
-      console.log('휴대폰 인증 요청 성공:', data);
+      // 성공 처리
     },
     onError: (error: any) => {
       console.error('휴대폰 인증 요청 실패:', error);

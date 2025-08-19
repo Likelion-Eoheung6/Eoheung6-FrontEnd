@@ -6,7 +6,7 @@ export const useVerifyCodeMutation = () => {
   return useMutation({
     mutationFn: (data: VerifyCodeRequest) => verifyCode(data),
     onSuccess: (data) => {
-      console.log('인증번호 확인 성공:', data);
+      // 성공 처리
     },
     onError: (error: any) => {
       console.error('인증번호 확인 실패:', error);

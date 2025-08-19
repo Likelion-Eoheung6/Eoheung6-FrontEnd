@@ -6,7 +6,7 @@ export const useCheckIdMutation = () => {
   return useMutation({
     mutationFn: (data: CheckIdRequest) => checkId(data),
     onSuccess: (data) => {
-      console.log('아이디 중복체크 성공:', data);
+      // 성공 처리
     },
     onError: (error: any) => {
       console.error('아이디 중복체크 실패:', error);

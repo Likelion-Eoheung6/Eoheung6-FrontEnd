@@ -46,7 +46,7 @@ const UsernameSection: React.FC<UsernameSectionProps> = ({
       />
       {isIdChecked && isIdAvailable && (
         <p className="text-[#009DFF] text-[10px] mt-[4px] ml-[10px]">
-          사용 가능한 아이디입니다.
+          사용할 수 있는 아이디입니다.
         </p>
       )}
     </FormField>

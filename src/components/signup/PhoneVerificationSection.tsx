@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import FormField from './FormField';
 import InputWithButton from '../common/InputWithButton';
 import timeIcon from '../../assets/signup/time.svg';
@@ -33,8 +33,8 @@ const PhoneVerificationSection: React.FC<PhoneVerificationSectionProps> = ({
   onResetCode,
   onVerifyCode
 }) => {
-  const phoneValidation = validatePhone(formData.phone);
-  const verificationCodeValidation = validateVerificationCode(formData.verificationCode);
+  const phoneValidation = useMemo(() => validatePhone(formData.phone), [formData.phone]);
+  const verificationCodeValidation = useMemo(() => validateVerificationCode(formData.verificationCode), [formData.verificationCode]);
 
   return (
     <FormField 
@@ -43,12 +43,12 @@ const PhoneVerificationSection: React.FC<PhoneVerificationSectionProps> = ({
       marginBottom="mb-[0px]"
       errorMessage={errorMessages.phone || errorMessages.verificationCode}
     >
-      <div className="space-y-[20px]">
+      <div className="">
         <InputWithButton
           type="tel"
           placeholder="010-0000-0000"
           value={formData.phone}
-          onChange={(value) => onInputChange('phone', formatPhoneInput(value))}
+          onChange={useCallback((value) => onInputChange('phone', formatPhoneInput(value)), [onInputChange])}
           buttonText={
             isSendCodeLoading 
               ? "요청 중..." 
@@ -65,30 +65,32 @@ const PhoneVerificationSection: React.FC<PhoneVerificationSectionProps> = ({
           }
           inputPattern="^[0-9-]*$"
           isValid={phoneValidation.isValid}
-          onButtonClick={isCountdownActive ? onResetCode : onSendCode}
+          onButtonClick={useCallback(() => isCountdownActive ? onResetCode() : onSendCode(), [isCountdownActive, onResetCode, onSendCode])}
           buttonDisabled={!phoneValidation.isValid || isSendCodeLoading}
         />
-        <InputWithButton
-          type="text"
-          placeholder="인증 번호를 입력해 주세요."
-          value={formData.verificationCode}
-          onChange={(value) => onInputChange('verificationCode', value)}
-          buttonText={isVerifyCodeLoading ? "확인 중..." : "인증"}
-          buttonPadding={isVerifyCodeLoading ? "px-[20px] py-[9px]" : "px-[26px] py-[9px]"}
-          inputPattern="^[0-9]*$"
-          isValid={verificationCodeValidation.isValid}
-          onButtonClick={onVerifyCode}
-          buttonDisabled={!verificationCodeValidation.isValid || isCountdownActive || isVerifyCodeLoading}
-        >
-          <div className="absolute right-[10px] top-[7px] flex items-center gap-[1px]">
-            <img src={timeIcon} alt="시간" className="w-[20px] h-[20px]" />
-            <span className="text-[#545454] text-[14px] font-normal leading-[120%] tracking-[-0.025em]">
-              {isCountdownActive ? formattedTime : '03:00'}
-            </span>
-          </div>
-        </InputWithButton>
+        <div className="mt-[20px]">
+          <InputWithButton
+            type="text"
+            placeholder="인증 번호를 입력해 주세요."
+            value={formData.verificationCode}
+            onChange={useCallback((value) => onInputChange('verificationCode', value), [onInputChange])}
+            buttonText={isVerifyCodeLoading ? "확인 중..." : "인증"}
+            buttonPadding={isVerifyCodeLoading ? "px-[20px] py-[9px]" : "px-[26px] py-[9px]"}
+            inputPattern="^[0-9]*$"
+            isValid={verificationCodeValidation.isValid}
+            onButtonClick={useCallback(onVerifyCode, [onVerifyCode])}
+            buttonDisabled={formData.verificationCode.length !== 6 || isVerifyCodeLoading}
+          >
+            <div className="absolute right-[10px] top-[7px] flex items-center gap-[1px]">
+              <img src={timeIcon} alt="시간" className="w-[20px] h-[20px]" />
+              <span className="text-[#545454] text-[14px] font-normal leading-[120%] tracking-[-0.025em]">
+                {isCountdownActive ? formattedTime : '03:00'}
+              </span>
+            </div>
+          </InputWithButton>
+        </div>
         {isCodeVerified && (
-          <p className="text-[#009DFF] text-[10px] mt-[4px] ml-[10px]">
+          <p className="text-[#009DFF] text-[10px] mt-[2px] ml-[10px]">
             인증이 완료되었습니다.
           </p>
         )}

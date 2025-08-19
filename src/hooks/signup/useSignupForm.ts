@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { SignupFormData, SignupErrorMessages } from '../../types/signup/formTypes';
 import type { SignupState } from '../../types/signup/stateTypes';
 import { validateForm } from '../../utils/signupValidation';
@@ -17,12 +17,12 @@ export const useSignupForm = () => {
 
   // 에러 메시지 상태
   const [errorMessages, setErrorMessages] = useState<SignupErrorMessages>({
-    username: ' ',
-    password: ' ',
-    confirmPassword: ' ',
-    email: ' ',
-    phone: ' ',
-    verificationCode: ' '
+    username: '',
+    password: '',
+    confirmPassword: '',
+    email: '',
+    phone: '',
+    verificationCode: ''
   });
 
   // 회원가입 상태
@@ -36,7 +36,7 @@ export const useSignupForm = () => {
   });
 
   // 입력 필드 변경 핸들러
-  const handleInputChange = (field: keyof SignupFormData, value: string) => {
+  const handleInputChange = useCallback((field: keyof SignupFormData, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -60,34 +60,45 @@ export const useSignupForm = () => {
       }));
       clearErrorMessage('verificationCode');
     }
-  };
+  }, []);
 
   // 에러 메시지 설정
-  const setErrorMessage = (field: keyof SignupErrorMessages, message: string) => {
+  const setErrorMessage = useCallback((field: keyof SignupErrorMessages, message: string) => {
     setErrorMessages(prev => ({
       ...prev,
       [field]: message
     }));
-  };
+  }, []);
 
   // 에러 메시지 제거
-  const clearErrorMessage = (field: keyof SignupErrorMessages) => {
+  const clearErrorMessage = useCallback((field: keyof SignupErrorMessages) => {
     setErrorMessages(prev => ({
       ...prev,
-      [field]: ' '
+      [field]: ''
     }));
-  };
+  }, []);
 
   // 회원가입 상태 업데이트
-  const updateSignupState = (updates: Partial<SignupState>) => {
+  const updateSignupState = useCallback((updates: Partial<SignupState>) => {
     setSignupState(prev => ({
       ...prev,
       ...updates
     }));
-  };
+  }, []);
+
+  // 비밀번호 확인 에러 자동 설정
+  useEffect(() => {
+    if (formData.password && formData.confirmPassword) {
+      if (formData.password !== formData.confirmPassword) {
+        setErrorMessage('confirmPassword', '비밀번호가 일치하지 않습니다.');
+      } else {
+        clearErrorMessage('confirmPassword');
+      }
+    }
+  }, [formData.password, formData.confirmPassword, setErrorMessage, clearErrorMessage]);
 
   // 폼 유효성 검사
-  const formValidation = validateForm(formData, errorMessages);
+  const formValidation = validateForm(formData, errorMessages, signupState);
 
   return {
     formData,

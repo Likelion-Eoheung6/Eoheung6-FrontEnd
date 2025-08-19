@@ -1,5 +1,5 @@
 import type { SignupFormData, SignupErrorMessages } from '../types/signup/formTypes';
-import type { ValidationResult } from '../types/signup/stateTypes';
+import type { ValidationResult, SignupState } from '../types/signup/stateTypes';
 
 // 아이디 유효성 검사
 export const validateUsername = (username: string): ValidationResult => {
@@ -14,12 +14,19 @@ export const validateUsername = (username: string): ValidationResult => {
 
 // 비밀번호 유효성 검사
 export const validatePassword = (password: string): ValidationResult => {
-  const passwordRegex = /^[a-z0-9]{4,12}$/;
-  const isValid = passwordRegex.test(password);
+  // 4~12자 길이 체크
+  const isValidLength = password.length >= 4 && password.length <= 12;
+  
+  // 영문과 숫자 조합 체크 (대소문자 구분 없음)
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const isValidFormat = hasLetter && hasNumber;
+  
+  const isValid = isValidLength && isValidFormat;
   
   return {
     isValid,
-    errorMessage: isValid ? undefined : '영문 소문자와 숫자의 조합으로 4~12자 이내로 입력해 주세요.'
+    errorMessage: isValid ? undefined : '영문과 숫자의 조합으로 4~12자 이내로 입력해 주세요.'
   };
 };
 
@@ -46,8 +53,11 @@ export const validateEmail = (email: string): ValidationResult => {
 
 // 휴대폰 번호 유효성 검사
 export const validatePhone = (phone: string): ValidationResult => {
-  const phoneRegex = /^010-\d{4}-\d{4}$/;
-  const isValid = phoneRegex.test(phone);
+  // 하이픈을 제거한 숫자만 추출
+  const numbers = phone.replace(/[^0-9]/g, '');
+  
+  // 010으로 시작하고 11자리인지 확인
+  const isValid = numbers.length === 11 && numbers.startsWith('010');
   
   return {
     isValid,
@@ -57,8 +67,11 @@ export const validatePhone = (phone: string): ValidationResult => {
 
 // 인증번호 유효성 검사
 export const validateVerificationCode = (code: string): ValidationResult => {
-  const codeRegex = /^\d{6}$/;
-  const isValid = codeRegex.test(code);
+  // 숫자만 추출
+  const numbers = code.replace(/[^0-9]/g, '');
+  
+  // 6자리 숫자인지 확인
+  const isValid = numbers.length === 6;
   
   return {
     isValid,
@@ -67,17 +80,42 @@ export const validateVerificationCode = (code: string): ValidationResult => {
 };
 
 // 전체 폼 유효성 검사
-export const validateForm = (formData: SignupFormData, errorMessages: SignupErrorMessages) => {
-  const isFormValid = !!(
+export const validateForm = (formData: SignupFormData, errorMessages: SignupErrorMessages, signupState?: SignupState) => {
+  // 각 필드별 유효성 검사
+  const usernameValid = validateUsername(formData.username).isValid;
+  const passwordValid = validatePassword(formData.password).isValid;
+  const confirmPasswordValid = validateConfirmPassword(formData.password, formData.confirmPassword).isValid;
+  const emailValid = validateEmail(formatEmail(formData.email, formData.emailDomain)).isValid;
+  const phoneValid = validatePhone(formData.phone).isValid;
+  const verificationCodeValid = validateVerificationCode(formData.verificationCode).isValid;
+
+  // 모든 필수 필드가 입력되었는지 확인 (API 요청에 필요한 필드만)
+  const allFieldsFilled = !!(
     formData.username && 
     formData.password && 
-    formData.confirmPassword && 
     formData.email && 
     formData.emailDomain && 
     formData.phone && 
-    formData.verificationCode &&
-    formData.password === formData.confirmPassword
+    formData.verificationCode
   );
+
+  // 모든 유효성 검사가 통과했는지 확인 (API 요청에 필요한 필드만)
+  const allValidationsPassed = !!(
+    usernameValid &&
+    passwordValid &&
+    emailValid &&
+    phoneValid &&
+    verificationCodeValid
+  );
+
+  // 추가 조건들 (signupState가 제공된 경우)
+  const additionalConditions = signupState ? (
+    signupState.isIdChecked && 
+    signupState.isIdAvailable && 
+    signupState.isCodeVerified
+  ) : true;
+
+  const isFormValid = allFieldsFilled && allValidationsPassed && additionalConditions;
 
   const hasErrors = Object.values(errorMessages).some(error => error && error.trim() !== '');
 
