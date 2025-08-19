@@ -4,6 +4,7 @@ import OnLogo from '../../assets/common/logo.svg';
 import IdInput from '../../components/login/IdInput';
 import PasswordInput from '../../components/login/PasswordInput';
 import KakaoLoginButton from '../../components/login/KakaoLoginButton';
+import { useLoginMutation } from '../../hooks/login/useLoginMutation';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,24 +13,42 @@ export default function LoginPage() {
   const [userIdError, setUserIdError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
+  
+  // 로그인 뮤테이션
+  const loginMutation = useLoginMutation();
 
   const handleLogin = () => {
-    const expectedId = 'wlgms144';
-    const expectedPw = 'dnjswnsdud1.';
-    let hasError = false;
+    // 에러 메시지 초기화
     setUserIdError('');
     setPasswordError('');
-    if (userId.trim() !== expectedId) {
-      setUserIdError('아이디가 일치하지 않습니다.');
-      hasError = true;
+    
+    // 입력값 검증
+    if (!userId.trim()) {
+      setUserIdError('아이디를 입력해 주세요.');
+      return;
     }
-    if (password.trim() !== expectedPw) {
-      setPasswordError('비밀번호가 일치하지 않습니다.');
-      hasError = true;
+    if (!password.trim()) {
+      setPasswordError('비밀번호를 입력해 주세요.');
+      return;
     }
-    if (!hasError) {
-      navigate('/version');
-    }
+    
+    // 로그인 API 호출
+    loginMutation.mutate(
+      { id: userId.trim(), password: password.trim() },
+      {
+        onError: (error: any) => {
+          const errorMessage = error.userMessage || error.message;
+          
+          // 400_1, 400_2 에러는 모두 비밀번호 필드에 표시
+          if (error.response?.data?.code === 'SIGNIN_400_1' || error.response?.data?.code === 'SIGNIN_400_2') {
+            setPasswordError(errorMessage);
+          } else {
+            // 기타 에러는 비밀번호 필드에 표시
+            setPasswordError(errorMessage);
+          }
+        }
+      }
+    );
   };
 
   return (
@@ -56,13 +75,13 @@ export default function LoginPage() {
           error={passwordError}
         />
 
-        {/* 로그인 버튼 (비활성 예시) */}
+        {/* 로그인 버튼 */}
         <button
           type="button"
-          disabled={!userId.trim() || !password.trim()}
+          disabled={!userId.trim() || !password.trim() || loginMutation.isPending}
           onClick={handleLogin}
           className={`mt-[22px] rounded-[20px] text-[#FDFDFD] text-[14px] font-semibold tracking-[-0.025em] px-[133px] py-[10px] transition-colors appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 ${
-            userId.trim() && password.trim()
+            userId.trim() && password.trim() && !loginMutation.isPending
               ? 'bg-[rgba(0,157,255,1)] cursor-pointer hover:brightness-105'
               : 'bg-[rgba(179,179,179,1)] cursor-not-allowed'
           }`}
