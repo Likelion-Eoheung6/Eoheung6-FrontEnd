@@ -10,7 +10,7 @@ interface VacantPlace {
 
 interface MapComponentProps {
   places: VacantPlace[];
-  selectedPlaceId: number | null;
+  selectedPlaceId: number | null | undefined;
   onMarkerClick?: (placeId: number) => void;
 }
 

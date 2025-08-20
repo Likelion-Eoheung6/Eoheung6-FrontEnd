@@ -1,36 +1,29 @@
 import React from 'react';
 import SelectedRadioButtonIcon from '../../assets/class/radio-btn.svg';
+import type { MyPlace } from '../../pages/Class/MyPlacePage';
 
-interface PlaceInfoCardProps {
-  id: number;
-  name: string;
-  address: string;
-  area: string;
-  capacity: number;
-  imageUrl?: string;
+interface MyPlaceInfoCardProps {
+  place: MyPlace;
   isSelected: boolean;
-  onSelect: (id: number) => void;
+  onSelect: (id: Number) => void;
 }
 
-const MyPlaceInfoCardComponent: React.FC<PlaceInfoCardProps> = ({
-  id,
-  name,
-  address,
-  area,
-  capacity,
-  imageUrl,
+const MyPlaceInfoCardComponent: React.FC<MyPlaceInfoCardProps> = ({
+  place,
   isSelected,
   onSelect,
 }) => {
+  const { id, roadAddress, detailAddress, zipCode } = place;
+
   return (
     <label
       htmlFor={id.toString()}
       className={`
-        flex max-w-[420px] items-stretch gap-[12px] rounded-[24px] bg-white p-[12px]
+        flex w-full max-w-[420px] items-center gap-[12px] rounded-[24px] bg-white p-[12px]
         border-[2px] transition-all duration-200 cursor-pointer
         ${
           isSelected
-            ? 'border-[#0BF] shadow-[0_0_0_4px_rgba(0,187,255,0.16)]'
+            ? 'border-[#0BF] shadow-[0_0_0_4px_rgba(0, 187, 255, 0.16)]'
             : 'border-transparent shadow-[0_4px_12px_rgba(0,0,0,0.05)]'
         }
       `}
@@ -38,52 +31,45 @@ const MyPlaceInfoCardComponent: React.FC<PlaceInfoCardProps> = ({
       <input
         type="radio"
         id={id.toString()}
-        name={name}
+        name="my-place-selection"
         checked={isSelected}
         onChange={() => onSelect(id)}
         className="sr-only"
       />
 
       <div className="flex flex-shrink-0 items-center gap-[8px]">
-        <div
-          className={`
-            flex h-[20px] w-[20px] items-center justify-center 
-            ${
-              isSelected
-                ? ''
-                : 'rounded-full border-[2px] transition-all border-[#E0E0E0] bg-[#E0E0E0]'
-            }
-          `}
-        >
-          {isSelected ? (
-            <img src={SelectedRadioButtonIcon} alt="Selected" className="" />
-          ) : (
-            <div className="h-[10px] w-[10px] rounded-full bg-white"></div>
-          )}
-        </div>
+        {isSelected ? (
+          <img
+            src={SelectedRadioButtonIcon}
+            alt="Selected"
+            className="h-[24px] w-[24px]"
+          />
+        ) : (
+          <div className="h-[24px] w-[24px] rounded-full border-[6px] border-[#ced4da] bg-white" />
+        )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col justify-center gap-[8px] py-[4px]">
-        <div className="flex items-center justify-between rounded-[9999px] border-[1px] border-[#e9ecef] bg-white p-[4px] text-[8px]">
-          <span className="flex-shrink-0 font-semibold text-[#868e96]">
-            주소 |
+      <div className="flex min-w-0 flex-1 flex-col justify-center gap-[8px] rounded-[1.3rem] border-[1px] border-[#e9ecef] bg-[white] py-[4px]">
+        <div className="flex items-center justify-between  p-[8px] text-[12px] border-b-[1px] border-[#e9ecef]">
+          <span className="w-[50px] flex-shrink-0 font-semibold text-[#868e96] border-r-[1px] border-[#e9ecef]">
+            주소
           </span>
           <span className="truncate pl-[8px] text-right text-[#495057]">
-            {address}
+            {roadAddress}
           </span>
         </div>
-        <div className="flex items-center justify-between rounded-[9999px] border-[1px] border-[#e9ecef] bg-white p-[4px] text-[8px]">
-          <span className="flex-shrink-0 font-semibold text-[#868e96]">
-            평수 |
+        <div className="flex items-center justify-between p-[8px] text-[12px] border-b-[1px] border-[#e9ecef]">
+          <span className="w-[50px] flex-shrink-0 font-semibold text-[#868e96] border-r-[1px] border-[#e9ecef]">
+            우편번호
           </span>
-          <span className="pl-[8px] text-right text-[#495057]">{area}</span>
+          <span className="pl-[8px] text-right text-[#495057]">{zipCode}</span>
         </div>
-        <div className="flex items-center justify-between rounded-[9999px] border-[1px] border-[#e9ecef] bg-white p-[4px] text-[8px]">
-          <span className="flex-shrink-0 font-semibold text-[#868e96]">
-            수용 인원 |
+        <div className="flex items-center justify-between p-[8px] text-[12px]">
+          <span className="w-[50px] flex-shrink-0 font-semibold text-[#868e96] border-r-[1px] border-[#e9ecef]">
+            상세주소
           </span>
           <span className="pl-[8px] text-right text-[#495057]">
-            {capacity}명
+            {detailAddress}
           </span>
         </div>
       </div>

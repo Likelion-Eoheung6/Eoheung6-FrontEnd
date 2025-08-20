@@ -15,6 +15,16 @@ import TimeConfirmComponent from '../../components/class/TimeConfirmComponent';
 import dayjs from 'dayjs';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import MyPlaceInfoCardComponent from '../../components/class/MyPlaceInfoCardComponent';
+import useGet from '../../hooks/useGet';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import BackIcon from '../../assets/common/back.svg';
+import NextIcon from '../../assets/common/next.svg';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 interface ApiDay {
   date: string;
@@ -22,14 +32,38 @@ interface ApiDay {
   bookedRanges: { start: string; end: string }[];
 }
 
+export interface MyPlace {
+  id: number;
+  roadAddress: string;
+  detailAddress: string;
+  zipCode: string;
+}
+
+interface MyPlacesData {
+  count: number;
+  items: MyPlace[];
+}
+
+interface ApiResponse<T> {
+  isSuccess: boolean;
+  code: string;
+  data: T; // The nested data object
+}
 export default function MyPlacePage() {
   const { req, updateReq } = useCreateClassStore();
   const [availability, setAvailability] = useState<ApiDay[]>([]);
-  const location = useLocation();
   const navigate = useNavigate();
   const [startTime, setStartTime] = useState('00:00');
   const [endTime, setEndTime] = useState('00:00');
   const [duration, setDuration] = useState('00시간 00분');
+  const {
+    data: response,
+    loading,
+    error,
+  } = useGet<ApiResponse<MyPlacesData>>('/classes/mentor-places/me');
+  const apiData = response?.data;
+  const [selectedPlaceId, setSelectedPlaceId] = useState<Number | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   // 날짜
   const handleDateChange = (newDate: Date) => {
@@ -94,25 +128,78 @@ export default function MyPlacePage() {
       navigate('/open-class');
     }
   };
+
+  useEffect(() => {
+    console.log(apiData);
+  }, [apiData]);
   return (
     <ClassContainer>
       <ClassHeaderBar title="빈집 대여하기" />
       <BodyContainer>
         {/* 내 장소 등록 */}
-        {/* <MyPlaceInfoCardComponent /> */}
-        <div
-          className={`w-full h-[132px] rounded-[1.25rem] box-border p-[12px]   shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[20px] flex justify-center items-center`}
-        >
-          <button
-            className="border-none bg-transparent text-[#B3B3B3]"
-            onClick={() => navigate('register')}
-          >
-            내 장소 등록하기
-          </button>
+        <div className="mb-[30px] w-full">
+          {apiData && apiData.count > 0 ? (
+            <div className="relative">
+              <Swiper
+                modules={[Navigation, Pagination]}
+                spaceBetween={16}
+                slidesPerView={1.05}
+                centeredSlides={true}
+                navigation={{
+                  prevEl: '.swiper-button-prev-custom',
+                  nextEl: '.swiper-button-next-custom',
+                }}
+                pagination={{
+                  clickable: true,
+                  el: '.swiper-pagination-custom',
+                }}
+                className="w-full"
+              >
+                {apiData.items.map(place => (
+                  <SwiperSlide key={place.id}>
+                    <MyPlaceInfoCardComponent
+                      place={place}
+                      isSelected={selectedPlaceId === place.id}
+                      onSelect={setSelectedPlaceId}
+                    />
+                  </SwiperSlide>
+                ))}
+                <SwiperSlide>
+                  <div className="flex h-full min-h-[132px] w-full items-center justify-center rounded-[1.25rem] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)]">
+                    <button
+                      className="border-none bg-transparent text-[#B3B3B3] underline"
+                      onClick={() => navigate('/open-class/myplace/register')}
+                    >
+                      내 장소 등록하기 &gt;
+                    </button>
+                  </div>
+                </SwiperSlide>
+              </Swiper>
+              <img
+                src={BackIcon}
+                alt="Previous"
+                className="swiper-button-prev-custom absolute left-[-8px] top-[50%] z-10 h-[24px] w-[24px] -translate-y-1/2 cursor-pointer"
+              />
+              <img
+                src={NextIcon}
+                alt="Next"
+                className="swiper-button-next-custom absolute right-[-8px] top-[50%] z-10 h-[24px] w-[24px] -translate-y-1/2 cursor-pointer"
+              />
+            </div>
+          ) : (
+            <button
+              className="border-none bg-transparent text-[#B3B3B3] underline "
+              onClick={() => navigate('/open-class/myplace/register')}
+            >
+              내 장소 등록하기 &gt;
+            </button>
+          )}
         </div>
+        <div className="swiper-pagination-custom flex justify-center gap-[10px]"></div>
+
         {/* 달력 */}
         <div
-          className={`w-full rounded-[1.25rem] box-border p-[12px]   shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[20px]`}
+          className={`w-full rounded-[1.25rem] box-border p-[12px] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[20px]`}
         >
           <div className="flex flex-col">
             <span className="w-fit px-[14px] py-[6px] text-[12px] rounded-full bg-[#009DFF] text-[white] font-semibold mb-[5px]">

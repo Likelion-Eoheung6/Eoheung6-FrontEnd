@@ -38,7 +38,6 @@ export default function CreateClassPage() {
   const { reservation } = useGovReservationStore();
 
   // 클래스 사진
-  const [imageFiles, setImageFiles] = useState<string[]>([]); // 클래스 사진
   const imageUrls = useMemo(() => {
     return images.map(file => URL.createObjectURL(file));
   }, [images]);
