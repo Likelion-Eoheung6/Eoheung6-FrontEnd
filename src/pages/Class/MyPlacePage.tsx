@@ -4,8 +4,7 @@ import BodyContainer from '../../components/common/BodyContainer';
 import ClassHeaderBar from '../../components/class/ClassHeaderBar';
 import CalendarComponent from '../../components/class/CalendarComponent';
 import { useCreateClassStore } from '../../stores/useCreateClassStore';
-import { samplePlaceDetailData } from '../../mock/rentalPlaceDetailMocks';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PriceComponent from '../../components/class/PriceComponent';
 import CapacityComponent from '../../components/class/CapacityComponent';
 import ClassTimeComponent from '../../components/class/ClassTimeComponent';
@@ -25,6 +24,8 @@ import NextIcon from '../../assets/common/next.svg';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { useMyPlaceStore } from '../../stores/useMyPlaceStore';
+import { useGovReservationStore } from '../../stores/useGovReservationStore';
 
 interface ApiDay {
   date: string;
@@ -37,6 +38,8 @@ export interface MyPlace {
   roadAddress: string;
   detailAddress: string;
   zipCode: string;
+  latitude: number;
+  longitude: number;
 }
 
 interface MyPlacesData {
@@ -47,11 +50,11 @@ interface MyPlacesData {
 interface ApiResponse<T> {
   isSuccess: boolean;
   code: string;
-  data: T; // The nested data object
+  data: T;
 }
 export default function MyPlacePage() {
   const { req, updateReq } = useCreateClassStore();
-  const [availability, setAvailability] = useState<ApiDay[]>([]);
+  const { setReservation } = useGovReservationStore();
   const navigate = useNavigate();
   const [startTime, setStartTime] = useState('00:00');
   const [endTime, setEndTime] = useState('00:00');
@@ -63,7 +66,6 @@ export default function MyPlacePage() {
   } = useGet<ApiResponse<MyPlacesData>>('/classes/mentor-places/me');
   const apiData = response?.data;
   const [selectedPlaceId, setSelectedPlaceId] = useState<Number | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   // 날짜
   const handleDateChange = (newDate: Date) => {
@@ -76,9 +78,6 @@ export default function MyPlacePage() {
     updateReq({ openAt: formattedDate });
     console.log('selected date: ' + formattedDate);
   };
-  const unavailableDates = useMemo(() => {
-    return availability.filter(day => day.full).map(day => day.date);
-  }, [availability]);
 
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
   const onClickToggleModal = useCallback(() => {
@@ -113,6 +112,22 @@ export default function MyPlacePage() {
     setOpenModal(false);
   };
 
+  const handleSelectPlace = (id: number) => {
+    setSelectedPlaceId(id);
+
+    const selectedPlace = apiData?.items.find(p => p.id === id);
+
+    if (selectedPlace) {
+      updateReq({ mentorPlaceId: selectedPlace.id });
+
+      setReservation({
+        placeId: selectedPlace.id,
+        latitude: selectedPlace.latitude,
+        longitude: selectedPlace.longitude,
+      });
+    }
+  };
+
   const isFormComplete = useMemo(() => {
     return (
       req.openAt.trim() !== '' &&
@@ -134,10 +149,10 @@ export default function MyPlacePage() {
   }, [apiData]);
   return (
     <ClassContainer>
-      <ClassHeaderBar title="빈집 대여하기" />
+      <ClassHeaderBar title="내 장소 선택하기" />
       <BodyContainer>
         {/* 내 장소 등록 */}
-        <div className="mb-[30px] w-full">
+        <div className="mb-[10px] w-full">
           {apiData && apiData.count > 0 ? (
             <div className="relative">
               <Swiper
@@ -153,14 +168,13 @@ export default function MyPlacePage() {
                   clickable: true,
                   el: '.swiper-pagination-custom',
                 }}
-                className="w-full"
               >
                 {apiData.items.map(place => (
                   <SwiperSlide key={place.id}>
                     <MyPlaceInfoCardComponent
                       place={place}
                       isSelected={selectedPlaceId === place.id}
-                      onSelect={setSelectedPlaceId}
+                      onSelect={() => handleSelectPlace(place.id)}
                     />
                   </SwiperSlide>
                 ))}

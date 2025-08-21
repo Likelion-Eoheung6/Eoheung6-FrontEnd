@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ClassContainer from '../../components/class/ClassContainer';
 import ClassHeaderBar from '../../components/class/ClassHeaderBar';
 import BodyContainer from '../../components/common/BodyContainer';
@@ -13,6 +13,9 @@ import {
 import useGet from '../../hooks/useGet';
 import { useNavigate, useParams } from 'react-router-dom';
 import ButtonComponent from '../../components/common/ButtonComponent';
+import { getClassDetail } from '../../apis/apply/applyApi';
+import HeartIcon from '../../assets/class/heart.svg';
+import HeartSelectedIcon from '../../assets/class/heart-red.svg';
 
 const dummyData = {
   title: 'Dummy Class Title',
@@ -31,43 +34,84 @@ const dummyData = {
 export default function ApplyClassPage() {
   const { classInfo, setClassInfo, clearClassInfo } = useClassInfoStore();
   const { classId } = useParams();
-  const { data, loading, error } = useGet<ClassInfoData>(
-    `/api/classes/${classId}`
-  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState(false);
+
+  // 찜하기
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
+    // Handle API call to update like status if needed
+    console.log('Like toggled:', !isLiked);
+  };
 
   useEffect(() => {
-    if (data) {
-      setClassInfo(data);
-    } else if (loading === false || error) {
-      setClassInfo(dummyData); // 통신 시 삭제
-    }
+    if (!classId) return;
 
-    return () => {
-      clearClassInfo();
+    const fetchClassData = async () => {
+      try {
+        setLoading(true);
+        const response = await getClassDetail(classId);
+        if (response.isSuccess) {
+          setClassInfo(response.data);
+        } else {
+          setError(response.message);
+        }
+      } catch (err) {
+        setError('Failed to fetch class details.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
-  }, [data, setClassInfo, clearClassInfo]);
+
+    fetchClassData();
+  }, [classId]);
+
   return (
     <ClassContainer>
       <ClassHeaderBar title="클래스 신청하기" />
       <BodyContainer>
-        <ImageSwiperComponent
-          slides={classInfo?.imageUrls || []}
-          showEditButton={false}
-        />
-        {/* 클래스 제목 */}
-        <div
-          className={`w-full h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[20px]`}
-        >
-          <div className="rounded-full bg-[#009DFF] text-[white] text-[12px] font-semibold px-[14px] py-[6px] shadow mr-[5px]">
-            클래스 제목
-          </div>
-          <input
-            value={classInfo?.title || ''}
-            placeholder="클래스 제목을 적어주세요."
-            className="flex-1 bg-transparent outline-none border-0 placeholder:text-[#B3B3B3] text-gray-500 px-1 py-2"
+        <div className="relative">
+          <ImageSwiperComponent
+            slides={classInfo?.imageUrls || []}
+            showEditButton={false}
           />
+          <button onClick={toggleLike} className="absolute top-52 right-2 ">
+            {classInfo?.isWished ? (
+              <img src={HeartSelectedIcon} />
+            ) : (
+              <img src={HeartIcon} />
+            )}
+          </button>
         </div>
+
+        {/* 클래스 제목 */}
+        <div className="w-full rounded-[1.25rem] bg-white shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mt-[20px] mb-[20px] p-[12px]">
+          {/* Class Title */}
+          <div className="flex items-center ">
+            <div className="rounded-full bg-[#009DFF] text-[white] text-[12px] font-semibold px-[14px] py-[6px] shadow mr-[8px] flex-shrink-0">
+              클래스 제목
+            </div>
+            <div className="text-gray-700 overflow-hidden text-ellipsis whitespace-nowrap">
+              {classInfo?.title || ''}
+            </div>
+          </div>
+          <div className="w-full h-[1px] border-t-[1px] border-[#E0E0E0] my-[6px]" />
+          {/* Mentor Profile */}
+          <div className="flex items-center gap-[12px]">
+            <img
+              src={classInfo?.mentorProfileImageUrl}
+              alt="Mentor Profile"
+              className="h-[40px] w-[40px] rounded-full object-cover bg-[#e0e0e0] flex-shrink-0"
+            />
+            <div className="text-[14px] text-gray-700 break-words ">
+              {classInfo?.mentorIntro}
+            </div>
+          </div>
+        </div>
+
         {/* 클래스 소개 */}
         <div
           className={`w-full rounded-[1.25rem] box-border p-[12px]   shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[30px]`}
@@ -95,18 +139,8 @@ export default function ApplyClassPage() {
                     <span className="text-[12px] font-medium text-[#4338ca]">
                       {tag}
                     </span>
-                    <button className="ml-[4px] text-[16px] leading-none text-[#6366f1] hover:text-[#4338ca]">
-                      &times;
-                    </button>
                   </div>
                 ))}
-              </div>
-              <div>
-                <input
-                  //   value={tagInput}
-                  placeholder="#태그를 입력해주세요."
-                  className="w-full bg-transparent outline-none border-0 placeholder:text-[#B3B3B3] text-gray-600 pb-2"
-                />
               </div>
             </div>
           </div>

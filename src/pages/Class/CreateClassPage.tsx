@@ -17,6 +17,10 @@ import { useCreateClassStore } from '../../stores/useCreateClassStore';
 import { useNavigate } from 'react-router-dom';
 import { useGovReservationStore } from '../../stores/useGovReservationStore';
 import MapComponent from '../../components/class/MapComponent';
+import usePost from '../../hooks/usePost';
+import { API } from '../../apis/axios';
+import { getAccessToken } from '../../utils/cookieUtils';
+import axios from 'axios';
 
 export interface CreateClassPayload {
   infoId: number | null;
@@ -34,8 +38,9 @@ export interface CreateClassPayload {
 
 export default function CreateClassPage() {
   const navigate = useNavigate();
-  const { req, images, updateReq, setImages } = useCreateClassStore();
-  const { reservation } = useGovReservationStore();
+  const { req, images, updateReq, setImages, resetStore } =
+    useCreateClassStore();
+  const { reservation, clearReservation } = useGovReservationStore();
 
   // 클래스 사진
   const imageUrls = useMemo(() => {
@@ -73,7 +78,7 @@ export default function CreateClassPage() {
     setTagInput('');
   };
 
-  // ✅ 태그 삭제를 위한 함수
+  // 태그 삭제를 위한 함수
   const removeTag = (tagToRemove: string) => {
     updateReq({ tags: req.tags.filter(tag => tag !== tagToRemove) });
   };
@@ -101,7 +106,70 @@ export default function CreateClassPage() {
     );
   }, [req, images]);
 
+  const handleSubmit = async () => {
+    if (!isFormComplete) return;
+    const isMentorPlace = req.mentorPlaceId !== null;
+    const reqForApi = {
+      infoId: null,
+      title: "Let's Make Cute Moru Dolls!",
+      content:
+        "Join our class to create your very own moru doll! We provide all the materials and guidance. It's a fun and relaxing experience perfect for everyone.",
+      tags: req.tags,
+      mentorPlaceId: isMentorPlace ? req.mentorPlaceId : null,
+      govReservationId: isMentorPlace ? null : req.govReservationId,
+      openAt: '2025-09-25',
+      price: 25000,
+      capacity: 8,
+      startTime: '14:00',
+      endTime: '16:00',
+    };
+
+    const formData = new FormData();
+
+    // ✅ 1. Create a Blob with the correct JSON Content-Type
+    const reqBlob = new Blob([JSON.stringify(reqForApi)], {
+      type: 'application/json',
+    });
+
+    // ✅ 2. Append the Blob instead of the plain string
+    formData.append('req', reqBlob);
+
+    const imagesToSend = images.slice(0, 5);
+    imagesToSend.forEach(file => {
+      formData.append('images', file);
+    });
+    // const orders = Array.from({ length: imagesToSend.length }, (_, i) => i);
+    // formData.append('orders', JSON.stringify(orders));
+
+    try {
+      // ✅ 2. Get the auth token
+      const token = getAccessToken();
+      if (!token) {
+        throw new Error('Authentication token not found.');
+      }
+
+      // ✅ 3. Use axios.post directly and manually set all headers
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}classes`, // Full URL
+        formData, // Request body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log('Submission successful:', response.data);
+      resetStore();
+      navigate('done');
+    } catch (err) {
+      console.error('Submission failed:', err);
+      alert('클래스 개설에 실패했습니다.');
+    } finally {
+    }
+  };
   useEffect(() => {
+    const token = getAccessToken();
     console.log(req);
   }, [req]);
   // 날짜
@@ -254,35 +322,6 @@ export default function CreateClassPage() {
                 </button>
               </div>
             )}
-            {/* <div className="flex justify-between items-center rounded-[1rem] border border-[#E0E0E0] bg-[#FAFAFA] pt-[22px] pb-[22px]">
-              <button
-                onClick={() => navigate('/my-place')}
-                className="flex flex-col items-center flex-1 bg-transparent border-none"
-              >
-                <img
-                  src={CharacterBlue}
-                  alt="내 장소"
-                  className="mb-[25px] w-16 h-16"
-                />
-                <div className="bg-[#009DFF] text-[white] text-[16px] font-semibold px-[14px] py-[8px] rounded-full">
-                  내 장소
-                </div>
-              </button>
-              <div className="w-px bg-[#E0E0E0] mx-6 self-stretch" />
-              <div className="flex flex-col items-center flex-1 bg-transparent border-none">
-                <img
-                  src={CharacterYellow}
-                  alt="빈집 대여하기"
-                  className="mb-[25px] w-16 h-16"
-                />
-                <div
-                  className="bg-[#009DFF] text-[white] text-[16px] font-semibold px-[14px] py-[8px] rounded-full"
-                  onClick={() => navigate('/open-class/rent')}
-                >
-                  빈집 대여하기
-                </div>
-              </div>
-            </div> */}
             <div className="flex flex-col gap-[10px] mt-4">
               <PriceComponent
                 price={req.price}
@@ -308,12 +347,7 @@ export default function CreateClassPage() {
           <ButtonComponent
             text={'클래스 개설하기'}
             isActive={isFormComplete}
-            onClick={() => {
-              if (isFormComplete) {
-                navigate('done');
-                console.log('Submitting form:', { req, images });
-              }
-            }}
+            onClick={handleSubmit}
           />
         </BodyContainer>
       </ClassContainer>
