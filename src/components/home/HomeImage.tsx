@@ -50,11 +50,12 @@ export default function HomeImage({
           centeredSlides={true} // 현재 슬라이드를 가운데 정렬
           initialSlide={Math.floor(slides.length / 2)} // 가운데 슬라이드부터 시작
           allowTouchMove={true}
+          loop={true} // 순환 슬라이드 활성화
           navigation={{
             prevEl: '.custom-prev',
             nextEl: '.custom-next',
           }}
-          onSlideChange={swiper => setCurrentIndex(swiper.activeIndex)}
+          onSlideChange={swiper => setCurrentIndex(swiper.realIndex)}
           className="w-full"
         >
           {slides.map((img, idx) => (
@@ -80,13 +81,11 @@ export default function HomeImage({
           className="custom-prev absolute left-[30px] z-20 h-8 w-8 cursor-pointer select-none"
         />
         {/* Next 버튼 */}
-        {currentIndex < slides.length - 1 && (
-          <img
-            src={NextIcon}
-            alt="다음"
-            className="custom-next absolute right-[30px] z-20 h-8 w-8 cursor-pointer select-none"
-          />
-        )}
+        <img
+          src={NextIcon}
+          alt="다음"
+          className="custom-next absolute right-[30px] z-20 h-8 w-8 cursor-pointer select-none"
+        />
       </div>
 
       {/* 커스텀 페이지네이션 */}

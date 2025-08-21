@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState} from 'react';
 import ClassCard from './ClassCard';
 
 interface ClassInfo {
@@ -32,7 +32,7 @@ export default function CardSlider({
     if (images.length > 0 && !isRotating) {
       setIsRotating(true);
       setCurrentIndex(prev => (prev > 0 ? prev - 1 : images.length - 1));
-      setTimeout(() => setIsRotating(false), 500);
+      setTimeout(() => setIsRotating(false), 300);
     }
     onPrev?.();
   };
@@ -41,7 +41,7 @@ export default function CardSlider({
     if (images.length > 0 && !isRotating) {
       setIsRotating(true);
       setCurrentIndex(prev => (prev < images.length - 1 ? prev + 1 : 0));
-      setTimeout(() => setIsRotating(false), 500);
+      setTimeout(() => setIsRotating(false), 300);
     }
     onNext?.();
   };
@@ -52,55 +52,65 @@ export default function CardSlider({
     <div className={`relative ${className}`}>
       {/* 회색 배경 카드들 */}
       <div className="flex justify-center items-center gap-[5px]">
-        <div className="w-[107px] h-[68px] bg-[#B3B3B3] rounded-[20px]"></div>
         <div 
-          className={`w-[137px] h-[86px] rounded-[20px] transition-all duration-500 ease-in-out ${
+          className={`w-[107px] h-[68px] rounded-[20px] transition-all duration-300 ease-in-out ${
+            images[(currentIndex - 1 + images.length) % images.length] ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
+          }`}
+          style={images[(currentIndex - 1 + images.length) % images.length] ? { backgroundImage: `url(${images[(currentIndex - 1 + images.length) % images.length]})` } : undefined}
+        ></div>
+        <div 
+          className={`w-[137px] h-[86px] rounded-[20px] transition-all duration-300 ease-in-out ${
             currentImage ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
           } ${
             isRotating ? 'transform scale-95 rotate-3' : 'transform scale-100 rotate-0'
           }`}
           style={currentImage ? { backgroundImage: `url(${currentImage})` } : undefined}
         ></div>
-        <div className="w-[107px] h-[68px] bg-[#B3B3B3] rounded-[20px]"></div>
+        <div 
+          className={`w-[107px] h-[68px] rounded-[20px] transition-all duration-300 ease-in-out ${
+            images[(currentIndex + 1) % images.length] ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
+          }`}
+          style={images[(currentIndex + 1) % images.length] ? { backgroundImage: `url(${images[(currentIndex + 1) % images.length]})` } : undefined}
+        ></div>
       </div>
 
       {/* 클래스 카드들 - 각 카드 아래 5px 간격 */}
       <div className="flex justify-center items-center gap-[2px] mt-[5px]">
         {/* 왼쪽 클래스 카드 (작은 크기) */}
         <div className="w-[107px] flex justify-center">
-          {classes[0] && (
+          {classes[(currentIndex - 1 + classes.length) % classes.length] && (
             <ClassCard 
-              title={classes[0].title}
-              currentParticipants={classes[0].currentParticipants}
-              maxParticipants={classes[0].maxParticipants}
+              title={classes[(currentIndex - 1 + classes.length) % classes.length].title}
+              currentParticipants={classes[(currentIndex - 1 + classes.length) % classes.length].currentParticipants}
+              maxParticipants={classes[(currentIndex - 1 + classes.length) % classes.length].maxParticipants}
               size="small"
-              onClick={() => onClassClick?.(classes[0].id)}
+              onClick={() => onClassClick?.(classes[(currentIndex - 1 + classes.length) % classes.length].id)}
             />
           )}
         </div>
         
         {/* 가운데 클래스 카드 (큰 크기) */}
         <div className="w-[137px] flex justify-center">
-          {classes[1] && (
+          {classes[currentIndex] && (
             <ClassCard 
-              title={classes[1].title}
-              currentParticipants={classes[1].currentParticipants}
-              maxParticipants={classes[1].maxParticipants}
+              title={classes[currentIndex].title}
+              currentParticipants={classes[currentIndex].currentParticipants}
+              maxParticipants={classes[currentIndex].maxParticipants}
               size="medium"
-              onClick={() => onClassClick?.(classes[1].id)}
+              onClick={() => onClassClick?.(classes[currentIndex].id)}
             />
           )}
         </div>
         
         {/* 오른쪽 클래스 카드 (작은 크기) */}
         <div className="w-[107px] flex justify-center">
-          {classes[2] && (
+          {classes[(currentIndex + 1) % classes.length] && (
             <ClassCard 
-              title={classes[2].title}
-              currentParticipants={classes[2].currentParticipants}
-              maxParticipants={classes[2].maxParticipants}
+              title={classes[(currentIndex + 1) % classes.length].title}
+              currentParticipants={classes[(currentIndex + 1) % classes.length].currentParticipants}
+              maxParticipants={classes[(currentIndex + 1) % classes.length].maxParticipants}
               size="small"
-              onClick={() => onClassClick?.(classes[2].id)}
+              onClick={() => onClassClick?.(classes[(currentIndex + 1) % classes.length].id)}
             />
           )}
         </div>
@@ -108,7 +118,7 @@ export default function CardSlider({
 
       {/* 페이지네이션 점들 - 클래스 카드 아래 15px 간격 */}
       <div className="flex justify-center gap-2 pt-[15px]">
-        {Array.from({ length: Math.min(Math.max(classes.length, images.length), 5) }, (_, idx) => (
+        {Array.from({ length: Math.max(classes.length, images.length) }, (_, idx) => (
           <div
             key={idx}
             className={`w-2 h-2 rounded-full ${

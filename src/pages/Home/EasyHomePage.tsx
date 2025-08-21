@@ -4,9 +4,21 @@ import logo from '../../assets/common/logo2.svg';
 import EasyClassCard from '../../components/common/EasyClassCard';
 import ClassActionButtons from '../../components/home/ClassActionButtons';
 import ClassSearchButton from '../../components/home/ClassSearchButton';
+import LoadingScreen from '../../components/common/LoadingScreen';
+import { useHomeData } from '../../hooks/home/useHomeData';
 
 export default function EasyHomePage() {
   const navigate = useNavigate();
+  const { data: homeData, isLoading, error } = useHomeData();
+
+  // 로딩 중이거나 에러가 있을 때 처리
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return <div className="flex items-center justify-center h-screen">데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  }
 
   const handleStartEasy = () => {
     navigate('/tag/basic?version=easy');
@@ -32,34 +44,13 @@ export default function EasyHomePage() {
     navigate(`/class/${classId}`);
   };
 
-  // 샘플 클래스 데이터
-  const sampleClasses = [
-    {
-      id: '1',
-      title: '키오스크 사용방법 키오스크 사용방법 키오스크 사용방법 배우기키오스크',
-      participants: { current: 5, max: 12 }
-    },
-    {
-      id: '2',
-      title: '키오스크 사용방법 키오스크 사용방법 키오스크 사용방법 배우기키오스크',
-      participants: { current: 5, max: 12 }
-    },
-    {
-      id: '3',
-      title: '키오스크 사용방법 키오스크 사용방법 키오스크 사용방법 배우기키오스크',
-      participants: { current: 5, max: 12 }
-    },
-    {
-      id: '4',
-      title: '키오스크 사용방법 키오스크 사용방법 키오스크 사용방법 배우기키오스크',
-      participants: { current: 5, max: 12 }
-    },
-    {
-      id: '5',
-      title: '키오스크 사용방법 키오스크 사용방법 키오스크 사용방법 배우기키오스크',
-      participants: { current: 5, max: 12 }
-    }
-  ];
+  // API 데이터를 EasyClassCard 형식으로 변환
+  const classData = Array.isArray(homeData?.data) ? homeData.data.map(item => ({
+    id: item.openId.toString(),
+    title: item.title,
+    image: item.imageUrl,
+    participants: { current: item.appliedCount, max: item.capacity }
+  })) : [];
 
   return (
     <div className="flex flex-col">
@@ -92,11 +83,12 @@ export default function EasyHomePage() {
 
         {/* 쉬운 버전용 클래스 카드들 */}
         <div>
-          <div className="space-y-[19px] flex flex-col items-center">
-            {sampleClasses.map((classItem) => (
+          <div className="space-y-[19px] flex flex-col items-center pb-[28px] px-[23px]">
+            {classData.map((classItem) => (
               <EasyClassCard
                 key={classItem.id}
                 title={classItem.title}
+                image={classItem.image}
                 participants={classItem.participants}
                 onClick={() => handleClassClick(classItem.id)}
               />
