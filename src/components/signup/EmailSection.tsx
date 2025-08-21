@@ -17,13 +17,12 @@ const EmailSection: React.FC<EmailSectionProps> = ({
   return (
     <FormField 
       title="이메일" 
-      description="영문 소문자와 숫자의 조합으로 4~12자 이내로 입력해 주세요."
       marginBottom="mb-[18px]"
       errorMessage={errorMessages.email}
     >
       <div className="flex gap-[8px]">
         <input
-          type="email"
+          type="text"
           placeholder="이메일을 입력해 주세요."
           value={formData.email}
           onChange={(e) => onInputChange('email', e.target.value)}

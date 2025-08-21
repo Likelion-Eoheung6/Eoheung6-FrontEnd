@@ -11,6 +11,8 @@ type ClassCardProps = {
   tags: string[];
   isRecommended?: boolean;
   imageUrl?: string;
+  onImageLoad?: () => void;
+  onImageError?: () => void;
 };
 
 export default function ClassCard({
@@ -21,13 +23,31 @@ export default function ClassCard({
   price,
   tags,
   isRecommended = false,
-  imageUrl
+  imageUrl,
+  onImageLoad,
+  onImageError
 }: ClassCardProps) {
   return (
     <div className="rounded-[16px] relative">
       <div className="flex gap-[5px]">
-        <div className="w-[130px] h-[130px] bg-[#B3B3B3] rounded-[20px]">
-          {imageUrl && <img src={imageUrl} alt={title} className="w-full h-full object-cover rounded-[20px]" />}
+        <div className="w-[130px] h-[130px] bg-[#B3B3B3] rounded-[20px] overflow-hidden">
+          {imageUrl ? (
+            <img 
+              src={imageUrl} 
+              alt={title} 
+              className="w-full h-full object-cover rounded-[20px]" 
+              onLoad={onImageLoad}
+              onError={onImageError}
+            />
+          ) : (
+            // 이미지가 없는 경우 기본 배경
+            <div 
+              className="w-full h-full bg-[#B3B3B3] rounded-[20px] flex items-center justify-center"
+              onLoad={onImageLoad}
+            >
+              <span className="text-gray-500 text-xs">이미지 없음</span>
+            </div>
+          )}
         </div>
         <div className="flex-1">
           <div className="text-[#111111] text-[12px] font-medium leading-[120%] tracking-[-0.025em] mb-[4px] bg-[#FDFDFD] border border-[#E0E0E0] rounded-[10px] px-[8px] py-[4px] h-[24px] flex items-center justify-between">

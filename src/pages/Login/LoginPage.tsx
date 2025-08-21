@@ -63,31 +63,32 @@ export default function LoginPage() {
           {`취미, 배움, 이야기까지 세대를 잇는 하루 클래스\n‘이음학당’에서 찾아보세요!`}
         </p>
 
-        {/* 아이디 입력 */}
-        <IdInput value={userId} onChange={(v) => setUserId(v)} error={userIdError} />
+        <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="flex flex-col items-center">
+          {/* 아이디 입력 */}
+          <IdInput value={userId} onChange={(v) => setUserId(v)} error={userIdError} />
 
-        {/* 비밀번호 입력 */}
-        <PasswordInput
-          value={password}
-          onChange={(v) => setPassword(v)}
-          show={showPassword}
-          onToggle={() => setShowPassword(prev => !prev)}
-          error={passwordError}
-        />
+          {/* 비밀번호 입력 */}
+          <PasswordInput
+            value={password}
+            onChange={(v) => setPassword(v)}
+            show={showPassword}
+            onToggle={() => setShowPassword(prev => !prev)}
+            error={passwordError}
+          />
 
-        {/* 로그인 버튼 */}
-        <button
-          type="button"
-          disabled={!userId.trim() || !password.trim() || loginMutation.isPending}
-          onClick={handleLogin}
-          className={`mt-[22px] rounded-[20px] text-[#FDFDFD] text-[14px] font-semibold tracking-[-0.025em] px-[133px] py-[10px] transition-colors appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 ${
-            userId.trim() && password.trim() && !loginMutation.isPending
-              ? 'bg-[rgba(0,157,255,1)] cursor-pointer hover:brightness-105'
-              : 'bg-[rgba(179,179,179,1)] cursor-not-allowed'
-          }`}
-        >
-          로그인
-        </button>
+          {/* 로그인 버튼 */}
+          <button
+            type="submit"
+            disabled={!userId.trim() || !password.trim() || loginMutation.isPending}
+            className={`mt-[22px] rounded-[20px] text-[#FDFDFD] text-[14px] font-semibold tracking-[-0.025em] px-[133px] py-[10px] transition-colors appearance-none border-0 outline-none focus:outline-none ring-0 focus:ring-0 ${
+              userId.trim() && password.trim() && !loginMutation.isPending
+                ? 'bg-[rgba(0,157,255,1)] cursor-pointer hover:brightness-105'
+                : 'bg-[rgba(179,179,179,1)] cursor-not-allowed'
+            }`}
+          >
+            로그인
+          </button>
+        </form>
 
         <div className="mt-[20px] flex items-center justify-center text-[12px] font-medium leading-[1.2] tracking-[-0.025em] text-[rgba(84,84,84,1)]">
           <a href="#" className="align-middle no-underline text-[rgba(84,84,84,1)] visited:text-[rgba(84,84,84,1)] hover:no-underline">아이디 찾기</a>

@@ -53,6 +53,7 @@ const InputWithButton: React.FC<InputWithButtonProps> = ({
             }
           }}
           className={`w-full h-[34px] bg-[#FDFDFD] border border-[#E0E0E0] rounded-[20px] px-[10px] text-[14px] font-normal leading-[120%] tracking-[-0.025em] text-[#545454] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] placeholder:text-[#B3B3B3] ${inputClassName}`}
+          autoComplete={type === 'password' ? 'new-password' : type === 'tel' ? 'tel' : 'username'}
         />
         {children}
       </div>
