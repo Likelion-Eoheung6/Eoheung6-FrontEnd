@@ -45,8 +45,10 @@ export default function SignupPage() {
 
   // 아이디 중복체크 핸들러
   const handleCheckId = () => {
+    const checkIdData = { id: formData.username };
+    
     checkIdMutation.mutate(
-      { id: formData.username },
+      checkIdData,
       {
         onSuccess: (data) => {
           if (data.data) {
@@ -78,8 +80,10 @@ export default function SignupPage() {
 
   // 휴대폰 인증 요청 핸들러
   const handleSendCode = () => {
+    const sendCodeData = { phone: formatPhoneForAPI(formData.phone) };
+    
     sendCodeMutation.mutate(
-      { phone: formatPhoneForAPI(formData.phone) },
+      sendCodeData,
       {
         onSuccess: () => {
           startCountdown();
@@ -154,7 +158,7 @@ export default function SignupPage() {
     const signupData = {
       id: formData.username,
       password: formData.password,
-      email: formatEmail(formData.email, formData.emailDomain),
+      email: formData.email && formData.emailDomain ? formatEmail(formData.email, formData.emailDomain) : '',
       phone: formatPhoneForAPI(formData.phone)
     };
     
@@ -181,61 +185,63 @@ export default function SignupPage() {
           회원가입
         </h1>
 
-        {/* 아이디 섹션 */}
-        <UsernameSection
-          formData={formData}
-          errorMessages={errorMessages}
-          isIdChecked={signupState.isIdChecked}
-          isIdAvailable={signupState.isIdAvailable}
-          isCheckIdLoading={checkIdMutation.isPending}
-          onInputChange={handleInputChange}
-          onCheckId={handleCheckId}
-        />
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} noValidate>
+          {/* 아이디 섹션 */}
+          <UsernameSection
+            formData={formData}
+            errorMessages={errorMessages}
+            isIdChecked={signupState.isIdChecked}
+            isIdAvailable={signupState.isIdAvailable}
+            isCheckIdLoading={checkIdMutation.isPending}
+            onInputChange={handleInputChange}
+            onCheckId={handleCheckId}
+          />
 
-        {/* 비밀번호 섹션 */}
-        <PasswordSection
-          formData={formData}
-          errorMessages={errorMessages}
-          onInputChange={handleInputChange}
-        />
+          {/* 비밀번호 섹션 */}
+          <PasswordSection
+            formData={formData}
+            errorMessages={errorMessages}
+            onInputChange={handleInputChange}
+          />
 
-        {/* 이메일 섹션 */}
-        <EmailSection
-          formData={formData}
-          errorMessages={errorMessages}
-          onInputChange={handleInputChange}
-        />
+          {/* 이메일 섹션 */}
+          <EmailSection
+            formData={formData}
+            errorMessages={errorMessages}
+            onInputChange={handleInputChange}
+          />
 
-                 {/* 휴대폰 인증 섹션 */}
-         <PhoneVerificationSection
-           formData={formData}
-           errorMessages={errorMessages}
-           isCountdownActive={isCountdownActive}
-           formattedTime={formattedTime}
-           isCodeVerified={signupState.isCodeVerified}
-           isSendCodeLoading={sendCodeMutation.isPending}
-           isVerifyCodeLoading={verifyCodeMutation.isPending}
-           onInputChange={handleInputChange}
-           onSendCode={handleSendCode}
-           onResetCode={handleResetCode}
-           onVerifyCode={handleVerifyCode}
-         />
-        
-        {/* 가입하기 버튼 */}
-        <div className="mt-[30px]">
-          <button 
-            className={`w-full text-[#FDFDFD] text-[14px] font-semibold leading-[120%] tracking-[-0.025em] py-[11px] rounded-[20px] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] ${formValidation.canSubmit && !signupMutation.isPending ? 'bg-[#009DFF] cursor-pointer' : 'bg-[#B3B3B3] cursor-not-allowed'}`}
-            disabled={!formValidation.canSubmit || signupMutation.isPending}
-            onClick={handleSubmit}
-          >
-            {signupMutation.isPending ? '가입 중...' : '가입하기'}
-          </button>
-        </div>
+          {/* 휴대폰 인증 섹션 */}
+          <PhoneVerificationSection
+            formData={formData}
+            errorMessages={errorMessages}
+            isCountdownActive={isCountdownActive}
+            formattedTime={formattedTime}
+            isCodeVerified={signupState.isCodeVerified}
+            isSendCodeLoading={sendCodeMutation.isPending}
+            isVerifyCodeLoading={verifyCodeMutation.isPending}
+            onInputChange={handleInputChange}
+            onSendCode={handleSendCode}
+            onResetCode={handleResetCode}
+            onVerifyCode={handleVerifyCode}
+          />
+          
+          {/* 가입하기 버튼 */}
+          <div className="mt-[30px]">
+            <button 
+              type="submit"
+              className={`w-full text-[#FDFDFD] text-[14px] font-semibold leading-[120%] tracking-[-0.025em] py-[11px] rounded-[20px] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] ${formValidation.canSubmit && !signupMutation.isPending ? 'bg-[#009DFF] cursor-pointer' : 'bg-[#B3B3B3] cursor-not-allowed'}`}
+              disabled={!formValidation.canSubmit || signupMutation.isPending}
+            >
+              가입하기
+            </button>
+          </div>
+        </form>
         
         {/* 에러 메시지 */}
         {signupMutation.isError && (
           <div className="mt-[10px] text-center">
-            <p className="text-red-500 text-[12px]">
+            <p className="text-[#FF0000] text-[12px]">
               회원가입에 실패했습니다. 다시 시도해 주세요.
             </p>
           </div>

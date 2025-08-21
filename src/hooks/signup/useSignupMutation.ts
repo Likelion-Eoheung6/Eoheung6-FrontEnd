@@ -14,12 +14,6 @@ export const useSignupMutation = () => {
     },
     onError: (error: any) => {
       console.error('회원가입 실패:', error);
-      console.error('에러 상세 정보:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        url: error.config?.url
-      });
       throw error;
     }
   });

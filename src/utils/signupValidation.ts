@@ -85,25 +85,21 @@ export const validateForm = (formData: SignupFormData, errorMessages: SignupErro
   const usernameValid = validateUsername(formData.username).isValid;
   const passwordValid = validatePassword(formData.password).isValid;
   const confirmPasswordValid = validateConfirmPassword(formData.password, formData.confirmPassword).isValid;
-  const emailValid = validateEmail(formatEmail(formData.email, formData.emailDomain)).isValid;
   const phoneValid = validatePhone(formData.phone).isValid;
   const verificationCodeValid = validateVerificationCode(formData.verificationCode).isValid;
 
-  // 모든 필수 필드가 입력되었는지 확인 (API 요청에 필요한 필드만)
+  // 모든 필수 필드가 입력되었는지 확인 (이메일 제외)
   const allFieldsFilled = !!(
     formData.username && 
     formData.password && 
-    formData.email && 
-    formData.emailDomain && 
     formData.phone && 
     formData.verificationCode
   );
 
-  // 모든 유효성 검사가 통과했는지 확인 (API 요청에 필요한 필드만)
+  // 모든 유효성 검사가 통과했는지 확인 (이메일 제외)
   const allValidationsPassed = !!(
     usernameValid &&
     passwordValid &&
-    emailValid &&
     phoneValid &&
     verificationCodeValid
   );

@@ -4,11 +4,9 @@ import SearchInput from '../../components/search/SearchInput';
 import SearchTag from '../../components/search/SearchTag';
 import PopularKeywords from '../../components/search/PopularKeywords';
 import PageHeader from '../../components/common/PageHeader';
-import Navbar from '../../components/common/Navbar';
 
 export default function SearchPage() {
   const navigate = useNavigate();
-  const [searchResults, setSearchResults] = useState<string[]>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const handleBack = () => {
@@ -102,9 +100,6 @@ export default function SearchPage() {
           <PopularKeywords onKeywordClick={handleKeywordClick} />
         </div>
       </div>
-
-      {/* Navbar */}
-      <Navbar />
     </div>
   );
 }

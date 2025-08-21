@@ -39,7 +39,6 @@ const PhoneVerificationSection: React.FC<PhoneVerificationSectionProps> = ({
   return (
     <FormField 
       title="휴대폰 인증" 
-      description="영문 소문자와 숫자의 조합으로 4~12자 이내로 입력해 주세요."
       marginBottom="mb-[0px]"
       errorMessage={errorMessages.phone || errorMessages.verificationCode}
     >

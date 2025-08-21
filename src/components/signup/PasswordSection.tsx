@@ -38,6 +38,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
             value={formData.password}
             onChange={(e) => onInputChange('password', e.target.value)}
             className="w-full h-[34px] bg-[#FDFDFD] border border-[#E0E0E0] rounded-[20px] px-[10px] text-[14px] font-normal leading-[120%] tracking-[-0.025em] text-[#545454] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)]"
+            autoComplete="new-password"
           />
           <button
             type="button"
@@ -65,9 +66,10 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
             onChange={(e) => onInputChange('confirmPassword', e.target.value)}
             className={`w-full h-[34px] bg-[#FDFDFD] border rounded-[20px] px-[10px] text-[14px] font-normal leading-[120%] tracking-[-0.025em] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] ${
               formData.confirmPassword && !confirmPasswordValidation.isValid
-                ? 'border-red-500 text-red-500'
+                ? 'border-[#FF0000] text-[#FF0000]'
                 : 'border-[#E0E0E0] text-[#545454]'
             }`}
+            autoComplete="new-password"
           />
           <button
             type="button"
