@@ -39,8 +39,8 @@ export default function ClassCard({
       {/* 참여인원 정보 */}
       <div className={`bg-[#FDFDFD] rounded-[50px] flex flex-col items-center justify-center ${
         size === 'small'
-          ? 'px-[3px] py-[3px]'
-          : 'px-[3px] py-[4px]'
+          ? 'px-[6px] py-[4px]'
+          : 'px-[4px] py-[3px]'
       }`}>
         <div className={`text-[#545454] font-light leading-[1em] tracking-[-0.025em] ${
           size === 'small' ? 'text-[6px]' : 'text-[8px]'

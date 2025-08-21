@@ -50,7 +50,7 @@ export default function HomeImage({
           centeredSlides={true} // 현재 슬라이드를 가운데 정렬
           initialSlide={Math.floor(slides.length / 2)} // 가운데 슬라이드부터 시작
           allowTouchMove={true}
-          loop={true} // 순환 슬라이드 활성화
+          loop={slides.length >= 3} // 슬라이드가 3개 이상일 때만 loop 활성화
           navigation={{
             prevEl: '.custom-prev',
             nextEl: '.custom-next',
