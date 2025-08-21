@@ -3,7 +3,7 @@ import MoneyIcon from '../../assets/class/money.svg';
 
 interface PriceComponentProps {
   price: number;
-  onPriceChange: (newPrice: number) => void;
+  onPriceChange?: (newPrice: number) => void;
   disabled?: boolean; // Optional disabled prop
 }
 
@@ -20,9 +20,9 @@ export default function PriceComponent({
     const value = e.target.value.replace(/,/g, '');
     const numberValue = parseInt(value, 10);
     if (!isNaN(numberValue)) {
-      onPriceChange(numberValue);
+      onPriceChange?.(numberValue);
     } else if (value === '') {
-      onPriceChange(0);
+      onPriceChange?.(0);
     }
   };
 

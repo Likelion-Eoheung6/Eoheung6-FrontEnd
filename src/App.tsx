@@ -25,6 +25,7 @@ import LoadingScreen from './components/common/LoadingScreen';
 import SignupPage from './pages/Auth/SignupPage';
 import ApplyClassPage from './pages/Class/ApplyClassPage';
 import PaymentPage from './pages/Class/PaymentPage';
+import PaymentSuccessPage from './pages/Class/PaymentSuccessPage';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
         path: 'class/:classId/payment',
         element: <PaymentPage />,
       },
+      { path: 'payment/success', element: <PaymentSuccessPage /> },
       { path: 'request-class', element: <CreateClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'search', element: <SearchPage /> },
