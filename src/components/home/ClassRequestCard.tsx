@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import WishIcon from '../../assets/common/wish-n.svg';
 import WishSelectedIcon from '../../assets/common/wish.svg';
 import { toggleWishlist } from '../../apis/home/homeApi';
