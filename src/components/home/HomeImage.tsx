@@ -12,10 +12,7 @@ interface HomeImageProps {
   slides: string[]; // 이미지 URL 배열
   setImageFiles: React.Dispatch<React.SetStateAction<string[]>>;
 }
-export default function HomeImage({
-  slides,
-  setImageFiles,
-}: HomeImageProps) {
+export default function HomeImage({ slides, setImageFiles }: HomeImageProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const prevRef = useRef<HTMLImageElement | null>(null);
   const nextRef = useRef<HTMLImageElement | null>(null);
@@ -64,9 +61,7 @@ export default function HomeImage({
                   img ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
                 }`}
                 style={img ? { backgroundImage: `url(${img})` } : undefined}
-              >
-
-              </div>
+              ></div>
             </SwiperSlide>
           ))}
         </Swiper>

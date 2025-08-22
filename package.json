@@ -13,8 +13,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.85.3",
+    "@tanstack/react-query": "^5.85.5",
+    "@tosspayments/payment-widget-sdk": "^0.12.0",
+    "@tosspayments/tosspayments-sdk": "^2.3.6",
     "@types/styled-components": "^5.1.34",
+    "axios": "^1.11.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.23.12",
     "react": "^19.1.1",

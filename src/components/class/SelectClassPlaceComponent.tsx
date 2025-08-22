@@ -1,6 +1,3 @@
-import React from 'react';
-import BackIcon from '../../assets/common/back.svg';
-import NextIcon from '../../assets/common/next.svg';
 import LocationIcon from '../../assets/class/location.svg';
 import QestionIcon from '../../assets/class/question.svg';
 import CharacterBlue from '../../assets/class/character-blue.svg';
@@ -10,6 +7,7 @@ import PeopleIcon from '../../assets/class/people.svg';
 import TimeIcon from '../../assets/class/time.svg';
 import PlusIcon from '../../assets/class/plus.svg';
 import MinusIcon from '../../assets/class/minus.svg';
+
 export default function SelectClassPlaceComponent() {
   return (
     <div className="w-full rounded-[1.25rem] box-border p-[12px] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[30px]">
@@ -87,14 +85,14 @@ export default function SelectClassPlaceComponent() {
 
             <div className="flex flex-1 items-center justify-center gap-[12px]">
               <button
-                onClick={() => setCapacity(Math.max(0, capacity - 1))}
+                // onClick={() => setCapacity(Math.max(0, capacity - 1))}
                 className="p-0 bg-transparent border-none"
               >
                 <img src={MinusIcon} alt="마이너스" className="w-6 h-6" />
               </button>
-              <span className="text-[14px] text-[#5A4B45]">{capacity}</span>
+              <span className="text-[14px] text-[#5A4B45]">{}</span>
               <button
-                onClick={() => setCapacity(capacity + 1)}
+                // onClick={() => setCapacity(capacity + 1)}
                 className="p-0 bg-transparent border-none"
               >
                 <img src={PlusIcon} alt="플러스" className="w-6 h-6" />
@@ -114,18 +112,18 @@ export default function SelectClassPlaceComponent() {
             </div>
             <div
               className="flex flex-1 items-center justify-center gap-[6px] pl-[14px] cursor-pointer"
-              onClick={handleTogglePicker}
+              // onClick={handleTogglePicker}
             >
               <input
                 type="text"
-                value={startTime}
+                // value={startTime}
                 readOnly
                 className="w-12 bg-transparent text-[#5A4B45] outline-none border-none focus:outline-none focus:ring-0 text-center"
               />
               <span className="text-[#B3B3B3]">~</span>
               <input
                 type="text"
-                value={endTime}
+                // value={endTime}
                 readOnly
                 className="w-12 bg-transparent text-[#5A4B45] outline-none border-none focus:outline-none focus:ring-0 text-center"
               />

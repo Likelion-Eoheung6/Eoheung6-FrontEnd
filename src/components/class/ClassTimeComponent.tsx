@@ -5,8 +5,8 @@ import TimeIcon from '../../assets/class/time.svg';
 interface ClassTimeComponentProps {
   startTime: string;
   endTime: string;
-  onStartTimeChange: (newTime: string) => void;
-  onEndTimeChange: (newTime: string) => void;
+  onStartTimeChange?: (newTime: string) => void;
+  onEndTimeChange?: (newTime: string) => void;
   onClick?: () => void;
   disabled?: boolean;
 }
@@ -28,8 +28,8 @@ export default function ClassTimeComponent({
   }, [startTime, endTime]);
 
   const handleConfirm = () => {
-    onStartTimeChange(tempStartTime);
-    onEndTimeChange(tempEndTime);
+    onStartTimeChange?.(tempStartTime);
+    onEndTimeChange?.(tempEndTime);
   };
   // 비활성화 상태에 따른 스타일
   const disabledClasses = disabled ? 'cursor-not-allowed' : 'cursor-pointer';
@@ -54,16 +54,17 @@ export default function ClassTimeComponent({
           {startTime} ~ {endTime}
         </span>
       </div>
-      <button
-        onClick={!disabled ? onClick : undefined}
-        disabled={disabled}
-        className={`
-          flex-shrink-0 text-[white] bg-[#545454] text-[12px] font-bold 
-          px-[7px] py-[5px] border-none rounded-[9999px] cursor-pointer
-        `}
-      >
-        시간 등록
-      </button>
+      {!disabled && (
+        <button
+          onClick={onClick} // disabled가 아닐 때만 렌더링되므로, 조건부 onClick은 더 이상 필요 없습니다.
+          className={`
+            flex-shrink-0 text-white bg-[#545454] text-xs font-bold 
+            px-2 py-1 border-none rounded-full cursor-pointer hover:bg-black
+          `}
+        >
+          시간 등록
+        </button>
+      )}
     </div>
   );
 }

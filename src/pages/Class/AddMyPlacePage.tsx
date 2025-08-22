@@ -2,12 +2,13 @@ import React, { useMemo, useState } from 'react';
 import ClassContainer from '../../components/class/ClassContainer';
 import ClassHeaderBar from '../../components/class/ClassHeaderBar';
 import BodyContainer from '../../components/common/BodyContainer';
-import DaumPostcodeEmbed, { Address } from 'react-daum-postcode';
+import DaumPostcodeEmbed, { type Address } from 'react-daum-postcode';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import { useMyPlaceStore } from '../../stores/useMyPlaceStore';
 import { useNavigate } from 'react-router-dom';
+import usePost from '../../hooks/usePost';
 
-export default function RegisterMyPlacePage() {
+export default function AddMyPlacePage() {
   const navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -17,6 +18,7 @@ export default function RegisterMyPlacePage() {
   const { placeData, setMyPlace, updateMyPlaceDetail, clearMyPlace } =
     useMyPlaceStore();
   const { roadAddress, zipCode, detailAddress } = placeData || {};
+  const { post, loading, error } = usePost();
 
   const handleCompletePost = (data: Address) => {
     updateMyPlaceDetail({
@@ -35,13 +37,21 @@ export default function RegisterMyPlacePage() {
     );
   }, [roadAddress, zipCode, detailAddress]);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (isFormComplete) {
-      clearMyPlace();
-      navigate('/open-class/myplace');
-      console.log('Registering place:', placeData);
+      try {
+        const response = await post('/classes/mentor-places', {
+          roadAddress,
+          zipCode,
+          detailAddress,
+        });
 
-      // 내 장소 등록 api 호출
+        console.log('Place registered successfully:', response);
+        clearMyPlace();
+        navigate('/open-class/myplace');
+      } catch (err) {
+        console.error('Error registering place:', err);
+      }
     }
   };
   return (

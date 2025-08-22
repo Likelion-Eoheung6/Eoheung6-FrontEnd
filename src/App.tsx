@@ -16,13 +16,16 @@ import CreateClassPage from './pages/Class/CreateClassPage';
 import RentalPlacePage from './pages/Class/RentalPlacePage';
 import RentalPlaceDetailPage from './pages/Class/RentalPlaceDetailPage';
 import MyPlacePage from './pages/Class/MyPlacePage';
-import RegisterMyPlacePage from './pages/Class/RegisterMyPlacePage';
-import DoneCreateClassPage from './pages/Class/DoneCreateClassPage';
+import AddMyPlacePage from './pages/Class/AddMyPlacePage';
+import DoneClassPage from './pages/Class/DoneClassPage';
 import LoginPage from './pages/Login/LoginPage';
 import VersionSelectPage from './pages/Tag/VersionSelectPage';
 import TagSelectPage from './pages/Tag/TagSelectPage';
 import LoadingScreen from './components/common/LoadingScreen';
 import SignupPage from './pages/Auth/SignupPage';
+import ApplyClassPage from './pages/Class/ApplyClassPage';
+import PaymentPage from './pages/Class/PaymentPage';
+import PaymentSuccessPage from './pages/Class/PaymentSuccessPage';
 
 const router = createBrowserRouter([
   {
@@ -37,15 +40,16 @@ const router = createBrowserRouter([
         element: <CreateClassPage />,
       },
       { path: 'open-class/myplace', element: <MyPlacePage /> },
-      { path: 'open-class/myplace/register', element: <RegisterMyPlacePage /> },
+      { path: 'open-class/myplace/register', element: <AddMyPlacePage /> },
       { path: 'open-class/rent', element: <RentalPlacePage /> },
       { path: 'open-class/rent/:placeId', element: <RentalPlaceDetailPage /> },
-      { path: 'open-class/done', element: <DoneCreateClassPage /> },
-      { path: 'open-class/apply/:classId', element: <CreateClassPage /> },
+      { path: 'class/done', element: <DoneClassPage /> },
+      { path: 'class/:classId', element: <ApplyClassPage /> },
       {
-        path: 'open-class/apply:classId/payment',
-        element: <CreateClassPage />,
+        path: 'class/:classId/payment',
+        element: <PaymentPage />,
       },
+      { path: 'payment/success', element: <PaymentSuccessPage /> },
       { path: 'request-class', element: <CreateClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'search', element: <SearchPage /> },
