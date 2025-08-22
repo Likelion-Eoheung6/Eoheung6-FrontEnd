@@ -218,7 +218,9 @@ const WheelPickerComponent = ({
         {hourItems.map((item, index) => (
           <li
             key={item.value}
-            ref={node => (hourRefs.current[index] = node)}
+            ref={node => {
+              hourRefs.current[index] = node;
+            }}
             className="item"
             style={{ height: `${itemHeight}px`, lineHeight: `${itemHeight}px` }}
           >
@@ -244,7 +246,9 @@ const WheelPickerComponent = ({
         {minuteItems.map((item, index) => (
           <li
             key={item.value}
-            ref={node => (minuteRefs.current[index] = node)}
+            ref={node => {
+              minuteRefs.current[index] = node;
+            }}
             className="item"
             style={{
               height: `${itemHeight}px`,

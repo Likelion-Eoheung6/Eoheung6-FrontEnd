@@ -15,10 +15,10 @@ import type { ClassDetailData } from '../../types/class/classTypes';
 export default function PaymentSuccessPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // const [paymentInfo, setPaymentInfo] = useState<{
-  //   amount: number;
-  //   count: number;
-  // } | null>(null);
+  const [paymentInfo, setPaymentInfo] = useState<{
+    totalPrice: number;
+    quantity: number;
+  } | null>(null);
   const [status, setStatus] = useState<'LOADING' | 'SUCCESS' | 'ERROR'>(
     'LOADING'
   );
@@ -28,13 +28,16 @@ export default function PaymentSuccessPage() {
   const [quantity, setQuantity] = useState();
 
   useEffect(() => {
-    // useEffect 내에서 사용할 별도의 async 함수를 선언합니다.
     const fetchFinalDetails = async () => {
       const orderId = sessionStorage.getItem('orderId');
       const totalPrice = sessionStorage.getItem('totalPrice');
       const quantity = sessionStorage.getItem('quantity');
-      setTotalPrice(totalPrice);
-      setQuantity(quantity);
+      if (totalPrice && quantity) {
+        setPaymentInfo({
+          totalPrice: Number(totalPrice),
+          quantity: Number(quantity),
+        });
+      }
 
       if (!orderId) {
         setStatus('ERROR');
@@ -49,7 +52,7 @@ export default function PaymentSuccessPage() {
     };
 
     fetchFinalDetails();
-  }, [searchParams]);
+  }, []);
 
   return (
     <ClassContainer>
@@ -82,7 +85,9 @@ export default function PaymentSuccessPage() {
                 <img src={WonIcon} alt="결제 금액 아이콘" className="w-6 h-6" />
                 <span className="text-gray-500">결제 금액 | 총</span>
               </div>
-              <span className="font-bold text-gray-800">{totalPrice} 원</span>
+              <span className="font-bold text-gray-800">
+                {paymentInfo?.totalPrice} 원
+              </span>
             </div>
 
             {/* 신청 인원 행 */}
@@ -95,7 +100,9 @@ export default function PaymentSuccessPage() {
                 />
                 <span className="text-gray-500">신청 인원 |</span>
               </div>
-              <span className="font-bold text-gray-800">{quantity} 명</span>
+              <span className="font-bold text-gray-800">
+                {paymentInfo?.quantity} 명
+              </span>
             </div>
           </div>
           <div className="w-full mt-8">

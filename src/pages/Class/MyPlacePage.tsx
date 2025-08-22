@@ -20,10 +20,9 @@ import { Navigation, Pagination } from 'swiper/modules';
 import BackIcon from '../../assets/common/back.svg';
 import NextIcon from '../../assets/common/next.svg';
 
-// Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+// import 'swiper/css/navigation';
+// import 'swiper/css/pagination';
 import { useMyPlaceStore } from '../../stores/useMyPlaceStore';
 import { useGovReservationStore } from '../../stores/useGovReservationStore';
 

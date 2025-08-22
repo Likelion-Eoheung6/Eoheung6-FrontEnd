@@ -55,9 +55,15 @@ export interface ApplyClassRequest {
 }
 
 export interface ApplyClassData {
-  applicationId: number;
-  status: string;
-  message: string;
+  // applicationId: number;
+  // status: string;
+  // message: string;
+  orderId: string;
+  itemName: string;
+  quantity: string; // API 응답이 문자열일 수 있으므로 string으로 받습니다.
+  totalPrice: string; // API 응답이 문자열일 수 있으므로 string으로 받습니다.
+  customerEmail: string;
+  customerId: string;
 }
 
 export interface ApplyClassResponse {

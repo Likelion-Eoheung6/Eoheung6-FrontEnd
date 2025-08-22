@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import ClassContainer from '../../components/class/ClassContainer';
 import ClassHeaderBar from '../../components/class/ClassHeaderBar';
 import BodyContainer from '../../components/common/BodyContainer';
-import DaumPostcodeEmbed, { Address } from 'react-daum-postcode';
+import DaumPostcodeEmbed, { type Address } from 'react-daum-postcode';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import { useMyPlaceStore } from '../../stores/useMyPlaceStore';
 import { useNavigate } from 'react-router-dom';

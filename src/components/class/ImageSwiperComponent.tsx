@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
+import 'swiper';
+// import 'swiper/css/navigation';
 
 import BackIcon from '../../assets/common/back.svg';
 import NextIcon from '../../assets/common/next.svg';
