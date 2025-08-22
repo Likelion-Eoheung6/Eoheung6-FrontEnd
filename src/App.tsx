@@ -26,6 +26,7 @@ import SignupPage from './pages/Auth/SignupPage';
 import ApplyClassPage from './pages/Class/ApplyClassPage';
 import PaymentPage from './pages/Class/PaymentPage';
 import PaymentSuccessPage from './pages/Class/PaymentSuccessPage';
+import RequestClassPage from './pages/Class/RequestClassPage';
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
         element: <PaymentPage />,
       },
       { path: 'payment/success', element: <PaymentSuccessPage /> },
-      { path: 'request-class', element: <CreateClassPage /> },
+      { path: 'request-class', element: <RequestClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'search', element: <SearchPage /> },
       { path: 'search-results', element: <SearchResultsPage /> },

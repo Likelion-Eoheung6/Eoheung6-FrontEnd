@@ -4,7 +4,7 @@ import type {
   GetClassDetailResponse,
   KakaoPayReadyRequest,
   KakaoPayReadyResponse,
-} from '../../types/class/classTypes';
+} from '../../types/apply/applyTypes';
 import { API } from '../axios';
 
 // 클래스 상세조회
