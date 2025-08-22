@@ -4,7 +4,7 @@ import logo from '../../assets/common/logo2.svg';
 import ImageSwiperComponent from '../../components/home/HomeImage';
 import ClassSearchButton from '../../components/home/ClassSearchButton';
 import ClassActionButtons from '../../components/home/ClassActionButtons';
-import CardSlider from '../../components/home/CardSlider';
+import ClassCardSlider from '../../components/home/ClassCardSlider';
 import ClassRequestCard from '../../components/home/ClassRequestCard';
 import LoadingScreen from '../../components/common/LoadingScreen';
 import { useHomeData } from '../../hooks/home/useHomeData';
@@ -85,7 +85,7 @@ export default function NormalHomePage() {
         </p>
       </div>
 
-      <CardSlider 
+      <ClassCardSlider 
         images={Array.isArray(homeData?.data?.hots) ? homeData.data.hots.map(hot => hot.imageUrl) : imageFiles} 
         classes={Array.isArray(homeData?.data?.hots) ? homeData.data.hots.map(hot => ({
           id: hot.openId.toString(),

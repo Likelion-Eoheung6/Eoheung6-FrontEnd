@@ -1,5 +1,20 @@
 import React from 'react';
 
+interface ClassInfo {
+  title: string;
+  currentParticipants: number;
+  maxParticipants: number;
+  id: string;
+}
+
+interface CenterCardProps {
+  image?: string;
+  classInfo?: ClassInfo;
+  isRotating?: boolean;
+  onClassClick?: (classId: string) => void;
+}
+
+// ClassCard 컴포넌트
 interface ClassCardProps {
   title: string;
   currentParticipants: number;
@@ -8,7 +23,7 @@ interface ClassCardProps {
   size?: 'small' | 'medium';
 }
 
-export default function ClassCard({
+function ClassCard({
   title,
   currentParticipants,
   maxParticipants,
@@ -52,6 +67,40 @@ export default function ClassCard({
         }`}>
           {currentParticipants} / {maxParticipants}
         </div>
+      </div>
+    </div>
+  );
+}
+
+export default function CenterCard({ 
+  image, 
+  classInfo, 
+  isRotating = false,
+  onClassClick 
+}: CenterCardProps) {
+  return (
+    <div className="flex flex-col items-center">
+      {/* 가운데 이미지 */}
+      <div 
+        className={`w-[137px] h-[86px] rounded-[20px] transition-all duration-300 ease-in-out ${
+          image ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
+        } ${
+          isRotating ? 'transform scale-95 rotate-3' : 'transform scale-100 rotate-0'
+        }`}
+        style={image ? { backgroundImage: `url(${image})` } : undefined}
+      ></div>
+
+      {/* 가운데 클래스 카드 - 이미지 아래 5px 간격 */}
+      <div className="w-[137px] flex justify-center mt-[5px]">
+        {classInfo && (
+          <ClassCard 
+            title={classInfo.title}
+            currentParticipants={classInfo.currentParticipants}
+            maxParticipants={classInfo.maxParticipants}
+            size="medium"
+            onClick={() => onClassClick?.(classInfo.id)}
+          />
+        )}
       </div>
     </div>
   );
