@@ -3,6 +3,7 @@ import React from 'react';
 interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
   radius?: string;
+  bgColor?: string;
   text: string;
   isActive?: boolean;
   onClick?: () => void;
@@ -12,6 +13,7 @@ export default function ButtonComponent({
   size = 'medium',
   radius = '9999px',
   text,
+  bgColor,
   isActive = true,
   onClick,
 }: ButtonProps) {
@@ -42,6 +44,7 @@ export default function ButtonComponent({
         ${sizeClasses}
         ${activeClasses}
         rounded-[${radius}]
+        bg-[${bgColor}]
 
       `}
     >

@@ -10,7 +10,6 @@ import TransferIcon from '../../assets/class/transfer.svg';
 
 import { loadTossPayments, ANONYMOUS } from '@tosspayments/tosspayments-sdk';
 
-// location.state로 받아올 데이터의 타입을 정의합니다.
 interface PaymentInfoState {
   orderId: string;
   itemName: string;
@@ -21,66 +20,50 @@ interface PaymentInfoState {
 }
 
 // 토스페이먼츠 클라이언트 키 (실제 키로 교체 필요)
-const tossClientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
+const tossClientKey = 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq';
 
 export default function PaymentPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 1. location.state에서 결제 정보를 가져옵니다.
-  // 타입 단언을 사용하여 state의 타입을 명확히 합니다.
+  // location.state에서 결제 정보를 가져온다
   const paymentInfo = location.state as PaymentInfoState | null;
   const [selectedMethod, setSelectedMethod] = useState<
     'KAKAOPAY' | 'TOSS_TRANSFER'
   >('KAKAOPAY');
   const [tossWidgets, setTossWidgets] = useState<any>(null);
-  const [tossReady, setTossReady] = useState(false);
-
-  // 2. 데이터 유효성 검사
-  // 만약 state 없이 이 페이지에 직접 접근하면, 이전 페이지로 돌려보냅니다.
-  useEffect(() => {
-    if (!paymentInfo) {
-      alert('잘못된 접근입니다. 이전 페이지로 돌아갑니다.');
-      navigate(-1); // 이전 페이지로 이동
-    }
-  }, [paymentInfo, navigate]);
+  const [tossPayments, setTossPayments] = useState<any>(null);
 
   // 1. 토스 위젯 인스턴스 생성
   useEffect(() => {
-    if (selectedMethod !== 'TOSS_TRANSFER' || !paymentInfo) return;
-
-    async function fetchTossWidgets() {
-      const tossPayments = await loadTossPayments(tossClientKey);
-      const widgets = tossPayments.widgets({
-        // 고객을 특정하는 값으로, 실제 유저 ID 또는 이름을 사용하는 것을 권장합니다.
-        customerKey: paymentInfo?.customerName || ANONYMOUS,
-      });
-      setTossWidgets(widgets);
+    async function fetchTossPayments() {
+      const loadedTossPayments = await loadTossPayments(tossClientKey);
+      setTossPayments(loadedTossPayments);
     }
-    fetchTossWidgets();
-  }, [selectedMethod, paymentInfo]);
+    fetchTossPayments();
+  }, []);
 
   // 2. 토스 위젯 렌더링
-  useEffect(() => {
-    if (tossWidgets == null || !paymentInfo) return;
+  // useEffect(() => {
+  //   if (tossWidgets == null || !paymentInfo) return;
 
-    async function renderTossWidgets() {
-      await tossWidgets.setAmount({
-        currency: 'KRW',
-        value: paymentInfo?.totalPrice,
-      });
-      await tossWidgets.renderPaymentMethods({
-        selector: '#payment-method',
-        variantKey: 'DEFAULT',
-      });
-      await tossWidgets.renderAgreement({
-        selector: '#agreement',
-        variantKey: 'AGREEMENT',
-      });
-      setTossReady(true);
-    }
-    renderTossWidgets();
-  }, [tossWidgets, paymentInfo]);
+  //   async function renderTossWidgets() {
+  //     await tossWidgets.setAmount({
+  //       currency: 'KRW',
+  //       value: paymentInfo?.totalPrice,
+  //     });
+  //     await tossWidgets.renderPaymentMethods({
+  //       selector: '#payment-method',
+  //       variantKey: 'DEFAULT',
+  //     });
+  //     await tossWidgets.renderAgreement({
+  //       selector: '#agreement',
+  //       variantKey: 'AGREEMENT',
+  //     });
+  //     setTossReady(true);
+  //   }
+  //   renderTossWidgets();
+  // }, [tossWidgets, paymentInfo]);
 
   const kakaoPayment = async () => {
     // paymentInfo가 없으면 결제 요청을 보내지 않습니다.
@@ -95,12 +78,6 @@ export default function PaymentPage() {
       if (response.data && response.data.data.next_redirect_pc_url) {
         const nextRedirectUrl = response.data.data.next_redirect_pc_url;
         window.location.href = nextRedirectUrl;
-        navigate(
-          `/payment/success?provider=kakao&orderId=${paymentInfo.orderId}`,
-          {
-            replace: true,
-          }
-        );
 
         console.log('카카오페이: ', response.data.data);
       } else {
@@ -113,24 +90,48 @@ export default function PaymentPage() {
   };
 
   const tossPayment = async () => {
-    if (!tossWidgets || !paymentInfo) return;
+    if (!tossPayments || !paymentInfo) {
+      alert('결제 모듈이 준비되지 않았습니다.');
+      return;
+    }
     try {
-      await tossWidgets.requestPayment({
+      const customerKey = window.btoa(Math.random().toString()).slice(0, 20);
+      const payment = tossPayments.payment({ customerKey });
+
+      await payment.requestPayment({
+        method: 'TRANSFER',
+        amount: {
+          currency: 'KRW',
+          value: paymentInfo.totalPrice,
+        },
         orderId: paymentInfo.orderId,
         orderName: paymentInfo.itemName,
-        customerName: paymentInfo.customerName,
+        customerName: paymentInfo.customerName || '고객님',
         customerEmail: paymentInfo.customerEmail,
         successUrl: `${window.location.origin}/payment/success`,
         failUrl: `${window.location.origin}/fail`,
+        // 계좌이체 관련 추가 옵션
+        transfer: {
+          cashReceipt: {
+            type: '소득공제', // 현금영수증 종류
+          },
+          useEscrow: false, // 에스크로 사용 여부
+        },
       });
     } catch (error) {
-      console.error('토스 결제 요청 에러:', error);
-      alert('결제 요청 중 에러가 발생했습니다.');
+      console.error('Toss Payment error:', error);
+      alert('토스페이먼츠 요청 중 오류가 발생했습니다.');
     }
   };
 
   // --- 메인 핸들러 ---
   const handlePayment = () => {
+    if (paymentInfo) {
+      sessionStorage.setItem('orderId', paymentInfo.orderId);
+      sessionStorage.setItem('totalPrice', paymentInfo.totalPrice.toString());
+      sessionStorage.setItem('quantity', paymentInfo.quantity.toString());
+    }
+
     if (selectedMethod === 'KAKAOPAY') {
       kakaoPayment();
     } else if (selectedMethod === 'TOSS_TRANSFER') {
@@ -147,7 +148,7 @@ export default function PaymentPage() {
     <ClassContainer>
       <ClassHeaderBar title="결제하기" />
       <BodyContainer>
-        <div className="w-full rounded-[1rem] box-border p-3 shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-8">
+        <div className="w-full rounded-[1rem] box-border p-3 shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] bg-[#FAFAFA] mb-8">
           <div className="flex flex-col">
             <span className="w-fit px-3.5 py-1.5 text-sm rounded-full font-semibold mb-3">
               결제수단
@@ -155,56 +156,49 @@ export default function PaymentPage() {
             <div className="flex gap-4">
               {/* 카카오페이 선택 버튼 */}
               <div className="text-center">
-                <img
-                  src={KakaoTalkIcon}
-                  alt="카카오톡"
-                  className="mx-auto mb-2"
-                />
                 <button
                   onClick={() => setSelectedMethod('KAKAOPAY')}
                   className={`rounded-2xl box-border p-3 font-bold ${
                     selectedMethod === 'KAKAOPAY'
-                      ? 'border-2 border-blue-500 bg-blue-50 text-blue-700'
+                      ? 'rounded-2xl border border-[#95E3FF] bg-[#FDFDFD] shadow-[0_0_4px_4px_rgba(0,187,255,0.16)]'
                       : 'border border-gray-300 text-gray-500'
                   }`}
                 >
+                  <img
+                    src={KakaoTalkIcon}
+                    alt="카카오톡"
+                    className="mx-auto mb-2"
+                  />
                   카카오 페이
                 </button>
               </div>
               {/* 계좌이체(토스) 선택 버튼 */}
               <div className="text-center">
-                <img
-                  src={TransferIcon}
-                  alt="계좌이체"
-                  className="mx-auto mb-2"
-                />
                 <button
                   onClick={() => setSelectedMethod('TOSS_TRANSFER')}
-                  className={`rounded-2xl box-border p-3 font-bold ${
+                  className={`rounded-2xl box-border px-6 py-2 font-bold ${
                     selectedMethod === 'TOSS_TRANSFER'
-                      ? 'border-2 border-blue-500 bg-blue-50 text-blue-700'
+                      ? 'rounded-2xl border border-[#95E3FF] bg-[#FDFDFD] shadow-[0_0_4px_4px_rgba(0,187,255,0.16)]'
                       : 'border border-gray-300 text-gray-500'
                   }`}
                 >
+                  <img
+                    src={TransferIcon}
+                    alt="계좌이체"
+                    className="mx-auto mb-2"
+                  />
                   계좌이체
                 </button>
               </div>{' '}
             </div>
           </div>
         </div>
-        {/* 토스페이먼츠 위젯이 렌더링될 영역 (계좌이체 선택 시 보임) */}
-        {selectedMethod === 'TOSS_TRANSFER' && (
-          <div className="mb-8">
-            <div id="payment-method" className="w-full" />
-            <div id="agreement" className="w-full" />
-          </div>
-        )}
         <ButtonComponent
-          text={`${paymentInfo.totalPrice.toLocaleString()}원 결제하기`}
+          text={`결제하기`}
           onClick={handlePayment}
-          // 토스 위젯이 준비 중일 때는 버튼 비활성화
-          isActive={selectedMethod === 'TOSS_TRANSFER' ? tossReady : true}
-        />{' '}
+          // tossPayments 인스턴스가 로드되었는지 여부로 활성화 결정
+          isActive={selectedMethod === 'TOSS_TRANSFER' ? !!tossPayments : true}
+        />
       </BodyContainer>
     </ClassContainer>
   );

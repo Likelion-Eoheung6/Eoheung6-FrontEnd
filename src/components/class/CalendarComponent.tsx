@@ -128,7 +128,8 @@ const CalendarComponent: React.FC<CalendarProps> = ({
               if (!isCurrentMonth) {
                 stateClasses = 'text-[#d1d5db] cursor-default';
               } else if (isSelected) {
-                stateClasses = 'bg-[#fefcbf] text-[#b45309] font-[700]';
+                stateClasses =
+                  'bg-[#FFEFA1] border-2 border-[#FFD400] stroke-1 stroke-[#FFD400] drop-shadow-[0_0_2px_rgba(255,212,0,0.60)] ';
               } else {
                 stateClasses = 'text-[#111111] hover:bg-[#f3f4f6]';
               }

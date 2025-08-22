@@ -19,21 +19,22 @@ export default function PaymentSuccessPage() {
   //   amount: number;
   //   count: number;
   // } | null>(null);
-  const [classDetails, setClassDetails] = useState<ClassDetailData | null>(
-    null
-  );
   const [status, setStatus] = useState<'LOADING' | 'SUCCESS' | 'ERROR'>(
     'LOADING'
   );
   const [errorMsg, setErrorMsg] = useState('');
 
+  const [totalPrice, setTotalPrice] = useState();
+  const [quantity, setQuantity] = useState();
+
   useEffect(() => {
     // useEffect 내에서 사용할 별도의 async 함수를 선언합니다.
     const fetchFinalDetails = async () => {
-      // URL 쿼리 파라미터 또는 sessionStorage에서 orderId를 가져옵니다.
-      const orderIdFromUrl = searchParams.get('orderId');
-      const orderIdFromStorage = sessionStorage.getItem('orderId');
-      const orderId = orderIdFromUrl || orderIdFromStorage;
+      const orderId = sessionStorage.getItem('orderId');
+      const totalPrice = sessionStorage.getItem('totalPrice');
+      const quantity = sessionStorage.getItem('quantity');
+      setTotalPrice(totalPrice);
+      setQuantity(quantity);
 
       if (!orderId) {
         setStatus('ERROR');
@@ -41,28 +42,10 @@ export default function PaymentSuccessPage() {
         return;
       }
 
-      try {
-        const response = await getClassDetail(orderId);
-
-        if (response.isSuccess) {
-          // 성공적으로 데이터를 받아오면, 이 데이터를 state에 저장합니다.
-          setClassDetails(response.data);
-          setStatus('SUCCESS');
-        } else {
-          throw new Error(
-            response.message || '예약 정보를 불러오는데 실패했습니다.'
-          );
-        }
-      } catch (err: any) {
-        setStatus('ERROR');
-        setErrorMsg(err.message);
-        console.error(err);
-      } finally {
-        // 확인이 끝났으므로 임시 데이터를 정리합니다.
-        sessionStorage.removeItem('orderId');
-        sessionStorage.removeItem('amount');
-        sessionStorage.removeItem('count');
-      }
+      // 확인이 끝났으므로 임시 데이터를 정리합니다.
+      sessionStorage.removeItem('orderId');
+      sessionStorage.removeItem('totalPrice');
+      sessionStorage.removeItem('quantity');
     };
 
     fetchFinalDetails();
@@ -99,9 +82,7 @@ export default function PaymentSuccessPage() {
                 <img src={WonIcon} alt="결제 금액 아이콘" className="w-6 h-6" />
                 <span className="text-gray-500">결제 금액 | 총</span>
               </div>
-              <span className="font-bold text-gray-800">
-                {classDetails?.price} 원
-              </span>
+              <span className="font-bold text-gray-800">{totalPrice} 원</span>
             </div>
 
             {/* 신청 인원 행 */}
@@ -114,7 +95,7 @@ export default function PaymentSuccessPage() {
                 />
                 <span className="text-gray-500">신청 인원 |</span>
               </div>
-              <span className="font-bold text-gray-800">{} 명</span>
+              <span className="font-bold text-gray-800">{quantity} 명</span>
             </div>
           </div>
           <div className="w-full mt-8">

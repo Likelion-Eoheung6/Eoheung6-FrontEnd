@@ -31,8 +31,7 @@ export default function ApplyClassPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // --- 상태 추가 ---
-  // '신청하기' 버튼 클릭 여부를 관리하는 상태
+  // '결제하기(신청)' 버튼 클릭 여부를 관리하는 상태
   const [isApplying, setIsApplying] = useState(false);
   // 찜하기 상태
   const [isWished, setIsWished] = useState(classInfo?.isWished || false);
@@ -114,24 +113,22 @@ export default function ApplyClassPage() {
   // 메인 버튼 클릭 핸들러
   const handleMainButtonClick = async () => {
     if (isApplying) {
-      // 1. handleApply 함수가 끝날 때까지 기다리고, 그 결과를 받습니다.
       const applicationResult = await handleApply();
+      if (classInfo?.openId) {
+        sessionStorage.setItem('openId', classInfo.openId.toString());
+      }
 
-      // 2. handleApply가 성공적으로 데이터를 반환했을 때만 다음 페이지로 이동합니다.
       if (applicationResult) {
-        // 3. API 응답으로 받은 실제 주문 정보를 payment 페이지로 전달합니다.
         navigate('payment', {
           state: {
             orderId: applicationResult.orderId,
             itemName: applicationResult.itemName,
-            quantity: Number(applicationResult.quantity), // 숫자로 변환
-            totalPrice: Number(applicationResult.totalPrice), // 숫자로 변환
+            quantity: Number(applicationResult.quantity),
+            totalPrice: Number(applicationResult.totalPrice),
           },
         });
       }
-      // applicationResult가 null이면, handleApply 내부에서 이미 alert가 실행되었으므로 아무것도 하지 않습니다.
     } else {
-      // '클래스 신청하기' 버튼 클릭 시, 신청 화면으로 전환
       setIsApplying(true);
     }
   };
@@ -143,7 +140,7 @@ export default function ApplyClassPage() {
   const ClassDetailsSection = () => (
     <>
       {/* 클래스 소개 */}
-      <div className="w-full rounded-[1.25rem] box-border p-3 shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-8">
+      <div className="w-full rounded-[1.25rem] box-border p-3 bg-[#FAFAFA] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-8">
         <div className="flex flex-col">
           <span className="w-fit px-3.5 py-1.5 text-xs rounded-full bg-[#009DFF] text-white font-semibold mb-2">
             클래스 소개
@@ -157,11 +154,9 @@ export default function ApplyClassPage() {
               {classInfo?.moodTags?.map(tag => (
                 <div
                   key={tag}
-                  className="flex items-center bg-indigo-100 rounded-full px-3 py-1"
+                  className="flex items-center rounded-full px-3 py-1"
                 >
-                  <span className="text-xs font-medium text-indigo-800">
-                    #{tag}
-                  </span>
+                  <span className="text-xs font-medium">#{tag}</span>
                 </div>
               ))}
             </div>
@@ -169,7 +164,7 @@ export default function ApplyClassPage() {
         </div>
       </div>
       {/* 클래스 장소 선택 */}
-      <div className="w-full rounded-[1.25rem] box-border p-3 shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-8">
+      <div className="w-full rounded-[1.25rem] box-border p-3 bg-[#FAFAFA] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-8">
         <div className="flex justify-between items-center mb-2">
           <span className="flex items-center gap-2 w-fit px-3.5 py-1.5 text-xs rounded-full bg-[#009DFF] text-white font-semibold">
             <img src={LocationIcon} alt="위치" className="h-4 w-4" />
@@ -263,7 +258,7 @@ export default function ApplyClassPage() {
           />
           <button
             onClick={toggleWish}
-            className="absolute -bottom-4 right-4 flex items-center justify-center bg-white rounded-full p-2 shadow-lg transition-transform active:scale-95"
+            className="absolute -bottom-4 right-4 flex items-center justify-center"
             aria-label="찜하기"
           >
             <img
@@ -275,7 +270,7 @@ export default function ApplyClassPage() {
         </div>
 
         {/* 클래스 제목 */}
-        <div className="w-full rounded-[1.25rem] bg-white shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mt-8 mb-5 p-3">
+        <div className="w-full rounded-[1.25rem] bg-[#FAFAFA] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mt-8 mb-5 p-3">
           <div className="flex items-center">
             <div className="rounded-full bg-[#009DFF] text-white text-xs font-semibold px-3.5 py-1.5 shadow mr-2 flex-shrink-0">
               클래스 제목
