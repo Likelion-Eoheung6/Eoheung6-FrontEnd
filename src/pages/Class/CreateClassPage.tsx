@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ClassContainer from '../../components/class/ClassContainer';
 import ClassHeaderBar from '../../components/class/ClassHeaderBar';
 import BodyContainer from '../../components/common/BodyContainer';

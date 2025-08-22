@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom'; // 데이터를 받기 위해 import
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'; // 데이터를 받기 위해 import
 import ClassContainer from '../../components/class/ClassContainer';
 import ClassHeaderBar from '../../components/class/ClassHeaderBar';
 import BodyContainer from '../../components/common/BodyContainer';
@@ -8,50 +8,65 @@ import CheckIcon from '../../assets/class/check.svg';
 import StarCharacterIcon from '../../assets/class/main-character.svg';
 import WonIcon from '../../assets/class/money.svg';
 import PeopleIcon from '../../assets/class/people.svg';
+import ButtonComponent from '../../components/common/ButtonComponent';
+import { getClassDetail } from '../../apis/apply/applyApi';
+import type { ClassDetailData } from '../../types/class/classTypes';
 
 export default function PaymentSuccessPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [paymentInfo, setPaymentInfo] = useState<{
-    amount: number;
-    count: number;
-  } | null>(null);
+  // const [paymentInfo, setPaymentInfo] = useState<{
+  //   amount: number;
+  //   count: number;
+  // } | null>(null);
+  const [classDetails, setClassDetails] = useState<ClassDetailData | null>(
+    null
+  );
+  const [status, setStatus] = useState<'LOADING' | 'SUCCESS' | 'ERROR'>(
+    'LOADING'
+  );
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    // URL 쿼리 파라미터에서 값을 먼저 확인합니다 (토스페이먼츠 방식).
-    const amountFromUrl = searchParams.get('amount');
-    const orderIdFromUrl = searchParams.get('orderId'); // 토스는 orderId도 함께 줍니다.
+    // useEffect 내에서 사용할 별도의 async 함수를 선언합니다.
+    const fetchFinalDetails = async () => {
+      // URL 쿼리 파라미터 또는 sessionStorage에서 orderId를 가져옵니다.
+      const orderIdFromUrl = searchParams.get('orderId');
+      const orderIdFromStorage = sessionStorage.getItem('orderId');
+      const orderId = orderIdFromUrl || orderIdFromStorage;
 
-    if (amountFromUrl && orderIdFromUrl) {
-      // 토스로부터 돌아온 경우
-      // TODO: 백엔드에 orderId로 수량을 조회하여 count를 가져오는 로직이 필요할 수 있습니다.
-      // 우선 임시로 1로 설정합니다.
-      setPaymentInfo({
-        amount: Number(amountFromUrl),
-        count: 1, // 임시 값
-      });
-    } else {
-      // sessionStorage에서 값을 확인합니다 (카카오페이 방식).
-      const amountFromStorage = sessionStorage.getItem('amount');
-      const countFromStorage = sessionStorage.getItem('count');
+      if (!orderId) {
+        setStatus('ERROR');
+        setErrorMsg('주문 정보를 찾을 수 없습니다.');
+        return;
+      }
 
-      if (amountFromStorage && countFromStorage) {
-        setPaymentInfo({
-          amount: Number(amountFromStorage),
-          count: Number(countFromStorage),
-        });
+      try {
+        const response = await getClassDetail(orderId);
 
-        // 사용 후에는 sessionStorage에서 데이터를 정리해주는 것이 좋습니다.
+        if (response.isSuccess) {
+          // 성공적으로 데이터를 받아오면, 이 데이터를 state에 저장합니다.
+          setClassDetails(response.data);
+          setStatus('SUCCESS');
+        } else {
+          throw new Error(
+            response.message || '예약 정보를 불러오는데 실패했습니다.'
+          );
+        }
+      } catch (err: any) {
+        setStatus('ERROR');
+        setErrorMsg(err.message);
+        console.error(err);
+      } finally {
+        // 확인이 끝났으므로 임시 데이터를 정리합니다.
+        sessionStorage.removeItem('orderId');
         sessionStorage.removeItem('amount');
         sessionStorage.removeItem('count');
       }
-    }
-    // 여기에 최종 결제 승인 로직(백엔드 API 호출)이 추가되어야 합니다.
-  }, [searchParams]);
+    };
 
-  if (!paymentInfo) {
-    // 데이터를 불러오는 중이거나 데이터가 없는 경우
-    return <div>결제 정보를 불러오는 중입니다...</div>;
-  }
+    fetchFinalDetails();
+  }, [searchParams]);
 
   return (
     <ClassContainer>
@@ -85,7 +100,7 @@ export default function PaymentSuccessPage() {
                 <span className="text-gray-500">결제 금액 | 총</span>
               </div>
               <span className="font-bold text-gray-800">
-                {paymentInfo.amount} 원
+                {classDetails?.price} 원
               </span>
             </div>
 
@@ -99,10 +114,20 @@ export default function PaymentSuccessPage() {
                 />
                 <span className="text-gray-500">신청 인원 |</span>
               </div>
-              <span className="font-bold text-gray-800">
-                {paymentInfo.count} 명
-              </span>
+              <span className="font-bold text-gray-800">{} 명</span>
             </div>
+          </div>
+          <div className="w-full mt-8">
+            <ButtonComponent
+              text="확인"
+              onClick={() =>
+                navigate('/class/done', {
+                  state: {
+                    type: 'application', // '신청' 완료임을 명시
+                  },
+                })
+              }
+            />
           </div>
         </div>
       </BodyContainer>

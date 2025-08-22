@@ -5,6 +5,8 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "types": ["kakao.maps.d.ts"]
+    "types": ["kakao.maps.d.ts"],
+    "noUnusedParameters": false, // 함수 인자
+    "noUnusedLocals": false // 사용하지 않는 변수
   }
 }

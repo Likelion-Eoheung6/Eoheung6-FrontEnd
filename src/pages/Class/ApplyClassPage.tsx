@@ -65,6 +65,10 @@ export default function ApplyClassPage() {
     fetchClassData();
   }, [classId, setClassInfo]);
 
+  useEffect(() => {
+    console.log('class info: ', classInfo);
+  }, [classInfo]);
+
   // 찜하기 토글 함수
   const toggleWish = () => {
     setIsWished(prev => !prev);
@@ -85,9 +89,6 @@ export default function ApplyClassPage() {
       const response = await applyForClass(classId, applicationData);
 
       if (response.isSuccess && response.data) {
-        alert('클래스 신청이 완료되었습니다! 결제 페이지로 이동합니다.');
-
-        // --- 여기가 핵심 수정 부분 ---
         // 1. response.data에서 필요한 값들을 추출합니다.
         // 2. KakaoPayReadyRequest 타입에 맞는 새 객체를 생성합니다.
         const paymentData: KakaoPayReadyRequest = {
