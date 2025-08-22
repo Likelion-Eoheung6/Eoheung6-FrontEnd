@@ -59,7 +59,7 @@ export default function ImageSwiperComponent({
           {slides.map((imgUrl, idx) => (
             <SwiperSlide key={idx}>
               <div
-                className={`relative h-[200px] w-full overflow-hidden bg-cover bg-center ${
+                className={`relative h-[225px] w-full overflow-hidden bg-cover bg-center ${
                   !imgUrl && 'bg-[#808080]'
                 }`}
                 style={imgUrl ? { backgroundImage: `url(${imgUrl})` } : {}}

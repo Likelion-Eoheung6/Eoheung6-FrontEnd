@@ -10,7 +10,7 @@ import WonIcon from '../../assets/class/money.svg';
 import PeopleIcon from '../../assets/class/people.svg';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import { getClassDetail } from '../../apis/apply/applyApi';
-import type { ClassDetailData } from '../../types/class/classTypes';
+import type { ClassDetailData } from '../../types/apply/applyTypes';
 
 export default function PaymentSuccessPage() {
   const navigate = useNavigate();

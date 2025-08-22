@@ -14,7 +14,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useClassInfoStore } from '../../stores/useClassInfoStore';
 import { useEffect, useState } from 'react';
 import { getClassDetail } from '../../apis/apply/applyApi';
-import type { ClassDetailData } from '../../types/class/classTypes';
+import type { ClassDetailData } from '../../types/apply/applyTypes';
 
 export default function DoneClassPage() {
   const navigate = useNavigate();

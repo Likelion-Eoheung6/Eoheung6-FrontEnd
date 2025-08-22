@@ -21,7 +21,7 @@ import ClassTimeComponent from '../../components/class/ClassTimeComponent';
 import type {
   ApplyClassRequest,
   KakaoPayReadyRequest,
-} from '../../types/class/classTypes';
+} from '../../types/apply/applyTypes';
 
 export default function ApplyClassPage() {
   const { classInfo, setClassInfo } = useClassInfoStore();
