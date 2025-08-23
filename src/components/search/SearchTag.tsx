@@ -27,14 +27,14 @@ export default function SearchTag({ onTagSelect, selectedTagsFromInput = [] }: S
     if (selectedTags.includes(tag)) {
       const newSelectedTags = selectedTags.filter(t => t !== tag);
       setSelectedTags(newSelectedTags);
-      // 선택된 태그들을 모두 전달
-      const tagString = newSelectedTags.map(t => `✓${t}`).join(' ');
+      // 선택된 태그들을 쉼표로 구분하여 전달 (체크 표시 제외)
+      const tagString = newSelectedTags.join(', ');
       onTagSelect(tagString);
     } else {
       const newSelectedTags = [...selectedTags, tag];
       setSelectedTags(newSelectedTags);
-      // 선택된 태그들을 모두 전달
-      const tagString = newSelectedTags.map(t => `✓${t}`).join(' ');
+      // 선택된 태그들을 쉼표로 구분하여 전달 (체크 표시 제외)
+      const tagString = newSelectedTags.join(', ');
       onTagSelect(tagString);
     }
   };
