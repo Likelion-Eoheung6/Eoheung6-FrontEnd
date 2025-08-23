@@ -38,6 +38,10 @@ export default function ReviewPage() {
     setIsModalOpen(true);
   };
 
+  const handleClassClick = (classId: string) => {
+    navigate(`/class/${classId}`);
+  };
+
   // 수강한 클래스 데이터를 ActivityClassCard에서 사용할 형태로 변환
   const reviewClasses = takenClassesData?.data?.map(classItem => ({
     id: classItem.openId.toString(),
@@ -83,6 +87,7 @@ export default function ReviewPage() {
                 buttonText="리뷰 남기기 >"
                 imageUrl={classItem.imageUrl}
                 onButtonClick={() => handleReviewClick(classItem.id)}
+                onClick={() => handleClassClick(classItem.id)}
                 hasReview={classItem.hasReview}
                 reviewRating={classItem.reviewRating}
               />

@@ -80,10 +80,11 @@ export default function SideCard({
     <div className="flex flex-col items-center">
       {/* 사이드 이미지 */}
       <div 
-        className={`w-[107px] h-[68px] rounded-[20px] transition-all duration-300 ease-in-out ${
+        className={`w-[107px] h-[68px] rounded-[20px] transition-all duration-300 ease-in-out cursor-pointer ${
           image ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
         }`}
         style={image ? { backgroundImage: `url(${image})` } : undefined}
+        onClick={() => classInfo && onClassClick?.(classInfo.id)}
       ></div>
 
       {/* 사이드 클래스 카드 - 이미지 아래 5px 간격 */}

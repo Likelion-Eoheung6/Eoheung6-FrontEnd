@@ -11,6 +11,7 @@ interface WishlistCardProps {
   imageUrl?: string;
   openId: number;
   onToggleWish?: (openId: number, isWished: boolean) => void;
+  onClick?: () => void;
   isWished?: boolean;
   isLoading?: boolean;
 }
@@ -23,6 +24,7 @@ export default function WishlistCard({
   imageUrl,
   openId,
   onToggleWish,
+  onClick,
   isWished = true, // 위시리스트에 있으므로 true로 시작
   isLoading = false,
 }: WishlistCardProps) {
@@ -41,7 +43,10 @@ export default function WishlistCard({
     <div 
       className="w-full flex items-center gap-[7px]">
       {/* 이미지 */}
-      <div className="w-[88px] h-[88px] bg-[#B3B3B3] rounded-[21px] flex-shrink-0">
+      <div 
+        className="w-[88px] h-[88px] bg-[#B3B3B3] rounded-[21px] flex-shrink-0 cursor-pointer"
+        onClick={onClick}
+      >
         {imageUrl && (
           <img 
             src={imageUrl} 

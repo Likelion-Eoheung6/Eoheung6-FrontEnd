@@ -10,6 +10,9 @@ export const useVersionMutation = () => {
     mutationFn: (data: VersionRequest) => selectVersion(data),
     onSuccess: (data, variables) => {
       if (data.isSuccess) {
+        // 선택된 버전을 세션 스토리지에 저장
+        sessionStorage.setItem('userVersion', variables.chooseEasyVer ? 'easy' : 'normal');
+        
         // 선택된 버전에 따라 다른 페이지로 이동
         if (variables.chooseEasyVer) {
           // 쉬운 버전 선택 시

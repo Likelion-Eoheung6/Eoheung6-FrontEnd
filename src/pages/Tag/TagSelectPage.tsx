@@ -125,6 +125,7 @@ export default function TagSelectPage() {
           classData={classData}
           areAllImagesLoaded={areAllImagesLoaded()}
           onImageLoad={handleImageLoadComplete}
+          onClassClick={(classId) => navigate(`/class/${classId}`)}
         />
       )}
     </div>

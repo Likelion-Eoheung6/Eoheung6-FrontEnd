@@ -51,6 +51,10 @@ const WishlistPage: React.FC = () => {
       // 실패 시 UI 업데이트하지 않음
     }
   };
+
+  const handleClassClick = (openId: number) => {
+    navigate(`/class/${openId}`);
+  };
   if (isLoading) {
     return (
       <div>
@@ -123,6 +127,7 @@ const WishlistPage: React.FC = () => {
             imageUrl={wishClass.imageUrl}
             isWished={wishStates[wishClass.openId]}
             onToggleWish={handleToggleWish}
+            onClick={() => handleClassClick(wishClass.openId)}
             isLoading={updateWishlist.isPending}
           />
         ))}

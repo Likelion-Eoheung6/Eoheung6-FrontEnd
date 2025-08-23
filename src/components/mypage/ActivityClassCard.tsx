@@ -14,6 +14,7 @@ type ActivityClassCardProps = {
   buttonColor?: string;
   imageUrl?: string;
   onButtonClick?: () => void;
+  onClick?: () => void;
   hasReview?: boolean;
   reviewRating?: number;
 };
@@ -28,6 +29,7 @@ export default function ActivityClassCard({
   buttonColor = '#009DFF',
   imageUrl,
   onButtonClick,
+  onClick,
   hasReview = false,
   reviewRating = 0
 }: ActivityClassCardProps) {
@@ -73,7 +75,13 @@ export default function ActivityClassCard({
               <span className="text-[10px] font-medium leading-[120%] tracking-[-0.025em]">비용</span>
               <div className="w-[1px] h-[12px] bg-[#E0E0E0]"></div>
               <span className="text-[#111111] text-[10px] font-medium leading-[120%] tracking-[-0.025em]">인당 <span className="pl-[13px]">{price.toLocaleString()}원</span></span>
-              <button className="ml-auto self-center bg-[#B3B3B3] text-[#FDFDFD] text-[10px] font-semibold px-[8px] py-[2px] rounded-[10px] leading-[120%] tracking-[-0.025em] mr-[4px]">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClick?.();
+                }}
+                className="ml-auto self-center bg-[#B3B3B3] text-[#FDFDFD] text-[10px] font-semibold px-[8px] py-[2px] rounded-[10px] leading-[120%] tracking-[-0.025em] mr-[4px] cursor-pointer"
+              >
                 상세보기 &gt;
               </button>
             </div>
