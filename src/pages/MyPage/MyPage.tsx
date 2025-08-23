@@ -11,7 +11,9 @@ import TagBox from '../../components/mypage/TagBox';
 export default function MyPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const version = searchParams.get('version');
+  const urlVersion = searchParams.get('version');
+  const sessionVersion = sessionStorage.getItem('userVersion');
+  const version = urlVersion || sessionVersion;
   
   // API 데이터 가져오기
   const { data: myPageData, isLoading, error } = useMyPageData();
