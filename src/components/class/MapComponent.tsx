@@ -26,6 +26,7 @@ export default function MapComponent({
     if (map && selectedPlaceId) {
       const selectedPlace = places.find(p => p.id === selectedPlaceId);
       if (selectedPlace) {
+        console.log('');
         const newCenter = new window.kakao.maps.LatLng(
           selectedPlace.latitude,
           selectedPlace.longitude
