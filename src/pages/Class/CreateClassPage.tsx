@@ -59,30 +59,27 @@ export default function CreateClassPage() {
 
   // 태그
   const [tagInput, setTagInput] = useState('');
+  const removeTag = (tagToRemove: string) => {
+    const newTags = req.tags.filter((tag: string) => tag !== tagToRemove);
+    updateReq({ tags: newTags });
+  };
 
   const addTag = (raw: string) => {
-    // 스페이스바 또는 콤마로 여러 태그를 한 번에 분리
     const potentialTags = raw.split(/[\s,]+/).filter(Boolean);
-
     if (potentialTags.length === 0) return;
 
-    // 중복되지 않은 새 태그만 필터링
     const newTags = potentialTags.filter(
-      tag => tag.trim() && !req.tags.includes(tag.trim())
+      (tag: string) => tag.trim() && !req.tags.includes(tag.trim())
     );
 
     if (newTags.length > 0) {
       updateReq({ tags: [...req.tags, ...newTags.map(t => t.trim())] });
     }
-
     setTagInput('');
   };
 
-  // 태그 삭제를 위한 함수
-  const removeTag = (tagToRemove: string) => {
-    updateReq({ tags: req.tags.filter(tag => tag !== tagToRemove) });
-  };
-  const onTagKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
+  const onTagKeyUp: React.KeyboardEventHandler<HTMLInputElement> = e => {
+    // onKeyUp은 한글 조합이 끝난 후 발생하므로 isComposing 체크가 필요 없습니다.
     if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
       e.preventDefault();
       addTag(tagInput);
@@ -91,7 +88,6 @@ export default function CreateClassPage() {
       tagInput === '' &&
       req.tags.length > 0
     ) {
-      // 가장 마지막 태그를 삭제
       removeTag(req.tags[req.tags.length - 1]);
     }
   };
@@ -168,10 +164,12 @@ export default function CreateClassPage() {
     } finally {
     }
   };
+
   useEffect(() => {
     const token = getAccessToken();
     console.log(req);
   }, [req]);
+
   // 날짜
   const handleDateChange = (newDate: Date) => {
     const formattedDate = newDate.toISOString().split('T')[0];
@@ -191,7 +189,7 @@ export default function CreateClassPage() {
           />
           {/* 클래스 제목 */}
           <div
-            className={`w-full h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[20px]`}
+            className={`w-full h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] my-[20px] `}
           >
             <div className="rounded-full bg-[#009DFF] text-[white] text-[12px] font-semibold px-[14px] py-[6px] shadow mr-[5px]">
               클래스 제목
@@ -220,34 +218,22 @@ export default function CreateClassPage() {
               />
 
               <div className="mt-2 border-b border-[#E0E0E0]" />
-              <div className="mt-3">
-                <div className="flex flex-wrap gap-[8px] mb-[8px]">
-                  {req.tags.map(tag => (
-                    <div
-                      key={tag}
-                      className="flex items-center bg-[#e0e7ff] rounded-full px-[12px] py-[4px]"
-                    >
-                      <span className="text-[12px] font-medium text-[#4338ca]">
-                        {tag}
-                      </span>
-                      <button
-                        onClick={() => removeTag(tag)}
-                        className="ml-[4px] text-[16px] leading-none text-[#6366f1] hover:text-[#4338ca]"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <input
-                    value={tagInput}
-                    onChange={e => setTagInput(e.target.value)}
-                    onKeyDown={onTagKeyDown}
-                    placeholder="#태그를 입력해주세요."
-                    className="w-full bg-transparent outline-none border-0 placeholder:text-[#B3B3B3] text-gray-600 pb-2"
-                  />
-                </div>
+              <div className="flex flex-wrap items-center gap-2 p-2 rounded-lg bg-gray-50">
+                {req.tags.map((tag: string) => (
+                  <div
+                    key={tag}
+                    className="flex items-center text-sm font-medium rounded-full px-3 py-1"
+                  >
+                    <span>{tag}</span>
+                  </div>
+                ))}
+                <input
+                  value={tagInput}
+                  onChange={e => setTagInput(e.target.value)}
+                  onKeyUp={onTagKeyUp}
+                  placeholder="#태그를 입력해주세요"
+                  className="flex-1 bg-transparent outline-none border-none p-1 text-sm"
+                />
               </div>
             </div>
           </div>
