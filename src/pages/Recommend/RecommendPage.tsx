@@ -76,7 +76,7 @@ const RecommendPage: React.FC = () => {
         </div>
 
         {/* 새로운 추천 요청 버튼 */}
-        <div className="mt-8">
+        <div className="mt-8 mb-[31px]">
           <div className="w-full py-[7px] bg-[#009DFF] rounded-[20px] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] flex items-center justify-center cursor-pointer">
             <div className="flex items-center">
               <span className="text-white text-[16px] font-semibold leading-[120%] tracking-[-0.025em]">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWishlist, useUpdateWishlist } from '../../hooks/wishlist/useWishlist';
 import WishlistCard from '../../components/wish/WishlistCard';
-import LoadingScreen from '../../components/common/LoadingScreen';
+import ClassCardSkeleton from '../../components/common/ClassCardSkeleton';
 import EmptyState from '../../components/common/EmptyState';
 import PageHeader from '../../components/common/PageHeader';
 
@@ -52,7 +52,16 @@ const WishlistPage: React.FC = () => {
     }
   };
   if (isLoading) {
-    return <LoadingScreen />;
+    return (
+      <div>
+        <PageHeader title="위시리스트"/>
+        <div className="px-[32px] py-[14px] space-y-[21px]">
+          {[1, 2, 3].map((index) => (
+            <ClassCardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (error) {

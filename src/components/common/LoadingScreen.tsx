@@ -36,7 +36,7 @@ export default function LoadingScreen({ isVisible = true }: LoadingScreenProps) 
       {/* 로딩 콘텐츠 */}
       <div className="flex-1 flex flex-col items-center mt-[120px] sm:mt-[160px] md:mt-[180px] lg:mt-[210px]">
         {/* 로딩 애니메이션 */}
-        <div className="relative w-[300px] h-[300px] mb-[24px]">
+        <div className="relative w-[300px] h-[300px] mb-[14px]">
           {currentImage === 1 ? (
             <img 
               src={loading1} 
@@ -54,13 +54,21 @@ export default function LoadingScreen({ isVisible = true }: LoadingScreenProps) 
               }`}
             />
           )}
-        </div>
-          {/* 로딩 텍스트 */}
-          <div className="text-center">
-            <p className="text-[#545454] text-[18px] font-medium leading-[120%] tracking-[-0.025em]">
-              세대를 잇는 하루의 순간, 지금 챙겨오는 중이에요!
+          
+          {/* 로딩 이미지 내부 텍스트 */}
+          <div className="absolute inset-0 flex items-center justify-center pt-[250px]">
+            <p className="text-[#009DFF] text-[28px] font-semibold leading-[120%] tracking-[-0.025em]">
+              잠시만 기다려 주세요.
             </p>
           </div>
+        </div>
+        
+        {/* 로딩 텍스트 */}
+        <div className="text-center">
+          <p className="text-[#545454] text-[18px] font-medium leading-[120%] tracking-[-0.025em]">
+            세대를 잇는 하루의 순간, 지금 챙겨오는 중이에요!
+          </p>
+        </div>
         </div>
       </div>
     );
