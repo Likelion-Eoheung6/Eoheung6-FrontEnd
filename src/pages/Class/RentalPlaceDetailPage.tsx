@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import ClassContainer from '../../components/class/ClassContainer';
 import BodyContainer from '../../components/common/BodyContainer';
 import ClassHeaderBar from '../../components/class/ClassHeaderBar';
@@ -14,7 +14,17 @@ import TimeWheelComponent from '../../components/class/TimeWheelComponent';
 import TimeConfirmComponent from '../../components/class/TimeConfirmComponent';
 import dayjs from 'dayjs';
 import ButtonComponent from '../../components/common/ButtonComponent';
+import {
+  getGovPlaceBookedDates,
+  reserveGovPlace,
+} from '../../apis/create/createApi';
+import type {
+  DailyBookingInfo,
+  ReserveGovPlaceRequest,
+} from '../../types/create/createTypes';
+import { useGovReservationStore } from '../../stores/useGovReservationStore';
 
+useGovReservationStore;
 interface ApiDay {
   date: string;
   full: boolean;
@@ -23,7 +33,7 @@ interface ApiDay {
 
 export default function RentalPlaceDetailPage() {
   const { req, updateReq } = useCreateClassStore();
-  const [availability, setAvailability] = useState<ApiDay[]>([]);
+  const [availability, setAvailability] = useState<DailyBookingInfo[]>([]);
   const { placeId } = useParams<{ placeId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -31,6 +41,10 @@ export default function RentalPlaceDetailPage() {
   const [startTime, setStartTime] = useState('00:00');
   const [endTime, setEndTime] = useState('00:00');
   const [duration, setDuration] = useState('00시간 00분');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date()); // 현재 달력 월 상태
+  const { setReservation } = useGovReservationStore();
 
   // 날짜
   const handleDateChange = (newDate: Date) => {
@@ -43,10 +57,20 @@ export default function RentalPlaceDetailPage() {
     updateReq({ openAt: formattedDate });
     console.log('selected date: ' + formattedDate);
   };
+
+  // 가능하지 않은 날짜/시간
   const unavailableDates = useMemo(() => {
+    // 오늘 날짜를 시간 정보 없이 가져옵니다 (정확한 비교를 위해)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     return availability
-      .filter(day => day.full) // Filter for days where 'full' is true
-      .map(day => day.date); // Extract just the date string
+      .filter(day => {
+        const dayDate = new Date(day.date);
+        // 예약이 꽉 찼거나(day.full) 또는 과거 날짜일 경우
+        return day.full || dayDate < today;
+      })
+      .map(day => day.date);
   }, [availability]);
 
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
@@ -92,15 +116,71 @@ export default function RentalPlaceDetailPage() {
     );
   }, [req]);
 
-  const handleSubmit = () => {
-    if (isFormComplete) {
-      navigate('/open-class');
+  // 빈집 예약 요청
+  const handleSubmit = async () => {
+    if (!isFormComplete || !placeId) {
+      alert('모든 정보를 입력해주세요.');
+      return;
+    }
+    navigate('/open-class');
+
+    // API에 보낼 요청 데이터를 구성합니다.
+    const reservationData: ReserveGovPlaceRequest = {
+      date: req.openAt,
+      start: req.startTime,
+      end: req.endTime,
+    };
+
+    try {
+      // 예약 API를 호출합니다.
+      const response = await reserveGovPlace(Number(placeId), reservationData);
+
+      if (response.isSuccess) {
+        setReservation({
+          reservationId: response.data.reservationId,
+          placeId: response.data.placeId,
+          latitude: response.data.latitude,
+          longitude: response.data.longitude,
+        });
+
+        navigate('/open-class');
+      } else {
+        alert(`예약에 실패했습니다: ${response.message}`);
+      }
+    } catch (error) {
+      console.error('Reservation failed:', error);
+      alert('예약 중 오류가 발생했습니다.');
     }
   };
 
+  // 빈집 날짜/시간 조회
   useEffect(() => {
-    setAvailability(samplePlaceDetailData.data.days);
-  }, [placeId]);
+    if (!placeId) return;
+
+    const fetchBookedDates = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const monthParam = dayjs(currentMonth).format('YYYY-MM');
+        const response = await getGovPlaceBookedDates(Number(placeId), {
+          month: monthParam,
+        });
+
+        if (response.isSuccess) {
+          setAvailability(response.data.days);
+        } else {
+          setError(response.message);
+        }
+      } catch (err) {
+        setError('예약 정보를 불러오는 데 실패했습니다.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookedDates();
+  }, [placeId, currentMonth]);
   return (
     <ClassContainer>
       <ClassHeaderBar title="빈집 대여하기" />
@@ -193,7 +273,7 @@ export default function RentalPlaceDetailPage() {
                 endTime={endTime}
                 duration={duration}
                 onConfirm={handleConfirmClick}
-              />{' '}
+              />
             </div>
           </Drawer.Content>
         </Drawer.Portal>

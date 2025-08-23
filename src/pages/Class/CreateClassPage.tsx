@@ -17,10 +17,12 @@ import { useCreateClassStore } from '../../stores/useCreateClassStore';
 import { useNavigate } from 'react-router-dom';
 import { useGovReservationStore } from '../../stores/useGovReservationStore';
 import MapComponent from '../../components/class/MapComponent';
-import usePost from '../../hooks/usePost';
-import { API } from '../../apis/axios';
 import { getAccessToken } from '../../utils/cookieUtils';
-import axios from 'axios';
+import { createClass, reserveGovPlace } from '../../apis/create/createApi';
+import type {
+  CreateClassRequest,
+  ReserveGovPlaceRequest,
+} from '../../types/create/createTypes';
 
 export interface CreateClassPayload {
   infoId: number | null;
@@ -59,30 +61,27 @@ export default function CreateClassPage() {
 
   // 태그
   const [tagInput, setTagInput] = useState('');
+  const removeTag = (tagToRemove: string) => {
+    const newTags = req.tags.filter((tag: string) => tag !== tagToRemove);
+    updateReq({ tags: newTags });
+  };
 
   const addTag = (raw: string) => {
-    // 스페이스바 또는 콤마로 여러 태그를 한 번에 분리
     const potentialTags = raw.split(/[\s,]+/).filter(Boolean);
-
     if (potentialTags.length === 0) return;
 
-    // 중복되지 않은 새 태그만 필터링
     const newTags = potentialTags.filter(
-      tag => tag.trim() && !req.tags.includes(tag.trim())
+      (tag: string) => tag.trim() && !req.tags.includes(tag.trim())
     );
 
     if (newTags.length > 0) {
       updateReq({ tags: [...req.tags, ...newTags.map(t => t.trim())] });
     }
-
     setTagInput('');
   };
 
-  // 태그 삭제를 위한 함수
-  const removeTag = (tagToRemove: string) => {
-    updateReq({ tags: req.tags.filter(tag => tag !== tagToRemove) });
-  };
-  const onTagKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
+  const onTagKeyUp: React.KeyboardEventHandler<HTMLInputElement> = e => {
+    // onKeyUp은 한글 조합이 끝난 후 발생하므로 isComposing 체크가 필요 없습니다.
     if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
       e.preventDefault();
       addTag(tagInput);
@@ -91,10 +90,10 @@ export default function CreateClassPage() {
       tagInput === '' &&
       req.tags.length > 0
     ) {
-      // 가장 마지막 태그를 삭제
       removeTag(req.tags[req.tags.length - 1]);
     }
   };
+
   const isFormComplete = useMemo(() => {
     return (
       (images.length > 0 &&
@@ -107,71 +106,63 @@ export default function CreateClassPage() {
   }, [req, images]);
 
   const handleSubmit = async () => {
-    if (!isFormComplete) return;
-    const isMentorPlace = req.mentorPlaceId !== null;
-    const reqForApi = {
-      infoId: null,
-      title: "Let's Make Cute Moru Dolls!",
-      content:
-        "Join our class to create your very own moru doll! We provide all the materials and guidance. It's a fun and relaxing experience perfect for everyone.",
-      tags: req.tags,
-      mentorPlaceId: isMentorPlace ? req.mentorPlaceId : null,
-      govReservationId: isMentorPlace ? null : req.govReservationId,
-      openAt: '2025-09-25',
-      price: 25000,
-      capacity: 8,
-      startTime: '14:00',
-      endTime: '16:00',
+    if (!isFormComplete) {
+      alert('Please fill out all required fields and add at least one image.');
+      return;
+    }
+
+    const requestData: CreateClassRequest = {
+      title: req.title,
+      content: req.content,
+      mentorPlaceId: req.mentorPlaceId,
+      govReservationId: reservation?.reservationId || 0,
+      openAt: req.openAt,
+      startTime: req.startTime,
+      endTime: req.endTime,
+      capacity: req.capacity,
+      price: req.price,
+      tags: ['인형만들기', '유머스러운', '편안한'],
+      // tags: req.tags.map(tag => tag.replace('#', '')),
     };
 
-    const formData = new FormData();
-
-    // ✅ 1. Create a Blob with the correct JSON Content-Type
-    const reqBlob = new Blob([JSON.stringify(reqForApi)], {
-      type: 'application/json',
-    });
-
-    // ✅ 2. Append the Blob instead of the plain string
-    formData.append('req', reqBlob);
-
-    const imagesToSend = images.slice(0, 5);
-    imagesToSend.forEach(file => {
-      formData.append('images', file);
-    });
-    // const orders = Array.from({ length: imagesToSend.length }, (_, i) => i);
-    // formData.append('orders', JSON.stringify(orders));
+    // API에 보낼 요청 데이터를 구성합니다.
+    const reservationData: ReserveGovPlaceRequest = {
+      date: req.openAt,
+      start: req.startTime + ':00',
+      end: req.endTime + ':00',
+    };
 
     try {
-      // ✅ 2. Get the auth token
-      const token = getAccessToken();
-      if (!token) {
-        throw new Error('Authentication token not found.');
-      }
+      // 3. 클래스 개설 API를 호출하고 응답을 기다립니다.
+      const createClassResponse = await createClass(requestData, images);
 
-      // ✅ 3. Use axios.post directly and manually set all headers
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}classes`, // Full URL
-        formData, // Request body
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      // 4. 클래스 개설이 성공했을 경우
+      if (createClassResponse.isSuccess) {
+        console.log('클래스 개설 성공!:', createClassResponse.data);
+        alert('클래스가 성공적으로 개설되었습니다!');
+
+        // 5. 완료 페이지로 이동합니다.
+        navigate('/class/done', {
+          state: {
+            type: 'create', // '개설' 완료임을 명시
           },
-        }
-      );
-
-      console.log('Submission successful:', response.data);
-      resetStore();
-      navigate('done');
-    } catch (err) {
-      console.error('Submission failed:', err);
-      alert('클래스 개설에 실패했습니다.');
-    } finally {
+        });
+      } else {
+        // 클래스 개설 자체가 실패한 경우
+        alert(`클래스 개설에 실패했습니다: ${createClassResponse.message}`);
+      }
+    } catch (error) {
+      // 네트워크 오류 등 API 호출 중 예외가 발생한 경우
+      console.error('Submission failed:', error);
+      alert('클래스 개설 중 오류가 발생했습니다.');
     }
   };
+
   useEffect(() => {
     const token = getAccessToken();
     console.log(req);
   }, [req]);
+
   // 날짜
   const handleDateChange = (newDate: Date) => {
     const formattedDate = newDate.toISOString().split('T')[0];
@@ -191,7 +182,7 @@ export default function CreateClassPage() {
           />
           {/* 클래스 제목 */}
           <div
-            className={`w-full h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[20px]`}
+            className={`w-full h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] my-[20px] `}
           >
             <div className="rounded-full bg-[#009DFF] text-[white] text-[12px] font-semibold px-[14px] py-[6px] shadow mr-[5px]">
               클래스 제목
@@ -220,34 +211,22 @@ export default function CreateClassPage() {
               />
 
               <div className="mt-2 border-b border-[#E0E0E0]" />
-              <div className="mt-3">
-                <div className="flex flex-wrap gap-[8px] mb-[8px]">
-                  {req.tags.map(tag => (
-                    <div
-                      key={tag}
-                      className="flex items-center bg-[#e0e7ff] rounded-full px-[12px] py-[4px]"
-                    >
-                      <span className="text-[12px] font-medium text-[#4338ca]">
-                        {tag}
-                      </span>
-                      <button
-                        onClick={() => removeTag(tag)}
-                        className="ml-[4px] text-[16px] leading-none text-[#6366f1] hover:text-[#4338ca]"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <input
-                    value={tagInput}
-                    onChange={e => setTagInput(e.target.value)}
-                    onKeyDown={onTagKeyDown}
-                    placeholder="#태그를 입력해주세요."
-                    className="w-full bg-transparent outline-none border-0 placeholder:text-[#B3B3B3] text-gray-600 pb-2"
-                  />
-                </div>
+              <div className="flex flex-wrap items-center gap-2 p-2 rounded-lg bg-gray-50">
+                {req.tags.map((tag: string) => (
+                  <div
+                    key={tag}
+                    className="flex items-center text-sm font-medium rounded-full px-3 py-1"
+                  >
+                    <span>{tag}</span>
+                  </div>
+                ))}
+                <input
+                  value={tagInput}
+                  onChange={e => setTagInput(e.target.value)}
+                  onKeyUp={onTagKeyUp}
+                  placeholder="#태그를 입력해주세요"
+                  className="flex-1 bg-transparent outline-none border-none p-1 text-sm"
+                />
               </div>
             </div>
           </div>

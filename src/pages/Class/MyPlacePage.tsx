@@ -21,10 +21,12 @@ import BackIcon from '../../assets/common/back.svg';
 import NextIcon from '../../assets/common/next.svg';
 
 import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { useMyPlaceStore } from '../../stores/useMyPlaceStore';
 import { useGovReservationStore } from '../../stores/useGovReservationStore';
+import { deleteMyPlace } from '../../apis/create/createApi';
+import ModalContainer from '../../components/common/ModalContainer';
 
 interface ApiDay {
   date: string;
@@ -65,6 +67,20 @@ export default function MyPlacePage() {
   } = useGet<ApiResponse<MyPlacesData>>('/classes/mentor-places/me');
   const apiData = response?.data;
   const [selectedPlaceId, setSelectedPlaceId] = useState<Number | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [placeToDeleteId, setPlaceToDeleteId] = useState<number | null>(null);
+
+  // 삭제 모달 열기
+  const openDeleteModal = (id: number) => {
+    setPlaceToDeleteId(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  // 삭제 모달 닫기
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setPlaceToDeleteId(null);
+  };
 
   // 날짜
   const handleDateChange = (newDate: Date) => {
@@ -143,6 +159,20 @@ export default function MyPlacePage() {
     }
   };
 
+  const handleDeletePlace = async (id: number) => {
+    try {
+      const response = await deleteMyPlace(id);
+      if (response.isSuccess) {
+        window.location.reload();
+      } else {
+        alert(`삭제에 실패했습니다: ${response.message}`);
+      }
+    } catch (err) {
+      console.error('Failed to delete place:', err);
+      alert('장소 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   useEffect(() => {
     console.log(apiData);
   }, [apiData]);
@@ -174,6 +204,7 @@ export default function MyPlacePage() {
                       place={place}
                       isSelected={selectedPlaceId === place.id}
                       onSelect={() => handleSelectPlace(place.id)}
+                      onDelete={() => openDeleteModal(place.id)}
                     />
                   </SwiperSlide>
                 ))}
@@ -292,6 +323,30 @@ export default function MyPlacePage() {
           </Drawer.Content>
         </Drawer.Portal>
       </Drawer.Root>
+      {isDeleteModalOpen && (
+        <ModalContainer onClickToggleModal={closeDeleteModal}>
+          <div className="rounded-2xl p-8 m-4 max-w-sm text-center ">
+            <h3 className="text-sm font-semibold text-gray-500 mb-2"></h3>
+            <p className="text-[16px] font-bold text-gray-800 mb-1">
+              선택한 내 장소를 삭제하시겠습니까?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={closeDeleteModal}
+                className="flex-1 bg-[#EAEAEA] text-gray-600 font-bold py-3 rounded-full transition-colors hover:bg-gray-300"
+              >
+                돌아가기
+              </button>
+              <button
+                onClick={() => handleDeletePlace(Number(selectedPlaceId))}
+                className="flex-1 bg-[#555555] text-white font-bold py-3 rounded-full transition-colors hover:bg-black"
+              >
+                장소 삭제하기
+              </button>
+            </div>
+          </div>{' '}
+        </ModalContainer>
+      )}
     </ClassContainer>
   );
 }
