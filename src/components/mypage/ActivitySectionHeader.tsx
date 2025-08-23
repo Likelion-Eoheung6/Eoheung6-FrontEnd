@@ -5,12 +5,31 @@ import upIcon from '../../assets/mypage/up.svg';
 import notIcon from '../../assets/common/not-icon.svg';
 import ActivityClassCard from './ActivityClassCard';
 
-interface ActivitySectionHeaderProps {
+interface ClassData {
+  id: string;
   title: string;
-  onToggle?: (isExpanded: boolean) => void;
+  location: string;
+  maxParticipants: number;
+  currentParticipants: number;
+  price: number;
+  imageUrl: string;
 }
 
-export default function ActivitySectionHeader({ title, onToggle }: ActivitySectionHeaderProps) {
+interface ActivitySectionHeaderProps {
+  title: string;
+  classes?: ClassData[];
+  onToggle?: (isExpanded: boolean) => void;
+  isLoading?: boolean;
+  error?: string | null;
+}
+
+export default function ActivitySectionHeader({ 
+  title, 
+  classes = [], 
+  onToggle,
+  isLoading = false,
+  error = null
+}: ActivitySectionHeaderProps) {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -33,45 +52,6 @@ export default function ActivitySectionHeader({ title, onToggle }: ActivitySecti
         return '상세보기';
     }
   };
-
-  // 샘플 클래스 데이터
-  const sampleClasses: Array<{
-    id: string;
-    title: string;
-    location: string;
-    maxParticipants: number;
-    currentParticipants: number;
-    price: number;
-    imageUrl: string;
-  }> = [
-    {
-      id: '1',
-      title: '한성대 영문과 학생과 함께하는 영어교...',
-      location: '성북구성북구성북구성북구성북구성...',
-      maxParticipants: 5,
-      currentParticipants: 4,
-      price: 5000,
-      imageUrl: ''
-    },
-    {
-      id: '2',
-      title: '한성대 영문과 학생과 함께하는 영어교...',
-      location: '성북구성북구성북구성북구성북구성...',
-      maxParticipants: 5,
-      currentParticipants: 4,
-      price: 5000,
-      imageUrl: ''
-    },
-    {
-        id: '3',
-        title: '한성대 영문과 학생과 함께하는 영어교...',
-        location: '성북구성북구성북구성북구성북구성...',
-        maxParticipants: 5,
-        currentParticipants: 4,
-        price: 5000,
-        imageUrl: ''
-      }
-  ];
 
   const handleButtonClick = (classId: string) => {
     console.log(`${title} 버튼 클릭:`, classId);
@@ -117,9 +97,21 @@ export default function ActivitySectionHeader({ title, onToggle }: ActivitySecti
       {/* 토글 시 클래스 카드들 또는 빈 상태 */}
       {isExpanded && (
         <div className="mt-[10px] max-h-[280px] overflow-y-auto absolute w-full h-[298px] bg-[#FAFAFA] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] rounded-[20px]">
-          {sampleClasses.length > 0 ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="text-[#545454] text-[14px] font-normal leading-[120%] tracking-[-0.025em] text-center">
+                데이터를 불러오는 중...
+              </div>
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="text-[#545454] text-[14px] font-normal leading-[120%] tracking-[-0.025em] text-center">
+                {error}
+              </div>
+            </div>
+          ) : classes.length > 0 ? (
             <div className="space-y-[10px] pl-[5px] pr-[13px] py-[10px]">
-              {sampleClasses.map((classItem) => (
+              {classes.map((classItem) => (
                 <ActivityClassCard
                   key={classItem.id}
                   title={classItem.title}
