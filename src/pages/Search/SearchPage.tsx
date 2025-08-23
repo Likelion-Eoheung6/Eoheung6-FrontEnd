@@ -46,20 +46,13 @@ export default function SearchPage() {
   const getSelectedTagsFromInput = () => {
     if (!searchKeyword) return [];
     
-    // 전체 태그 목록
-    const allTags = ['도예체험', '꽃꽂이', '영어 회화', '천연비누 만들기', '사진교실', '수채화 클래스', '캘리그라피', '가죽공예'];
+    // 쉼표로 구분된 태그들을 분리
+    const tags = searchKeyword
+      .split(', ')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0);
     
-    // ✓로 시작하는 태그들을 찾아서 정확히 매칭
-    const selectedTags = [];
-    const tagString = searchKeyword;
-    
-    for (const tag of allTags) {
-      if (tagString.includes(`✓${tag}`)) {
-        selectedTags.push(tag);
-      }
-    }
-    
-    return selectedTags;
+    return tags;
   };
 
   const handleKeywordClick = (keyword: string) => {
