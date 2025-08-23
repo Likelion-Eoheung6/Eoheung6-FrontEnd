@@ -19,7 +19,7 @@ import type { ClassDetailData } from '../../types/apply/applyTypes';
 export default function DoneClassPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const pageType = location.state?.type || 'application';
+  const pageType = location.state?.type || 'create';
 
   const { req, images } = useCreateClassStore();
   const { classInfo } = useClassInfoStore();

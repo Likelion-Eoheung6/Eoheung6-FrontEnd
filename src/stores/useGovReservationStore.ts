@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 interface GovReservationData {
+  reservationId?: number | null;
   placeId: number;
   latitude: number;
   longitude: number;
