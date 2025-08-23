@@ -7,7 +7,8 @@ export const useWishlist = () => {
   return useQuery({
     queryKey: ['wishlist'],
     queryFn: getWishlist,
-    staleTime: 5 * 60 * 1000, // 5분
+    staleTime: 0, // 캐시 비활성화
+    gcTime: 0, // 가비지 컬렉션 시간 0
     retry: (failureCount, error) => {
       // 404 에러는 재시도하지 않음 (위시리스트가 비어있는 경우)
       const is404Error = (error as any)?.response?.status === 404;
@@ -23,8 +24,6 @@ export const useUpdateWishlist = () => {
   return useMutation({
     mutationFn: updateWishlist,
     onSuccess: () => {
-      // 위시리스트 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
     },
   });
 };

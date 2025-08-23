@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { applyForClass, getClassDetail } from '../../apis/apply/applyApi';
-import { updateWishlist, getWishlist } from '../../apis/wishlist/wishlistApi';
+import { getWishlist } from '../../apis/wishlist/wishlistApi';
+import { useUpdateWishlist } from '../../hooks/wishlist/useWishlist';
 import BodyContainer from '../../components/common/BodyContainer';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import CalendarComponent from '../../components/class/CalendarComponent';
@@ -28,6 +29,7 @@ export default function ApplyClassPage() {
   const { classInfo, setClassInfo } = useClassInfoStore();
   const { classId } = useParams();
   const navigate = useNavigate();
+  const updateWishlist = useUpdateWishlist();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +38,6 @@ export default function ApplyClassPage() {
   const [isApplying, setIsApplying] = useState(false);
   // 찜하기 상태
   const [isWished, setIsWished] = useState(classInfo?.isWished || false);
-  // 위시 버튼 로딩 상태
-  const [isWishLoading, setIsWishLoading] = useState(false);
   // 신청 인원 상태
   const [capacity, setCapacity] = useState(1);
   // 선택된 날짜 상태
@@ -73,10 +73,12 @@ export default function ApplyClassPage() {
 
   // 찜하기 토글 함수
   const toggleWish = async () => {
-    if (!classInfo?.openId || isWishLoading) return;
+    if (!classInfo?.openId || updateWishlist.isPending) return;
     
     const newWishState = !isWished;
-    setIsWishLoading(true);
+    
+    // 낙관적 업데이트: UI를 즉시 업데이트
+    setIsWished(newWishState);
     
     try {
       // 현재 위시리스트 조회 (404 오류 처리 포함)
@@ -94,26 +96,17 @@ export default function ApplyClassPage() {
         }
       }
       
-      // 새로운 위시리스트 상태 계산
-      let updatedWishIds: number[];
-      if (newWishState) {
-        // 위시리스트에 추가
-        updatedWishIds = [...currentWishIds, classInfo.openId];
-      } else {
-        // 위시리스트에서 제거
-        updatedWishIds = currentWishIds.filter(id => id !== classInfo.openId);
-      }
+      // 현재 클래스 ID만 포함하여 요청
+      // 백엔드에서 찜이 된건지 찜 해제된건지를 처리
+      const updatedWishIds = [classInfo.openId];
       
       // 위시리스트 업데이트
-      await updateWishlist({ openId: updatedWishIds });
+      await updateWishlist.mutateAsync({ ids: updatedWishIds });
       
-      // 성공 시 로컬 상태 업데이트
-      setIsWished(newWishState);
     } catch (error) {
       console.error('위시리스트 업데이트 실패:', error);
-      // 실패 시 원래 상태 유지
-    } finally {
-      setIsWishLoading(false);
+      // 실패 시 원래 상태로 롤백
+      setIsWished(!newWishState);
     }
   };
   const handleApply = async (): Promise<KakaoPayReadyRequest | null> => {
@@ -301,11 +294,11 @@ export default function ApplyClassPage() {
           />
           <button
             onClick={toggleWish}
-            disabled={isWishLoading}
-            className="absolute -bottom-4 right-4 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={updateWishlist.isPending}
+            className="absolute -bottom-4 right-4 flex items-center justify-center"
             aria-label="찜하기"
           >
-            {isWishLoading ? (
+            {updateWishlist.isPending ? (
               <div className="w-7 h-7 flex items-center justify-center">
                 <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
               </div>

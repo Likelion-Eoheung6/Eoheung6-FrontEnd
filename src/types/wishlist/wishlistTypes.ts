@@ -22,7 +22,7 @@ export interface WishlistResponse {
 
 // 위시리스트 일괄 업데이트 요청 타입
 export interface WishlistUpdateRequest {
-  openId: number[];
+  ids: number[];
 }
 
 // 위시리스트 일괄 업데이트 응답 타입

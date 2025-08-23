@@ -12,6 +12,7 @@ interface WishlistCardProps {
   openId: number;
   onToggleWish?: (openId: number, isWished: boolean) => void;
   isWished?: boolean;
+  isLoading?: boolean;
 }
 
 export default function WishlistCard({
@@ -23,15 +24,20 @@ export default function WishlistCard({
   openId,
   onToggleWish,
   isWished = true, // 위시리스트에 있으므로 true로 시작
+  isLoading = false,
 }: WishlistCardProps) {
-  const [localIsWished, setLocalIsWished] = useState(isWished);
+  const [isToggling, setIsToggling] = useState(false);
 
   const handleWishClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newWishState = !localIsWished;
-    setLocalIsWished(newWishState);
+    
+    if (isToggling || isLoading) return; // 이미 토글 중이거나 로딩 중이면 무시
+    
+    const newWishState = !isWished;
     onToggleWish?.(openId, newWishState);
   };
+
+  const isDisabled = isToggling || isLoading;
 
   return (
     <div 
@@ -59,12 +65,17 @@ export default function WishlistCard({
       <button 
         className="w-[22px] h-[22px] rounded-full flex items-center justify-center flex-shrink-0 bg-transparent border-none p-0"
         onClick={handleWishClick}
+        disabled={isDisabled}
       >
-        <img 
-          src={localIsWished ? wishSelectedIcon : wishIcon} 
-          alt="위시리스트" 
-          className="w-[22px] h-[22px]" 
-        />
+        {isToggling ? (
+          <div className="w-[22px] h-[22px] border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+        ) : (
+          <img 
+            src={isWished ? wishSelectedIcon : wishIcon} 
+            alt="위시리스트" 
+            className="w-[22px] h-[22px]" 
+          />
+        )}
       </button>
     </div>
   );
