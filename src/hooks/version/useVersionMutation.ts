@@ -9,7 +9,6 @@ export const useVersionMutation = () => {
   return useMutation({
     mutationFn: (data: VersionRequest) => selectVersion(data),
     onSuccess: (data, variables) => {
-      console.log('버전 선택 성공:', data, variables);
       if (data.isSuccess) {
         // 선택된 버전에 따라 다른 페이지로 이동
         if (variables.chooseEasyVer) {
@@ -26,7 +25,6 @@ export const useVersionMutation = () => {
       
       // 401 에러인 경우 로그인 페이지로 이동
       if (error.response?.status === 401) {
-        console.log('인증이 필요합니다. 로그인 페이지로 이동합니다.');
         navigate('/login');
         return;
       }

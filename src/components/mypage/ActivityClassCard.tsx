@@ -31,6 +31,9 @@ export default function ActivityClassCard({
   hasReview = false,
   reviewRating = 0
 }: ActivityClassCardProps) {
+  // 10점 시스템을 5점 시스템으로 변환 (1점=2, 2점=4, 3점=6, 4점=8, 5점=10)
+  const convertedRating = Math.round(reviewRating / 2);
+
   return (
     <div className="rounded-[16px] relative">
       <div className="flex gap-[5px]">
@@ -79,7 +82,7 @@ export default function ActivityClassCard({
           <div className="mt-[4px]">
             {hasReview ? (
               <div className="w-full h-[22px] flex items-center justify-start">
-                <ReviewRatingDisplay rating={reviewRating} />
+                <ReviewRatingDisplay rating={convertedRating} />
               </div>
             ) : (
               <button 

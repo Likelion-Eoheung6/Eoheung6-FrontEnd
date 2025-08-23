@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import WishIcon from '../../assets/common/wish-n.svg';
 import WishSelectedIcon from '../../assets/common/wish.svg';
+import { toggleWishlist } from '../../apis/home/homeApi';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ClassRequestCardProps {
   title: string;
   currentParticipants: number;
   maxParticipants: number;
+  recruitId: number;
+  isJoined?: boolean;
   onWishlistClick?: () => void;
   onClick?: () => void;
 }
@@ -14,10 +18,14 @@ export default function ClassRequestCard({
   title,
   currentParticipants,
   maxParticipants,
+  recruitId,
+  isJoined = false,
   onWishlistClick,
   onClick
 }: ClassRequestCardProps) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(isJoined);
+  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
   return (
     <div 
       className="w-full h-[34px] bg-[#FDFDFD] rounded-[20px] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] flex items-center pl-[14px] pr-[6px] cursor-pointer"
@@ -45,17 +53,32 @@ export default function ClassRequestCard({
       
       {/* 위시리스트 아이콘 */}
       <div 
-        className="w-[30px] h-[30px] bg-white rounded-full flex items-center justify-center cursor-pointer"
-        onClick={(e) => {
+        className={`w-[30px] h-[30px] rounded-full flex items-center justify-center ${
+          isJoined ? 'cursor-not-allowed' : 'cursor-pointer'
+        }`}
+        onClick={async (e) => {
           e.stopPropagation();
-          setIsWishlisted(!isWishlisted);
-          onWishlistClick?.();
+          if (isLoading || isJoined) return;
+          
+          setIsLoading(true);
+          try {
+            await toggleWishlist(recruitId);
+            setIsWishlisted(!isWishlisted);
+            onWishlistClick?.();
+            // 홈 데이터 무효화하여 최신 상태 반영
+            queryClient.invalidateQueries({ queryKey: ['home', 'main'] });
+          } catch (error) {
+            console.error('위시리스트 토글 실패:', error);
+            // 에러 시 상태 되돌리기
+          } finally {
+            setIsLoading(false);
+          }
         }}
       >
         <img 
           src={isWishlisted ? WishSelectedIcon : WishIcon} 
           alt="위시리스트" 
-          className="w-[30px] h-[30px]" 
+          className={`w-[30px] h-[30px] ${isLoading ? 'opacity-50' : ''}`} 
         />
       </div>
     </div>
