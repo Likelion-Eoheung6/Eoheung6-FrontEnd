@@ -68,6 +68,16 @@ const RecommendPage: React.FC = () => {
     navigate(`/class/${classId}`);
   };
 
+  const handleNewRecommendation = () => {
+    // 사용자의 버전에 따라 태그 선택 페이지로 이동
+    const userVersion = sessionStorage.getItem('userVersion');
+    if (userVersion === 'easy') {
+      navigate('/tags?version=easy');
+    } else {
+      navigate('/tags');
+    }
+  };
+
   if (isLoading || !areAllImagesLoaded) {
     return <LoadingScreen />;
   }
@@ -119,7 +129,10 @@ const RecommendPage: React.FC = () => {
 
         {/* 새로운 추천 요청 버튼 */}
         <div className="mt-8 mb-[31px]">
-          <div className="w-full py-[7px] bg-[#009DFF] rounded-[20px] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] flex items-center justify-center cursor-pointer">
+          <div 
+            className="w-full py-[7px] bg-[#009DFF] rounded-[20px] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] flex items-center justify-center cursor-pointer"
+            onClick={handleNewRecommendation}
+          >
             <div className="flex items-center">
               <span className="text-white text-[16px] font-semibold leading-[120%] tracking-[-0.025em]">
                 새로운 클래스를 추천받고 싶다면?
