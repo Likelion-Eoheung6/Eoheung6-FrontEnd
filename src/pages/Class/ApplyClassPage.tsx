@@ -298,17 +298,11 @@ export default function ApplyClassPage() {
             className="absolute -bottom-4 right-4 flex items-center justify-center"
             aria-label="찜하기"
           >
-            {updateWishlist.isPending ? (
-              <div className="w-7 h-7 flex items-center justify-center">
-                <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-              </div>
-            ) : (
-              <img
-                src={isWished ? HeartSelectedIcon : HeartIcon}
-                alt="찜하기 아이콘"
-                className="w-7 h-7"
-              />
-            )}
+            <img
+              src={isWished ? HeartSelectedIcon : HeartIcon}
+              alt="찜하기 아이콘"
+              className="w-7 h-7"
+            />
           </button>
         </div>
 
