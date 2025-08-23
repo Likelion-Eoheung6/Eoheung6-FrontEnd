@@ -45,12 +45,12 @@ export default function PriceComponent({
           className={`
             w-[70px] bg-transparent text-right outline-none border-none
             placeholder:text-[#D0D0D0]
-            ${disabled ? 'text-[#B3B3B3] cursor-not-allowed' : 'text-[#5A4B45]'}
+            ${disabled ? 'text-[#5A4B45] cursor-not-allowed' : 'text-[#5A4B45]'}
           `}
         />
         <span
           className={`text-[14px] font-semibold ${
-            disabled ? 'text-[#B3B3B3]' : 'text-[#5A4B45]'
+            disabled ? 'text-[#5A4B45]' : 'text-[#5A4B45]'
           }`}
         >
           원

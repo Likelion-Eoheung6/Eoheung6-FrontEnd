@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 interface CalendarProps {
   selectedDate: Date | null;
-  onDateChange: (date: Date) => void;
+  onDateChange?: (date: Date) => void;
   variant?: 'selectionOnly' | 'availability';
   unavailableDates?: string[];
   disabled?: boolean;
@@ -48,7 +48,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({
       day.getMonth() === month &&
       (variant === 'selectionOnly' || !unavailableDates.includes(dateString))
     ) {
-      onDateChange(day);
+      onDateChange?.(day);
     }
   };
 

@@ -132,3 +132,23 @@ export interface ReserveGovPlaceResponse {
   data: ReserveGovPlaceData;
   timeStamp: string;
 }
+
+export interface AppliedClassDetail {
+  openId: number;
+  title: string;
+  openAt: string;
+  roadAddress: string;
+  price: number;
+  capacity: number;
+  startTime: string;
+  endTime: string;
+}
+
+export interface AppliedClassDetailResponse {
+  isSuccess: boolean;
+  code: string;
+  httpStatus: number;
+  message: string;
+  data: AppliedClassDetail[]; // data는 ClassDetail 객체들의 배열입니다.
+  timeStamp: string;
+}
