@@ -29,6 +29,10 @@ export default function MyActivityPage() {
     navigate('/mypage');
   };
 
+  const handleClassClick = (classId: string) => {
+    navigate(`/class/${classId}`);
+  };
+
   const handleToggle = (sectionTitle: string, isExpanded: boolean) => {
     console.log('섹션 토글:', sectionTitle, isExpanded);
     
@@ -105,6 +109,7 @@ export default function MyActivityPage() {
           title="신청한 클래스" 
           classes={expandedSections.has('신청한 클래스') ? reservedClassesForActivity : []}
           onToggle={(isExpanded) => handleToggle('신청한 클래스', isExpanded)}
+          onClassClick={handleClassClick}
           isLoading={expandedSections.has('신청한 클래스') && reservedLoading}
           error={expandedSections.has('신청한 클래스') && reservedError && (reservedError as any)?.response?.status !== 404 ? '데이터를 불러오는 중 오류가 발생했습니다.' : null}
         />
@@ -114,6 +119,7 @@ export default function MyActivityPage() {
           title="개설한 클래스" 
           classes={expandedSections.has('개설한 클래스') ? myClassesForActivity : []}
           onToggle={(isExpanded) => handleToggle('개설한 클래스', isExpanded)}
+          onClassClick={handleClassClick}
           isLoading={expandedSections.has('개설한 클래스') && myClassesLoading}
           error={expandedSections.has('개설한 클래스') && myClassesError && (myClassesError as any)?.response?.status !== 404 ? '데이터를 불러오는 중 오류가 발생했습니다.' : null}
         />
@@ -123,6 +129,7 @@ export default function MyActivityPage() {
           title="수강한 클래스" 
           classes={expandedSections.has('수강한 클래스') ? takenClassesForActivity : []}
           onToggle={(isExpanded) => handleToggle('수강한 클래스', isExpanded)}
+          onClassClick={handleClassClick}
           isLoading={expandedSections.has('수강한 클래스') && takenLoading}
           error={expandedSections.has('수강한 클래스') && takenError && (takenError as any)?.response?.status !== 404 ? '데이터를 불러오는 중 오류가 발생했습니다.' : null}
         />

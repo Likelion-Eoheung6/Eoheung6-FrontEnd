@@ -11,8 +11,9 @@ import NextIcon from '../../assets/common/next.svg';
 interface HomeImageProps {
   slides: string[]; // 이미지 URL 배열
   setImageFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  onSlideClick?: (index: number) => void; // 슬라이드 클릭 핸들러
 }
-export default function HomeImage({ slides, setImageFiles }: HomeImageProps) {
+export default function HomeImage({ slides, setImageFiles, onSlideClick }: HomeImageProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const prevRef = useRef<HTMLImageElement | null>(null);
   const nextRef = useRef<HTMLImageElement | null>(null);
@@ -58,10 +59,11 @@ export default function HomeImage({ slides, setImageFiles }: HomeImageProps) {
           {slides.map((img, idx) => (
             <SwiperSlide key={idx}>
               <div
-                className={`relative w-full h-[225px] rounded-[1.25rem] overflow-hidden ${
+                className={`relative w-full h-[225px] rounded-[1.25rem] overflow-hidden cursor-pointer ${
                   img ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
                 }`}
                 style={img ? { backgroundImage: `url(${img})` } : undefined}
+                onClick={() => onSlideClick?.(idx)}
               ></div>
             </SwiperSlide>
           ))}

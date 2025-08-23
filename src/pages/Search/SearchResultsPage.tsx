@@ -70,7 +70,7 @@ export default function SearchResultsPage() {
   };
 
   const handleClassClick = (classId: number) => {
-    navigate(`/open-class/apply/${classId}`);
+    navigate(`/class/${classId}`);
   };
 
   if (searchClassesMutation.isPending) {
@@ -91,7 +91,7 @@ export default function SearchResultsPage() {
         <div className="px-[16px] pt-[30px]">
           <div className="space-y-[16px]">
             {searchResults.map((classItem, index) => (
-              <div key={`${classItem.openId}-${index}`} onClick={() => handleClassClick(classItem.openId)}>
+              <div key={`${classItem.openId}-${index}`}>
                 <ClassCard
                   title={classItem.title}
                   location={classItem.roadAddress}
@@ -100,6 +100,7 @@ export default function SearchResultsPage() {
                   price={classItem.price}
                   tags={[...classItem.moodTagsJson, classItem.educationTagGenre]}
                   imageUrl={classItem.image}
+                  onClick={() => handleClassClick(classItem.openId)}
                 />
               </div>
             ))}

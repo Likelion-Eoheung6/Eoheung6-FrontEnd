@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecommendClasses } from '../../hooks/recommend/useRecommend';
 import ClassCard from '../../components/common/ClassCard';
@@ -7,7 +7,11 @@ import EmptyState from '../../components/common/EmptyState';
 import LoadingScreen from '../../components/common/LoadingScreen';
 import arrowRightIcon from '../../assets/recommend/arrow-right.svg';
 
-const ClassCardWrapper: React.FC<{ classData: any }> = ({ classData }) => {
+const ClassCardWrapper: React.FC<{ 
+  classData: any; 
+  onClassClick: (classId: number) => void;
+  onImageLoad: (openId: number) => void;
+}> = ({ classData, onClassClick, onImageLoad }) => {
   return (
     <div>
       <ClassCard
@@ -19,6 +23,9 @@ const ClassCardWrapper: React.FC<{ classData: any }> = ({ classData }) => {
         tags={[...classData.modeGenre, classData.eduGenre]}
         isRecommended={true}
         imageUrl={classData.imageUrl}
+        onImageLoad={() => onImageLoad(classData.openId)}
+        onImageError={() => onImageLoad(classData.openId)}
+        onClick={() => onClassClick(classData.openId)}
       />
     </div>
   );
@@ -27,9 +34,41 @@ const ClassCardWrapper: React.FC<{ classData: any }> = ({ classData }) => {
 const RecommendPage: React.FC = () => {
   const navigate = useNavigate();
   const { data: recommendData, isLoading, error } = useRecommendClasses();
-  const [hasSelectedTags, setHasSelectedTags] = useState(true); // 기본적으로 추천 데이터가 있으면 true
+  const [hasSelectedTags, setHasSelectedTags] = useState(true);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [areAllImagesLoaded, setAreAllImagesLoaded] = useState(false);
 
-  if (isLoading) {
+  const recommendClasses = recommendData?.data || [];
+
+  // 이미지 로드 상태 관리
+  const handleImageLoad = (openId: number) => {
+    setLoadedImages(prev => {
+      const newSet = new Set(prev);
+      newSet.add(openId);
+      return newSet;
+    });
+  };
+
+  // 모든 이미지가 로드되었는지 확인
+  useEffect(() => {
+    if (recommendClasses.length > 0 && loadedImages.size === recommendClasses.length) {
+      setAreAllImagesLoaded(true);
+    } else {
+      setAreAllImagesLoaded(false);
+    }
+  }, [loadedImages, recommendClasses.length]);
+
+  // 데이터가 변경되면 로드 상태 초기화
+  useEffect(() => {
+    setLoadedImages(new Set());
+    setAreAllImagesLoaded(false);
+  }, [recommendData]);
+
+  const handleClassClick = (classId: number) => {
+    navigate(`/class/${classId}`);
+  };
+
+  if (isLoading || !areAllImagesLoaded) {
     return <LoadingScreen />;
   }
 
@@ -44,8 +83,6 @@ const RecommendPage: React.FC = () => {
       </div>
     );
   }
-
-  const recommendClasses = recommendData?.data || [];
 
   if (recommendClasses.length === 0) {
     return (
@@ -71,7 +108,12 @@ const RecommendPage: React.FC = () => {
         {/* 클래스 목록 */}
         <div className="space-y-[18px] mt-[30px]">
           {recommendClasses.map((classData) => (
-            <ClassCardWrapper key={classData.openId} classData={classData} />
+            <ClassCardWrapper 
+              key={classData.openId} 
+              classData={classData} 
+              onClassClick={handleClassClick}
+              onImageLoad={handleImageLoad}
+            />
           ))}
         </div>
 

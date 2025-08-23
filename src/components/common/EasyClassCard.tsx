@@ -19,7 +19,10 @@ export default function EasyClassCard({
   return (
     <div className="flex items-start gap-[9px] w-full">
       {/* 클래스 이미지 - 왼쪽 배치 */}
-      <div className="w-[94px] h-[94px] bg-[#B3B3B3] rounded-[20px] flex items-center justify-center flex-shrink-0">
+      <div 
+        className="w-[94px] h-[94px] bg-[#B3B3B3] rounded-[20px] flex items-center justify-center flex-shrink-0 cursor-pointer"
+        onClick={onClick}
+      >
         {image ? (
           <img src={image} alt={title} className="w-full h-full object-cover rounded-[20px]" />
         ) : (

@@ -60,16 +60,22 @@ export default function ClassRequestCard({
           e.stopPropagation();
           if (isLoading || isJoined) return;
           
+          // 낙관적 업데이트: 즉시 UI 상태 변경
+          const previousState = isWishlisted;
+          setIsWishlisted(!isWishlisted);
           setIsLoading(true);
+          
           try {
             await toggleWishlist(recruitId);
-            setIsWishlisted(!isWishlisted);
             onWishlistClick?.();
-            // 홈 데이터 무효화하여 최신 상태 반영
-            queryClient.invalidateQueries({ queryKey: ['home', 'main'] });
+            // 성공 시에만 캐시 무효화 (더 부드러운 경험을 위해 지연)
+            setTimeout(() => {
+              queryClient.invalidateQueries({ queryKey: ['home', 'main'] });
+            }, 1000);
           } catch (error) {
             console.error('위시리스트 토글 실패:', error);
             // 에러 시 상태 되돌리기
+            setIsWishlisted(previousState);
           } finally {
             setIsLoading(false);
           }

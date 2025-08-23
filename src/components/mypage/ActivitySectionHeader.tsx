@@ -22,6 +22,7 @@ interface ActivitySectionHeaderProps {
   title: string;
   classes?: ClassData[];
   onToggle?: (isExpanded: boolean) => void;
+  onClassClick?: (classId: string) => void;
   isLoading?: boolean;
   error?: string | null;
 }
@@ -30,6 +31,7 @@ export default function ActivitySectionHeader({
   title, 
   classes = [], 
   onToggle,
+  onClassClick,
   isLoading = false,
   error = null
 }: ActivitySectionHeaderProps) {
@@ -126,6 +128,7 @@ export default function ActivitySectionHeader({
                   buttonText={getButtonText()}
                   imageUrl={classItem.imageUrl}
                   onButtonClick={() => handleButtonClick(classItem.id)}
+                  onClick={() => onClassClick?.(classItem.id)}
                   hasReview={classItem.hasReview}
                   reviewRating={classItem.reviewRating}
                 />

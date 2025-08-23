@@ -13,6 +13,7 @@ type ClassCardProps = {
   imageUrl?: string;
   onImageLoad?: () => void;
   onImageError?: () => void;
+  onClick?: () => void;
 };
 
 export default function ClassCard({
@@ -25,7 +26,8 @@ export default function ClassCard({
   isRecommended = false,
   imageUrl,
   onImageLoad,
-  onImageError
+  onImageError,
+  onClick
 }: ClassCardProps) {
   return (
     <div className="rounded-[16px] relative">
@@ -87,9 +89,15 @@ export default function ClassCard({
               <span className="text-[10px] font-medium leading-[120%] tracking-[-0.025em]">비용</span>
               <div className="w-[1px] h-[12px] bg-[#E0E0E0]"></div>
                              <span className="text-[#111111] text-[10px] font-medium leading-[120%] tracking-[-0.025em]">인당 <span className="pl-[13px]">{price.toLocaleString()}원</span></span>
-              <button className="ml-auto self-center bg-[#009DFF] text-[#FDFDFD] text-[10px] font-semibold px-[8px] py-[2px] rounded-[10px] leading-[120%] tracking-[-0.025em] mr-[4px]">
-                  상세보기 &gt;
-                </button>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClick?.();
+                }}
+                className="ml-auto self-center bg-[#009DFF] text-[#FDFDFD] text-[10px] font-semibold px-[8px] py-[2px] rounded-[10px] leading-[120%] tracking-[-0.025em] mr-[4px] cursor-pointer"
+              >
+                상세보기 &gt;
+              </button>
             </div>
           </div>
           <div className="mt-[4px] flex gap-[8px] flex-nowrap overflow-x-auto scrollbar-hide">

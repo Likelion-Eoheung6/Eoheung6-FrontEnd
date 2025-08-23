@@ -45,7 +45,15 @@ export default function NormalHomePage() {
   };
 
   const handleClassRequestClick = (classId: string) => {
-    navigate(`/class/request/${classId}`);
+    navigate(`/class/${classId}`);
+  };
+
+  const handleBannerClick = (index: number) => {
+    // 배너 클릭 시 해당 클래스로 이동
+    if (Array.isArray(homeData?.data?.ads) && homeData.data.ads[index]) {
+      const adData = homeData.data.ads[index];
+      navigate(`/class/${adData.openId}`);
+    }
   };
 
   return (
@@ -59,6 +67,7 @@ export default function NormalHomePage() {
         <ImageSwiperComponent 
           slides={Array.isArray(homeData?.data?.ads) ? homeData.data.ads.map(ad => ad.imageUrl) : imageFiles} 
           setImageFiles={setImageFiles} 
+          onSlideClick={handleBannerClick}
         />
       </div>
       <div className="px-[31px] mb-[18px]">
