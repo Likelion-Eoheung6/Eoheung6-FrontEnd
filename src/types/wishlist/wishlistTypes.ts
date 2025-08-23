@@ -20,4 +20,22 @@ export interface WishlistResponse {
   timeStamp: string;
 }
 
+// 위시리스트 일괄 업데이트 요청 타입
+export interface WishlistUpdateRequest {
+  openId: number[];
+}
+
+// 위시리스트 일괄 업데이트 응답 타입
+export interface WishlistUpdateResponse {
+  isSuccess: boolean;
+  code: string;
+  httpStatus: number;
+  message: string;
+  data: {
+    deletedWishId: number[];
+    savedClassId: number[];
+  };
+  timeStamp: string;
+}
+
 

@@ -9,7 +9,9 @@ interface WishlistCardProps {
   price: string;
   location: string;
   imageUrl?: string;
-  onRemove?: () => void;
+  openId: number;
+  onToggleWish?: (openId: number, isWished: boolean) => void;
+  isWished?: boolean;
 }
 
 export default function WishlistCard({
@@ -18,15 +20,17 @@ export default function WishlistCard({
   price,
   location,
   imageUrl,
-  onRemove,
+  openId,
+  onToggleWish,
+  isWished = true, // 위시리스트에 있으므로 true로 시작
 }: WishlistCardProps) {
-  const [isWished, setIsWished] = useState(true); // 위시리스트에 있으므로 true로 시작
+  const [localIsWished, setLocalIsWished] = useState(isWished);
 
   const handleWishClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsWished(!isWished);
-    // onRemove는 나중에 처리하도록 주석 처리
-    // onRemove?.();
+    const newWishState = !localIsWished;
+    setLocalIsWished(newWishState);
+    onToggleWish?.(openId, newWishState);
   };
 
   return (
@@ -57,7 +61,7 @@ export default function WishlistCard({
         onClick={handleWishClick}
       >
         <img 
-          src={isWished ? wishSelectedIcon : wishIcon} 
+          src={localIsWished ? wishSelectedIcon : wishIcon} 
           alt="위시리스트" 
           className="w-[22px] h-[22px]" 
         />
