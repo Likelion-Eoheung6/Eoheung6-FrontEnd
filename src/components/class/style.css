@@ -1,0 +1,101 @@
+/* The container for both wheels */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 500px; /* Reduced perspective for a less intense tilt */
+  position: relative;
+  max-width: 150px; /* Adjusted max width */
+  border-radius: 8px;
+  overflow: hidden; /* Clip the rounded corners */
+}
+
+/* A faint line to indicate the selected item */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 32px; /* Should match itemHeight */
+  transform: translateY(-50%);
+  border-radius: 4px;
+  z-index: 1;
+  pointer-events: none; /* Ensure it doesn't interfere with scrolling */
+}
+
+/* A colon (:) separator between hours and minutes */
+.container::after {
+  content: ':';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28px; /* Increased size */
+  font-weight: bold;
+  color: #333;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Styles for each individual wheel (ul) */
+.items {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0; /* ✅ padding-top and padding-bottom removed */
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.items::-webkit-scrollbar {
+  display: none;
+}
+
+/* Styles for each list item (li) */
+.item {
+  scroll-snap-align: center;
+  color: #999; /* Non-selected item color */
+  height: 32px; /* Match container::before height */
+  line-height: 32px;
+  display: flex;
+  justify-content: center; /* Center text horizontally */
+  width: 100%; /* Make sure the item takes full width of the wheel */
+}
+
+.item div {
+  transition: transform 0.2s ease-out, color 0.2s ease-out,
+    font-weight 0.2s ease-out;
+  color: inherit;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+/* Make hour items perspective origin to the right */
+.hour-items {
+  perspective-origin: 100% 50%;
+  margin-right: 10px; /* Space from the colon */
+  padding-left: 10%; /* To visually center despite perspective */
+}
+
+/* Make minute items perspective origin to the left */
+.minute-items {
+  perspective-origin: 0% 50%;
+  margin-left: 10px; /* Space from the colon */
+  padding-right: 10%; /* To visually center despite perspective */
+}
+
+/* Style for the selected item (controlled by JS transform and scale) */
+.item div {
+  transform-origin: center;
+}
+
+.item div.selected {
+  color: #333;
+  font-weight: bold;
+  font-size: 20px;
+}
