@@ -17,10 +17,12 @@ import { useCreateClassStore } from '../../stores/useCreateClassStore';
 import { useNavigate } from 'react-router-dom';
 import { useGovReservationStore } from '../../stores/useGovReservationStore';
 import MapComponent from '../../components/class/MapComponent';
-import usePost from '../../hooks/usePost';
-import { API } from '../../apis/axios';
 import { getAccessToken } from '../../utils/cookieUtils';
-import axios from 'axios';
+import { createClass, reserveGovPlace } from '../../apis/create/createApi';
+import type {
+  CreateClassRequest,
+  ReserveGovPlaceRequest,
+} from '../../types/create/createTypes';
 
 export interface CreateClassPayload {
   infoId: number | null;
@@ -91,6 +93,7 @@ export default function CreateClassPage() {
       removeTag(req.tags[req.tags.length - 1]);
     }
   };
+
   const isFormComplete = useMemo(() => {
     return (
       (images.length > 0 &&
@@ -103,65 +106,55 @@ export default function CreateClassPage() {
   }, [req, images]);
 
   const handleSubmit = async () => {
-    if (!isFormComplete) return;
-    const isMentorPlace = req.mentorPlaceId !== null;
-    const reqForApi = {
-      infoId: null,
-      title: "Let's Make Cute Moru Dolls!",
-      content:
-        "Join our class to create your very own moru doll! We provide all the materials and guidance. It's a fun and relaxing experience perfect for everyone.",
-      tags: req.tags,
-      mentorPlaceId: isMentorPlace ? req.mentorPlaceId : null,
-      govReservationId: isMentorPlace ? null : req.govReservationId,
-      openAt: '2025-09-25',
-      price: 25000,
-      capacity: 8,
-      startTime: '14:00',
-      endTime: '16:00',
+    if (!isFormComplete) {
+      alert('Please fill out all required fields and add at least one image.');
+      return;
+    }
+
+    const requestData: CreateClassRequest = {
+      title: req.title,
+      content: req.content,
+      mentorPlaceId: req.mentorPlaceId,
+      govReservationId: reservation?.reservationId || 0,
+      openAt: req.openAt,
+      startTime: req.startTime,
+      endTime: req.endTime,
+      capacity: req.capacity,
+      price: req.price,
+      tags: ['인형만들기', '유머스러운', '편안한'],
+      // tags: req.tags.map(tag => tag.replace('#', '')),
     };
 
-    const formData = new FormData();
-
-    // ✅ 1. Create a Blob with the correct JSON Content-Type
-    const reqBlob = new Blob([JSON.stringify(reqForApi)], {
-      type: 'application/json',
-    });
-
-    // ✅ 2. Append the Blob instead of the plain string
-    formData.append('req', reqBlob);
-
-    const imagesToSend = images.slice(0, 5);
-    imagesToSend.forEach(file => {
-      formData.append('images', file);
-    });
-    // const orders = Array.from({ length: imagesToSend.length }, (_, i) => i);
-    // formData.append('orders', JSON.stringify(orders));
+    // API에 보낼 요청 데이터를 구성합니다.
+    const reservationData: ReserveGovPlaceRequest = {
+      date: req.openAt,
+      start: req.startTime + ':00',
+      end: req.endTime + ':00',
+    };
 
     try {
-      // ✅ 2. Get the auth token
-      const token = getAccessToken();
-      if (!token) {
-        throw new Error('Authentication token not found.');
-      }
+      // 3. 클래스 개설 API를 호출하고 응답을 기다립니다.
+      const createClassResponse = await createClass(requestData, images);
 
-      // ✅ 3. Use axios.post directly and manually set all headers
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}classes`, // Full URL
-        formData, // Request body
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      // 4. 클래스 개설이 성공했을 경우
+      if (createClassResponse.isSuccess) {
+        console.log('클래스 개설 성공!:', createClassResponse.data);
+        alert('클래스가 성공적으로 개설되었습니다!');
+
+        // 5. 완료 페이지로 이동합니다.
+        navigate('/class/done', {
+          state: {
+            type: 'create', // '개설' 완료임을 명시
           },
-        }
-      );
-
-      console.log('Submission successful:', response.data);
-      resetStore();
-      navigate('done');
-    } catch (err) {
-      console.error('Submission failed:', err);
-      alert('클래스 개설에 실패했습니다.');
-    } finally {
+        });
+      } else {
+        // 클래스 개설 자체가 실패한 경우
+        alert(`클래스 개설에 실패했습니다: ${createClassResponse.message}`);
+      }
+    } catch (error) {
+      // 네트워크 오류 등 API 호출 중 예외가 발생한 경우
+      console.error('Submission failed:', error);
+      alert('클래스 개설 중 오류가 발생했습니다.');
     }
   };
 

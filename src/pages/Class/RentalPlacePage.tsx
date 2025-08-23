@@ -8,6 +8,7 @@ import ButtonComponent from '../../components/common/ButtonComponent';
 import { useNavigate } from 'react-router-dom';
 import { useGovReservationStore } from '../../stores/useGovReservationStore';
 import MapComponent from '../../components/class/MapComponent';
+import { getGovReservation } from '../../apis/create/createApi';
 
 interface VacantPlace {
   id: number;
@@ -94,15 +95,42 @@ const sampleApiData = {
 
 export default function RentalPlacePage() {
   const [places, setPlaces] = useState<VacantPlace[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [selectedPlaceId, setSelectedPlaceId] = useState<number | null>(null);
   const navigate = useNavigate();
   const { updateReq } = useCreateClassStore();
   const { setReservation } = useGovReservationStore();
 
   useEffect(() => {
-    setPlaces(sampleApiData.data);
+    const fetchPlaces = async () => {
+      try {
+        setLoading(true);
+        const response = await getGovReservation(); // 수정한 API 함수 호출
+        if (response.isSuccess) {
+          setPlaces(response.data);
+        } else {
+          setError(response.message);
+        }
+      } catch (err) {
+        setError('장소 목록을 불러오는 데 실패했습니다.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlaces();
   }, []);
 
+  if (loading) {
+    return <div>장소 목록을 불러오는 중입니다...</div>;
+  }
+
+  if (error) {
+    return <div>오류: {error}</div>;
+  }
   const handleApply = () => {
     if (!selectedPlaceId) return;
 
