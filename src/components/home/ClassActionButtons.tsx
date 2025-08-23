@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface ClassActionButtonsProps {
   onCreateClass: () => void;
   onRequestClass: () => void;
