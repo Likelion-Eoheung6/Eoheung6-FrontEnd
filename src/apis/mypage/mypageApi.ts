@@ -1,5 +1,5 @@
 import { API } from '../axios';
-import type { MyPageResponse, UpdateProfileRequest, UpdateProfileResponse, ReservedClassesResponse } from '../../types/mypage/mypageTypes';
+import type { MyPageResponse, UpdateProfileRequest, UpdateProfileResponse, ReservedClassesResponse, MyClassesResponse, TakenClassesResponse } from '../../types/mypage/mypageTypes';
 
 export const getMyPageData = async (): Promise<MyPageResponse> => {
   const response = await API.get('/users/me');
@@ -46,8 +46,31 @@ export const updateProfile = async (
 };
 
 export const getReservedClasses = async (): Promise<ReservedClassesResponse> => {
-  console.log('예약한 클래스 API 호출 시작');
   const response = await API.get('/retrieve/reserve');
-  console.log('예약한 클래스 API 응답:', response.data);
+  return response.data;
+};
+
+export const getTakenClasses = async (): Promise<TakenClassesResponse> => {
+  console.log('수강한 클래스 API 호출 시작');
+  const response = await API.get('/retrieve/take');
+  console.log('수강한 클래스 API 응답:', response.data);
+  return response.data;
+};
+
+export const getMyClasses = async (): Promise<MyClassesResponse> => {
+  console.log('개설한 클래스 API 호출 시작');
+  const response = await API.get('/classes/me');
+  console.log('개설한 클래스 API 응답:', response.data);
+  return response.data;
+};
+
+// 리뷰 작성 API
+export const createReview = async (classId: string, score: number): Promise<any> => {
+  console.log('리뷰 작성 API 호출 시작:', { classId, score });
+  const response = await API.post('/review', {
+    openId: parseInt(classId),
+    score: score * 2 // 5점 시스템을 10점 시스템으로 변환
+  });
+  console.log('리뷰 작성 API 응답:', response.data);
   return response.data;
 };

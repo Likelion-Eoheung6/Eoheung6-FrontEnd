@@ -4,6 +4,7 @@ import downIcon from '../../assets/mypage/down.svg';
 import upIcon from '../../assets/mypage/up.svg';
 import notIcon from '../../assets/common/not-icon.svg';
 import ActivityClassCard from './ActivityClassCard';
+import ActivityClassCardSkeleton from './ActivityClassCardSkeleton';
 
 interface ClassData {
   id: string;
@@ -13,6 +14,8 @@ interface ClassData {
   currentParticipants: number;
   price: number;
   imageUrl: string;
+  hasReview?: boolean;
+  reviewRating?: number;
 }
 
 interface ActivitySectionHeaderProps {
@@ -66,7 +69,7 @@ export default function ActivitySectionHeader({
   const getEmptyMessage = () => {
     switch (title) {
       case '예약한 클래스':
-        return '앗! 예약한 클래스가 없어요.';
+        return '앗! 신청한 클래스가 없어요.';
       case '개설한 클래스':
         return '앗! 개설한 클래스가 없어요.';
       case '수강한 클래스':
@@ -98,10 +101,11 @@ export default function ActivitySectionHeader({
       {isExpanded && (
         <div className="mt-[10px] max-h-[280px] overflow-y-auto absolute w-full h-[298px] bg-[#FAFAFA] shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] rounded-[20px]">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center h-full">
-              <div className="text-[#545454] text-[14px] font-normal leading-[120%] tracking-[-0.025em] text-center">
-                데이터를 불러오는 중...
-              </div>
+            <div className="space-y-[10px] pl-[5px] pr-[13px] py-[10px]">
+              {/* 스켈레톤 UI 3개 표시 */}
+              <ActivityClassCardSkeleton />
+              <ActivityClassCardSkeleton />
+              <ActivityClassCardSkeleton />
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center h-full">
@@ -122,6 +126,8 @@ export default function ActivitySectionHeader({
                   buttonText={getButtonText()}
                   imageUrl={classItem.imageUrl}
                   onButtonClick={() => handleButtonClick(classItem.id)}
+                  hasReview={classItem.hasReview}
+                  reviewRating={classItem.reviewRating}
                 />
               ))}
             </div>
