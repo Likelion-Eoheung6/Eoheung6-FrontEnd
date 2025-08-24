@@ -191,16 +191,23 @@ export default function CreateClassPage() {
           />
           {/* 클래스 제목 */}
           <div
-            className={`w-full h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] my-[20px] `}
+            className={`h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] my-[20px] `}
           >
-            <div className="rounded-full bg-[#009DFF] text-[white] text-[12px] font-semibold px-[14px] py-[6px] shadow mr-[5px]">
+            <div
+              className="flex-shrink-0  
+          whitespace-nowrap           
+          rounded-full bg-[#009DFF] text-white font-semibold shadow
+          mr-3                       
+          text-[12px] py-1.5 px-3.5
+          md:text-sm md:py-2 md:px-4 "
+            >
               클래스 제목
             </div>
             <input
               value={req.title}
               onChange={e => updateReq({ title: e.target.value })}
               placeholder="클래스 제목을 적어주세요."
-              className="flex-1 bg-transparent outline-none border-0 placeholder:text-[#B3B3B3] text-gray-500 px-1 py-2"
+              className="bg-transparent outline-none border-0 placeholder:text-[#B3B3B3] text-gray-500 px-1 py-2"
             />
           </div>
           {/* 클래스 소개 */}
@@ -365,7 +372,7 @@ export default function CreateClassPage() {
                 <h3 className="text-xl font-bold text-[#545454]">
                   빈집 제공 서비스란?
                 </h3>
-                <p className="mt-2 text-gray-600 leading-relaxed">
+                <p className="mt-2 text-gray-600 leading-relaxed text-[14px]">
                   구청과 협력하여 빈집 일부를
                   <br />
                   단기 문화 프로젝트용 공간으로 개방하는 서비스에요.

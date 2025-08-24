@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper';
-// import 'swiper/css/navigation';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 import BackIcon from '../../assets/common/back.svg';
 import NextIcon from '../../assets/common/next.svg';
@@ -48,7 +49,7 @@ export default function ImageSwiperComponent({
           spaceBetween={10}
           slidesPerView={1}
           className="w-full"
-          pagination={{ clickable: true, el: '.swiper-button' }}
+          pagination={{ clickable: true, el: '.swiper-button ' }}
           allowTouchMove={true}
           navigation={{
             prevEl: '.swiper-button-prev',
@@ -91,7 +92,7 @@ export default function ImageSwiperComponent({
           className="swiper-button-next h-[24px] w-[24px]"
         />
       </div>
-      <div className="swiper-button flex justify-center gap-[10px]"></div>
+      <div className="swiper-button flex justify-center gap-[6px]"></div>
     </>
   );
 }
