@@ -72,7 +72,7 @@ export default function AddMyPlacePage() {
             />
             <button
               onClick={() => setModalOpen(true)}
-              className="rounded-r-[8px] bg-[#545454] px-[20px] text-[14px] font-bold text-[white]"
+              className="rounded-r-[8px] ] bg-[#545454] px-[20px] text-[12px] font-bold text-[white]"
             >
               주소 찾기
             </button>
