@@ -15,7 +15,7 @@ export const useTagSelect = () => {
   const tagRetrieveMutation = useTagRetrieveMutation();
   
   const isEasyVersion = searchParams.get('version') === 'easy';
-  const requiredCount = isEasyVersion ? 1 : 2;
+  const requiredCount = 1; // 일반 버전에서도 한 가지 태그만 선택해도 버튼 활성화
 
   // 태그 저장 함수
   const handleTagSave = () => {

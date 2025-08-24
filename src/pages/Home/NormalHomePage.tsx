@@ -105,12 +105,12 @@ export default function NormalHomePage() {
       <ClassCardSlider
         images={
           Array.isArray(homeData?.data?.hots)
-            ? homeData.data.hots.map(hot => hot.imageUrl)
+            ? homeData.data.hots.slice(0, 5).map(hot => hot.imageUrl)
             : imageFiles
         }
         classes={
           Array.isArray(homeData?.data?.hots)
-            ? homeData.data.hots.map(hot => ({
+            ? homeData.data.hots.slice(0, 5).map(hot => ({
                 id: hot.openId.toString(),
                 title: hot.title,
                 currentParticipants: hot.appliedCount,

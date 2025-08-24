@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/common/logo2.svg';
 import EasyClassCard from '../../components/common/EasyClassCard';
@@ -9,7 +9,12 @@ import { useHomeData } from '../../hooks/home/useHomeData';
 
 export default function EasyHomePage() {
   const navigate = useNavigate();
-  const { data: homeData, isLoading, error } = useHomeData();
+  const { data: homeData, isLoading, error, invalidateHomeData } = useHomeData();
+
+  // 컴포넌트 마운트 시 데이터 다시 불러오기
+  useEffect(() => {
+    invalidateHomeData();
+  }, [invalidateHomeData]);
 
   // 로딩 중이거나 에러가 있을 때 처리
   if (isLoading) {
