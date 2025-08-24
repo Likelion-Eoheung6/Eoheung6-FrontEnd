@@ -17,9 +17,34 @@ export const useTagSelect = () => {
   const isEasyVersion = searchParams.get('version') === 'easy';
   const requiredCount = 1; // 일반 버전에서도 한 가지 태그만 선택해도 버튼 활성화
 
-  // 태그 저장 함수
+  // 태그 저장 후 홈으로 이동하는 함수
+  const handleTagSaveAndGoHome = () => {
+    tagMutation.mutate(
+      { tag: selected },
+      {
+        onSuccess: (saveResponse) => {
+          if (saveResponse.isSuccess) {
+            // 태그 저장 성공 후 홈으로 이동
+            navigate(isEasyVersion ? '/easy' : '/home');
+          } else {
+            console.error('태그 저장 API 호출 실패:', saveResponse.message);
+            navigate(isEasyVersion ? '/easy' : '/home');
+          }
+        },
+        onError: (saveError: any) => {
+          console.error('태그 저장 API 호출 중 오류 발생:', saveError);
+          if (saveError.message === '인증 토큰이 없습니다. 로그인이 필요합니다.') {
+            navigate('/login');
+            return;
+          }
+          navigate(isEasyVersion ? '/easy' : '/home');
+        }
+      }
+    );
+  };
+
+  // 태그 저장 후 다음 단계로 진행하는 함수
   const handleTagSave = () => {
-    
     tagMutation.mutate(
       { tag: selected },
       {
@@ -164,6 +189,7 @@ export const useTagSelect = () => {
     handleImageLoadComplete,
     areAllImagesLoaded,
     navigate,
-    handleTagSave
+    handleTagSave,
+    handleTagSaveAndGoHome
   };
 };
