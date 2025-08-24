@@ -100,8 +100,8 @@ export default function StartPage() {
       <div className={`absolute left-0 top-[202px] w-full flex flex-col items-center transition-opacity duration-1600 ease-in-out ${
         showContent ? 'opacity-100' : 'opacity-0'
       }`}>
-        <div className="w-[256px] h-[251px]"></div> {/* 로고 공간만 차지 */}
-        <p className="mt-[30px] w-[324px] m-0 text-center text-[rgba(84,84,84,1)] font-medium text-[18px] leading-[1.2] tracking-[-0.025em] whitespace-pre-line">
+        <div className="w-[256px] h-[251px]"></div>
+        <p className="mt-[20px] w-[324px] m-0 text-center text-[rgba(84,84,84,1)] font-medium text-[18px] leading-[1.2] tracking-[-0.025em] whitespace-pre-line">
           {`취미, 배움, 이야기까지 세대를 잇는 하루 클래스\n'이음학당'에서 찾아보세요!`}
         </p>
         <button
