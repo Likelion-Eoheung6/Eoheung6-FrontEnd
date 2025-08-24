@@ -6,6 +6,7 @@ import LocationIcon from '../../assets/class/location.svg';
 import QestionIcon from '../../assets/class/question.svg';
 import CharacterBlue from '../../assets/class/character-blue.svg';
 import CharacterYellow from '../../assets/class/character-yellow.svg';
+import DeleteIcon from '../../assets/class/delete.svg';
 
 import ImageSwiperComponent from '../../components/class/ImageSwiperComponent';
 import CalendarComponent from '../../components/class/CalendarComponent';
@@ -23,6 +24,7 @@ import type {
   CreateClassRequest,
   ReserveGovPlaceRequest,
 } from '../../types/create/createTypes';
+import ModalContainer from '../../components/common/ModalContainer';
 
 export interface CreateClassPayload {
   infoId: number | null;
@@ -40,6 +42,7 @@ export interface CreateClassPayload {
 
 export default function CreateClassPage() {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { req, images, updateReq, setImages, resetStore } =
     useCreateClassStore();
   const { reservation, clearReservation } = useGovReservationStore();
@@ -121,8 +124,7 @@ export default function CreateClassPage() {
       endTime: req.endTime,
       capacity: req.capacity,
       price: req.price,
-      tags: ['인형만들기', '유머스러운', '편안한'],
-      // tags: req.tags.map(tag => tag.replace('#', '')),
+      tags: req.tags.map(tag => tag.replace('#', '')),
     };
 
     // API에 보낼 요청 데이터를 구성합니다.
@@ -253,7 +255,12 @@ export default function CreateClassPage() {
                 <img src={LocationIcon} alt="위치" className="h-4 w-4" />
                 클래스 장소
               </span>
-              <img src={QestionIcon} alt="도움말" className="h-5 w-5" />
+              <img
+                src={QestionIcon}
+                alt="도움말"
+                className="h-5 w-5"
+                onClick={() => setIsModalOpen(true)}
+              />
             </div>
             {reservation ? (
               // If a reservation exists, show the map
@@ -329,6 +336,43 @@ export default function CreateClassPage() {
             onClick={handleSubmit}
           />
         </BodyContainer>
+        {isModalOpen && (
+          <ModalContainer
+            onClickToggleModal={() => setIsModalOpen(prev => !prev)}
+          >
+            <div className="relative">
+              <div className="flex justify-between items-center justify-center">
+                <h2 className="text-[16px] font-medium text-[#009DFF]">
+                  마땅한 장소를 찾지 못하고 있다면?
+                  <br />
+                  빈집 제공 서비스를 이용해 보세요!
+                </h2>
+                <button
+                  className="absolute right-0 top-0"
+                  onClick={() => setIsModalOpen(prev => !prev)}
+                >
+                  <img src={DeleteIcon} alt="delete" />
+                </button>
+              </div>
+              <hr className="my-4 border-gray-200" />
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-[#545454]">
+                  빈집 제공 서비스란?
+                </h3>
+                <p className="mt-2 text-gray-600 leading-relaxed">
+                  구청과 협력하여 빈집 일부를
+                  <br />
+                  단기 문화 프로젝트용 공간으로 개방하는 서비스에요.
+                  <br />
+                  기존에 장소 대여 플랫폼 보다 비용의 부담이 적어요!
+                </p>
+              </div>
+              <div className="relative flex justify-center items-center mt-6 h-24">
+                <img src={CharacterYellow} alt="character" />
+              </div>
+            </div>
+          </ModalContainer>
+        )}
       </ClassContainer>
     </>
   );
