@@ -88,9 +88,9 @@ const RecommendPage: React.FC = () => {
       <div className="px-4">
         {/* 클래스 목록 */}
         <div className="space-y-[18px] mt-[30px]">
-          {recommendClasses.map((classData) => (
+          {recommendClasses.map((classData, index) => (
             <ClassCardWrapper 
-              key={classData.openId} 
+              key={`${classData.openId}-${index}`} 
               classData={classData} 
               onClassClick={handleClassClick}
             />
