@@ -21,12 +21,12 @@ export default function NavBar() {
   // 각 네비게이션 아이템을 배열로 관리하면 코드가 더 깔끔해집니다.
   const navItems = [
     {
-      path: '/',
+      path: '/home',
       defaultIcon: HomeIcon,
       selectedIcon: HomeSelectedIcon,
       label: '홈',
       alt: '홈',
-      activePaths: ['/', '/open-class', '/request-class'],
+      activePaths: ['/home', '/easy', '/open-class', '/request-class'],
     },
     {
       path: '/recommend',
@@ -77,11 +77,11 @@ export default function NavBar() {
         return (
           <Link
             to={
-              item.path === '/'
+              item.path === '/home'
                 ? (() => {
                     // 홈 버튼 클릭 시 사용자의 버전에 따라 이동
                     const userVersion = sessionStorage.getItem('userVersion');
-                    return userVersion === 'easy' ? '/?version=easy' : '/';
+                    return userVersion === 'easy' ? '/easy' : '/home';
                   })()
                 : item.path
             }

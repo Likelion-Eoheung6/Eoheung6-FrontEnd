@@ -35,7 +35,7 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <></>,
     children: [
-      { index: true, element: <HomePage /> },
+      { path: 'home', element: <HomePage /> },
       { path: 'easy', element: <EasyHomePage /> },
       {
         path: 'open-class',
@@ -68,7 +68,7 @@ const router = createBrowserRouter([
     element: <AuthLayout />,
     errorElement: <></>,
     children: [
-      { path: 'start', element: <StartPage /> },
+      { index: true, element: <StartPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'signup', element: <SignupPage /> },
       { path: 'version', element: <VersionSelectPage /> },
