@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGovReservationStore } from '../../stores/useGovReservationStore';
 import MapComponent from '../../components/class/MapComponent';
 import { getGovReservation } from '../../apis/create/createApi';
+import LoadingScreen from '../../components/common/LoadingScreen';
 
 interface VacantPlace {
   id: number;
@@ -55,7 +56,7 @@ export default function RentalPlacePage() {
   }, []);
 
   if (loading) {
-    return <div>장소 목록을 불러오는 중입니다...</div>;
+    return <LoadingScreen />;
   }
 
   if (error) {
