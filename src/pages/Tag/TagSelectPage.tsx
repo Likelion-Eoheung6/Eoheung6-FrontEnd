@@ -20,8 +20,6 @@ export default function TagSelectPage() {
     handleImageLoadComplete,
     areAllImagesLoaded,
     navigate,
-    handleTagSave,
-    handleTagSaveAndGoHome
   } = useTagSelect();
   
   const tags = isEasyVersion ? EASY_TAGS : TAGS;
@@ -49,14 +47,8 @@ export default function TagSelectPage() {
           <button
             type="button"
             onClick={() => {
-              // 태그가 선택되어 있으면 저장 후 홈으로 이동
-              if (selected.length >= requiredCount) {
-                // 홈으로 버튼을 눌렀을 때는 태그 저장 후 홈으로 이동
-                handleTagSaveAndGoHome();
-              } else {
-                // 태그가 선택되지 않았으면 바로 홈으로 이동
-                navigate(isEasyVersion ? '/easy' : '/home');
-              }
+              // 홈으로 버튼을 눌렀을 때는 태그 저장 없이 바로 홈으로 이동
+              navigate(isEasyVersion ? '/easy' : '/home');
             }}
             className="flex flex-col items-center justify-center appearance-none border-0 bg-transparent cursor-pointer pr-[2px]"
           >
