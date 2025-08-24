@@ -103,7 +103,7 @@ export default function MyActivityPage() {
       />
       
       {/* 활동 섹션들 */}
-      <div className="mt-[24px] px-[16px] space-y-[24px]">
+      <div className="mt-[24px] px-[16px] pb-[164px] space-y-[24px]">
         {/* 신청한 클래스 섹션 */}
         <ActivitySectionHeader 
           title="신청한 클래스" 

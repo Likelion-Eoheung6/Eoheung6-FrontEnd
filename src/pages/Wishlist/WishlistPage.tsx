@@ -55,6 +55,11 @@ const WishlistPage: React.FC = () => {
   const handleClassClick = (openId: number) => {
     navigate(`/class/${openId}`);
   };
+
+  const handleSearchClick = () => {
+    navigate('/search');
+  };
+
   if (isLoading) {
     return (
       <div>
@@ -115,7 +120,7 @@ const WishlistPage: React.FC = () => {
     <div>
       <PageHeader title="위시리스트"/>
       
-      <div className="px-[32px] py-[14px] space-y-[21px]">
+      <div className="px-[32px] py-[14px] pb-[31px] space-y-[21px]">
         {wishClasses.map((wishClass) => (
           <WishlistCard
             key={wishClass.openId}
@@ -131,6 +136,18 @@ const WishlistPage: React.FC = () => {
             isLoading={updateWishlist.isPending}
           />
         ))}
+        
+        {/* 클래스 검색하러 가기 버튼 */}
+        <div className="w-full pt-[10px]">
+          <button
+            onClick={handleSearchClick}
+            className="w-full py-[9px] rounded-[20px] bg-[#009DFF] flex items-center justify-center border-0 outline-none focus:outline-none ring-0 focus:ring-0 shadow-[0px_4px_4px_2px_rgba(0,0,0,0.04)] cursor-pointer"
+          >
+            <span className="text-[#FDFDFD] text-[14px] font-semibold leading-[1.2] tracking-[-0.025em]">
+              클래스 검색하러 가기
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );
