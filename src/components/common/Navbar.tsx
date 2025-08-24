@@ -49,7 +49,6 @@ export default function NavBar() {
       label: '위시리스트',
       alt: '위시리스트',
     },
-
     {
       path: '/mypage',
       defaultIcon: MyPageIcon,

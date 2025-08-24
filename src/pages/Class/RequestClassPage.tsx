@@ -113,16 +113,23 @@ export default function RequestClassPage() {
           />
           {/* 클래스 제목 */}
           <div
-            className={`w-full h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mt-[20px] mb-[20px]`}
+            className={`h-[50px] rounded-[1.25rem] box-border px-[12px] flex items-center shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] my-[20px] `}
           >
-            <div className="rounded-full bg-[#009DFF] text-[white] text-[12px] font-semibold px-[14px] py-[6px] shadow mr-[5px]">
+            <div
+              className="flex-shrink-0  
+          whitespace-nowrap           
+          rounded-full bg-[#009DFF] text-white font-semibold shadow
+          mr-3                       
+          text-[12px] py-1.5 px-3.5
+          md:text-sm md:py-2 md:px-4 "
+            >
               클래스 제목
             </div>
             <input
               value={req.title}
               onChange={e => updateReq({ title: e.target.value })}
               placeholder="클래스 제목을 적어주세요."
-              className="flex-1 bg-transparent outline-none border-0 placeholder:text-[#B3B3B3] placeholder:text-[14px] text-gray-500 px-1 py-2"
+              className="bg-transparent outline-none border-0 placeholder:text-[#B3B3B3] text-gray-500 px-1 py-2"
             />
           </div>
           {/* 클래스 소개 */}
