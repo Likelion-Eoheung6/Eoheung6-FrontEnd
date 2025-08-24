@@ -19,8 +19,6 @@ import MyPlacePage from './pages/Class/MyPlacePage';
 import AddMyPlacePage from './pages/Class/AddMyPlacePage';
 import DoneClassPage from './pages/Class/DoneClassPage';
 import LoginPage from './pages/Login/LoginPage';
-import OAuthRedirect from './components/auth/OAuthRedirect';
-import OAuthFailRedirect from './components/auth/OAuthFailRedirect';
 import VersionSelectPage from './pages/Tag/VersionSelectPage';
 import TagSelectPage from './pages/Tag/TagSelectPage';
 import LoadingScreen from './components/common/LoadingScreen';
@@ -74,14 +72,6 @@ const router = createBrowserRouter([
       { path: 'version', element: <VersionSelectPage /> },
       { path: 'tags', element: <TagSelectPage /> },
     ],
-  },
-  {
-    path: '/oauth-success',
-    element: <OAuthRedirect />,
-  },
-  {
-    path: '/oauth-fail',
-    element: <OAuthFailRedirect />,
   },
 ]);
 
