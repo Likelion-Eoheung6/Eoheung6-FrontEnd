@@ -57,11 +57,18 @@ export default function MyPage() {
   // 중복 제거된 고유한 태그 배열
   const uniqueTags = [...new Set(tags)];
   
-  // 예약 데이터 포맷팅 - 예약한 클래스 목록에서 최근 예약 가져오기
-  const reservationData = null; // 예약 데이터는 이제 직접 사용하지 않음
+  // 최근 예약 데이터 포맷팅
+  const reservationData = myPageData?.data?.recentReservation ? {
+    id: myPageData.data.recentReservation.applicationId,
+    title: myPageData.data.recentReservation.title,
+    date: myPageData.data.recentReservation.openAt,
+    startTime: myPageData.data.recentReservation.startTime,
+    endTime: myPageData.data.recentReservation.endTime,
+    classId: myPageData.data.recentReservation.openId
+  } : null;
 
   // 예약한 클래스 데이터를 ActivitySection에서 사용할 형태로 변환
-  const reservedClassesForActivity = []; // 예약 데이터는 이제 직접 사용하지 않음
+  const reservedClassesForActivity = reservationData ? [reservationData] : [];
 
   // 태그 삭제 함수
   const handleDeleteTag = (tagToDelete: string) => {
@@ -132,6 +139,18 @@ export default function MyPage() {
     if (file) {
       setSelectedImage(file);
     }
+  };
+
+  // 날짜 포맷팅 함수
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+    const weekday = weekdays[date.getDay()];
+    
+    return `${year}년 ${month}월 ${day}일 (${weekday})`;
   };
 
   // 태그 추가하기 버튼 클릭
@@ -241,13 +260,33 @@ export default function MyPage() {
               <div className="text-[#545454] text-[10px] font-medium leading-[120%] tracking-[-0.025em] mb-[2px]">
                 신청한 클래스
               </div>
-              <div className="text-[#B3B3B3] text-[14px] font-normal leading-[120%] tracking-[-0.025em]">
-                신청한 클래스가 없습니다.
-              </div>
+              {reservationData ? (
+                <div className="flex flex-col">
+                  <div className="text-[#111111] text-[14px] font-normal leading-[120%] tracking-[-0.025em]">
+                    {reservationData.title}
+                  </div>
+                  <div className="text-[#545454] text-[12px] font-light leading-[120%] tracking-[-0.025em]">
+                    {formatDate(reservationData.date)}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-[#B3B3B3] text-[14px] font-normal leading-[120%] tracking-[-0.025em]">
+                  신청한 클래스가 없습니다.
+                </div>
+              )}
             </div>
             
             {/* 오른쪽 위 더보기 버튼 */}
-            <div className="absolute top-[10px] right-[12px] text-[#545454] text-[12px] font-medium leading-[120%] tracking-[-0.025em]">
+            <div 
+              onClick={() => {
+                if (reservationData) {
+                  navigate('/my-applied');
+                }
+              }}
+              className={`absolute top-[10px] right-[12px] text-[#545454] text-[12px] font-medium leading-[120%] tracking-[-0.025em] ${
+                reservationData ? 'cursor-pointer' : 'cursor-default'
+              }`}
+            >
               더보기 &gt;
             </div>
           </div>
