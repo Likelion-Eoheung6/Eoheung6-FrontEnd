@@ -78,7 +78,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   };
 
   return (
-    <div className="relative max-w-md bg-white  rounded-[16px] shadow-lg font-sans">
+    <div className="relative max-w-md bg-white rounded-[10px]   shadow-lg font-sans">
       <div className="flex justify-start items-center gap-[4px]">
         <button
           onClick={() => changeMonth(-1)}

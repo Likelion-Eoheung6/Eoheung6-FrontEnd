@@ -150,7 +150,7 @@ export default function MyAppliedClassesPage() {
                     />
                   </div>
                   <div
-                    className={`w-full rounded-[1.25rem] box-border p-[12px] flex flex-col gap-[16px] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[30px]`}
+                    className={` rounded-[1.25rem] box-border p-[12px] flex flex-col gap-[16px] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)] mb-[30px]`}
                   >
                     {/* 4. 클래스 상세 정보 */}
                     <div className="w-full px-4 space-y-2">
@@ -169,8 +169,8 @@ export default function MyAppliedClassesPage() {
                             클래스 장소
                           </span>
                         </div>
-                        <span className="text-[14px] text-gray-800">
-                          {item.roadAddress} 명
+                        <span className="text-[13px] text-gray-800">
+                          {item.roadAddress}
                         </span>
                       </div>
                       {/* 가격 정보 */}
