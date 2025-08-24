@@ -30,10 +30,10 @@ export default function TagBottomSheet({
         <div className={`w-full max-w-[430px] h-[76vh] max-h-[700px] rounded-t-[20px] bg-[#FDFDFD] shadow-[0_-4px_16px_rgba(0,0,0,0.1)] transform transition-all duration-500 ease-out ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
           <div className="pt-[12px] px-[16px]">
             <div className="mx-auto h-[4px] w-[120px] rounded-full bg-[#C7C7C7]" />
-            <div className="items-start justify-center">
-              <div className="px-[56px] mt-[35px]">
+            <div className="flex justify-center">
+              <div className="mt-[35px]">
                 <div className="inline-flex items-center rounded-[20px] bg-[#009DFF] px-[14px] py-[8px] shadow-[0_4px_4px_2px_rgba(0,0,0,0.04)]">
-                  <span className="text-white text-[14px] font-semibold tracking-[-0.01em]">
+                  <span className="text-white text-[14px] font-semibold tracking-[-0.01em] whitespace-nowrap">
                     "선택하신 태그에 딱 맞는 클래스를 모아봤어요!"
                   </span>
                 </div>
