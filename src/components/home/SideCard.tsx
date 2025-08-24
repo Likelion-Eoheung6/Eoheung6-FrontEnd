@@ -1,5 +1,19 @@
 import React from 'react';
 
+interface ClassInfo {
+  title: string;
+  currentParticipants: number;
+  maxParticipants: number;
+  id: string;
+}
+
+interface SideCardProps {
+  image?: string;
+  classInfo?: ClassInfo;
+  onClassClick?: (classId: string) => void;
+}
+
+// ClassCard 컴포넌트
 interface ClassCardProps {
   title: string;
   currentParticipants: number;
@@ -8,12 +22,12 @@ interface ClassCardProps {
   size?: 'small' | 'medium';
 }
 
-export default function ClassCard({
+function ClassCard({
   title,
   currentParticipants,
   maxParticipants,
   onClick,
-  size = 'medium'
+  size = 'small'
 }: ClassCardProps) {
   return (
     <div 
@@ -39,8 +53,8 @@ export default function ClassCard({
       {/* 참여인원 정보 */}
       <div className={`bg-[#FDFDFD] rounded-[50px] flex flex-col items-center justify-center ${
         size === 'small'
-          ? 'px-[3px] py-[3px]'
-          : 'px-[3px] py-[4px]'
+          ? 'px-[6px] py-[4px]'
+          : 'px-[4px] py-[3px]'
       }`}>
         <div className={`text-[#545454] font-light leading-[1em] tracking-[-0.025em] ${
           size === 'small' ? 'text-[6px]' : 'text-[8px]'
@@ -52,6 +66,38 @@ export default function ClassCard({
         }`}>
           {currentParticipants} / {maxParticipants}
         </div>
+      </div>
+    </div>
+  );
+}
+
+export default function SideCard({ 
+  image, 
+  classInfo, 
+  onClassClick 
+}: SideCardProps) {
+  return (
+    <div className="flex flex-col items-center">
+      {/* 사이드 이미지 */}
+      <div 
+        className={`w-[107px] h-[68px] rounded-[20px] transition-all duration-300 ease-in-out cursor-pointer ${
+          image ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
+        }`}
+        style={image ? { backgroundImage: `url(${image})` } : undefined}
+        onClick={() => classInfo && onClassClick?.(classInfo.id)}
+      ></div>
+
+      {/* 사이드 클래스 카드 - 이미지 아래 5px 간격 */}
+      <div className="w-[107px] flex justify-center mt-[5px]">
+        {classInfo && (
+          <ClassCard 
+            title={classInfo.title}
+            currentParticipants={classInfo.currentParticipants}
+            maxParticipants={classInfo.maxParticipants}
+            size="small"
+            onClick={() => onClassClick?.(classInfo.id)}
+          />
+        )}
       </div>
     </div>
   );

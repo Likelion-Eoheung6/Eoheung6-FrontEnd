@@ -22,6 +22,11 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
   const passwordValidation = validatePassword(formData.password);
   const confirmPasswordValidation = validateConfirmPassword(formData.password, formData.confirmPassword);
 
+  // 비밀번호 확인 성공메시지 생성
+  const confirmPasswordSuccessMessage = formData.confirmPassword && confirmPasswordValidation.isValid 
+    ? "비밀번호가 일치합니다." 
+    : "";
+
   return (
     <>
       {/* 비밀번호 */}
@@ -57,6 +62,7 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
         description="영문과 숫자의 조합으로 4~12자 이내로 입력해 주세요."
         marginBottom="mb-[16px]"
         errorMessage={errorMessages.confirmPassword}
+        successMessage={confirmPasswordSuccessMessage}
       >
         <div className="relative">
           <input
@@ -80,11 +86,6 @@ const PasswordSection: React.FC<PasswordSectionProps> = ({
             <img src={showConfirmPassword ? EyeOn : EyeOff} alt="toggle-password" className="w-[18px] h-[12px]" />
           </button>
         </div>
-        {formData.confirmPassword && confirmPasswordValidation.isValid && (
-          <p className="text-[#009DFF] text-[10px] mt-[4px] ml-[10px]">
-            비밀번호가 일치합니다.
-          </p>
-        )}
       </FormField>
     </>
   );

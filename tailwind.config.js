@@ -25,6 +25,15 @@ export default {
         sans: ['Hakgyoansim Rikodeo', 'Pretendard', 'sans-serif'],
         serif: ['Merriweather', 'serif'],
       },
+      keyframes: {
+        'spin-slow': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+      },
+      animation: {
+        'spin-slow': 'spin-slow 3s linear infinite',
+      },
     },
   },
   plugins: [],

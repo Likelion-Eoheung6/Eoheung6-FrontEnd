@@ -183,11 +183,11 @@ export default function MyPlacePage() {
         {/* 내 장소 등록 */}
         <div className="mb-[10px] w-full">
           {apiData && apiData.count > 0 ? (
-            <div className="relative">
+            <div className="relative h-[]">
               <Swiper
                 modules={[Navigation, Pagination]}
                 spaceBetween={16}
-                slidesPerView={1.05}
+                slidesPerView={1.2}
                 centeredSlides={true}
                 navigation={{
                   prevEl: '.swiper-button-prev-custom',
@@ -209,7 +209,7 @@ export default function MyPlacePage() {
                   </SwiperSlide>
                 ))}
                 <SwiperSlide>
-                  <div className="flex h-full min-h-[132px] w-full items-center justify-center rounded-[1.25rem] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)]">
+                  <div className="flex h-full min-h-[150px] w-full items-center justify-center rounded-[1.25rem] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)]">
                     <button
                       className="border-none bg-transparent text-[#B3B3B3] underline"
                       onClick={() => navigate('/open-class/myplace/register')}
@@ -231,12 +231,14 @@ export default function MyPlacePage() {
               />
             </div>
           ) : (
-            <button
-              className="border-none bg-transparent text-[#B3B3B3] underline "
-              onClick={() => navigate('/open-class/myplace/register')}
-            >
-              내 장소 등록하기 &gt;
-            </button>
+            <div className="flex h-full min-h-[132px] w-full items-center justify-center rounded-[1.25rem]  shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)]">
+              <button
+                className="border-none bg-transparent text-[#B3B3B3] underline"
+                onClick={() => navigate('/open-class/myplace/register')}
+              >
+                내 장소 등록하기 &gt;
+              </button>
+            </div>
           )}
         </div>
         <div className="swiper-pagination-custom flex justify-center gap-[10px]"></div>

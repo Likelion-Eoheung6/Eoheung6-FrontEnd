@@ -8,9 +8,6 @@ export interface ClassRequestData {
   content: string;
 }
 
-/**
- * AI 클래스 추천 API의 전체 응답 타입
- */
 export interface ClassRequestResponse {
   isSuccess: boolean;
   code: string;

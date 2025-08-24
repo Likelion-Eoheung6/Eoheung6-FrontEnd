@@ -11,8 +11,9 @@ import NextIcon from '../../assets/common/next.svg';
 interface HomeImageProps {
   slides: string[]; // 이미지 URL 배열
   setImageFiles: React.Dispatch<React.SetStateAction<string[]>>;
+  onSlideClick?: (index: number) => void; // 슬라이드 클릭 핸들러
 }
-export default function HomeImage({ slides, setImageFiles }: HomeImageProps) {
+export default function HomeImage({ slides, setImageFiles, onSlideClick }: HomeImageProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const prevRef = useRef<HTMLImageElement | null>(null);
   const nextRef = useRef<HTMLImageElement | null>(null);
@@ -47,20 +48,22 @@ export default function HomeImage({ slides, setImageFiles }: HomeImageProps) {
           centeredSlides={true} // 현재 슬라이드를 가운데 정렬
           initialSlide={Math.floor(slides.length / 2)} // 가운데 슬라이드부터 시작
           allowTouchMove={true}
+          loop={slides.length >= 3} // 슬라이드가 3개 이상일 때만 loop 활성화
           navigation={{
             prevEl: '.custom-prev',
             nextEl: '.custom-next',
           }}
-          onSlideChange={swiper => setCurrentIndex(swiper.activeIndex)}
+          onSlideChange={swiper => setCurrentIndex(swiper.realIndex)}
           className="w-full"
         >
           {slides.map((img, idx) => (
             <SwiperSlide key={idx}>
               <div
-                className={`relative w-full h-[225px] rounded-[1.25rem] overflow-hidden ${
+                className={`relative w-full h-[225px] rounded-[1.25rem] overflow-hidden cursor-pointer ${
                   img ? 'bg-cover bg-center' : 'bg-[#B3B3B3]'
                 }`}
                 style={img ? { backgroundImage: `url(${img})` } : undefined}
+                onClick={() => onSlideClick?.(idx)}
               ></div>
             </SwiperSlide>
           ))}
@@ -75,13 +78,11 @@ export default function HomeImage({ slides, setImageFiles }: HomeImageProps) {
           className="custom-prev absolute left-[30px] z-20 h-8 w-8 cursor-pointer select-none"
         />
         {/* Next 버튼 */}
-        {currentIndex < slides.length - 1 && (
-          <img
-            src={NextIcon}
-            alt="다음"
-            className="custom-next absolute right-[30px] z-20 h-8 w-8 cursor-pointer select-none"
-          />
-        )}
+        <img
+          src={NextIcon}
+          alt="다음"
+          className="custom-next absolute right-[30px] z-20 h-8 w-8 cursor-pointer select-none"
+        />
       </div>
 
       {/* 커스텀 페이지네이션 */}

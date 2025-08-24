@@ -127,12 +127,12 @@ export default function SignupPage() {
             clearErrorMessage('verificationCode');
           } else {
             updateSignupState({ isCodeVerified: false });
-            setErrorMessage('verificationCode', '인증번호가 일치하지 않습니다.');
+            setErrorMessage('verificationCode', '인증 번호가 올바르지 않습니다.');
           }
         },
         onError: () => {
           updateSignupState({ isCodeVerified: false });
-          setErrorMessage('verificationCode', '인증번호 확인 중 오류가 발생했습니다.');
+          setErrorMessage('verificationCode', '인증 번호가 올바르지 않습니다.');
         }
       }
     );
@@ -238,14 +238,14 @@ export default function SignupPage() {
           </div>
         </form>
         
-        {/* 에러 메시지 */}
-        {signupMutation.isError && (
-          <div className="mt-[10px] text-center">
+        {/* 에러 메시지 - 고정 높이로 설정 */}
+        <div className="mt-[10px] h-[20px] flex items-center justify-center">
+          {signupMutation.isError && (
             <p className="text-[#FF0000] text-[12px]">
               회원가입에 실패했습니다. 다시 시도해 주세요.
             </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

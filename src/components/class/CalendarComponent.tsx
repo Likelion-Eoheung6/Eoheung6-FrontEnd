@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 interface CalendarProps {
   selectedDate: Date | null;
-  onDateChange: (date: Date) => void;
+  onDateChange?: (date: Date) => void;
   variant?: 'selectionOnly' | 'availability';
   unavailableDates?: string[];
   disabled?: boolean;
@@ -15,6 +15,8 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   unavailableDates = [],
   disabled = false,
 }) => {
+  const [showUnavailableModal, setShowUnavailableModal] = useState(false); // Modal state
+
   const [currentDate, setCurrentDate] = useState<Date>(
     selectedDate || new Date()
   );
@@ -44,11 +46,20 @@ const CalendarComponent: React.FC<CalendarProps> = ({
     const dateString = `${day.getFullYear()}-${String(
       day.getMonth() + 1
     ).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+    const isUnavailable = unavailableDates.includes(dateString);
+
+    if (day.getMonth() === month) {
+      if (variant === 'availability' && isUnavailable) {
+        setShowUnavailableModal(true); // Show modal for unavailable dates
+      } else {
+        onDateChange?.(day);
+      }
+    }
     if (
       day.getMonth() === month &&
       (variant === 'selectionOnly' || !unavailableDates.includes(dateString))
     ) {
-      onDateChange(day);
+      onDateChange?.(day);
     }
   };
 
@@ -67,7 +78,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   };
 
   return (
-    <div className=" max-w-md bg-white  rounded-[16px] shadow-lg font-sans">
+    <div className="relative max-w-md bg-white  rounded-[16px] shadow-lg font-sans">
       <div className="flex justify-start items-center gap-[4px]">
         <button
           onClick={() => changeMonth(-1)}
@@ -96,7 +107,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-y-[8px] border-x-[1px] border-b-[1px] border-[#E0E0E0] rounded-b-[8px] ">
+        <div className="grid grid-cols-7 gap-y-[8px] p-1 border-x-[1px] border-b-[1px] border-[#E0E0E0] rounded-b-[8px] ">
           {daysInMonth.map((day, index) => {
             const dateString = `${day.getFullYear()}-${String(
               day.getMonth() + 1
@@ -147,6 +158,25 @@ const CalendarComponent: React.FC<CalendarProps> = ({
           })}
         </div>
       </div>
+      {/* Modal component within Calendar */}
+      {showUnavailableModal && (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-10 bg-black/50">
+          <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
+            <h3 className="text-lg text-[#545454] font-bold ">
+              앗! 빈집의 예약이 꽉 찬 날짜에요!
+            </h3>
+            <p className="text-gray-700 text-[12px] mb-4">
+              초록색으로 설정된 날짜를 선택해주세요.
+            </p>
+            <button
+              onClick={() => setShowUnavailableModal(false)}
+              className="bg-[#545454] text-[12px] hover:bg-gray-400 text-white font-semibold py-2 px-4 rounded rounded-full"
+            >
+              다른 날짜 선택하기
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

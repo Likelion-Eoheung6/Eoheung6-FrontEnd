@@ -4,21 +4,28 @@ import logo from '../../assets/common/logo2.svg';
 import ImageSwiperComponent from '../../components/home/HomeImage';
 import ClassSearchButton from '../../components/home/ClassSearchButton';
 import ClassActionButtons from '../../components/home/ClassActionButtons';
-import CardSlider from '../../components/home/CardSlider';
-import ClassCard from '../../components/home/ClassCard';
+import ClassCardSlider from '../../components/home/ClassCardSlider';
 import ClassRequestCard from '../../components/home/ClassRequestCard';
+import LoadingScreen from '../../components/common/LoadingScreen';
+import { useHomeData } from '../../hooks/home/useHomeData';
 
 export default function NormalHomePage() {
   const navigate = useNavigate();
+  const { data: homeData, isLoading, error } = useHomeData();
   const [imageFiles, setImageFiles] = React.useState<string[]>(['', '', '']);
 
-  const handleStartEasy = () => {
-    navigate('/tag/basic?version=easy');
-  };
+  // 로딩 중이거나 에러가 있을 때 처리
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
-  const handleStartNormal = () => {
-    navigate('/tag/basic');
-  };
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        데이터를 불러오는 중 오류가 발생했습니다.
+      </div>
+    );
+  }
 
   const handleClassSearch = () => {
     navigate('/search');
@@ -29,7 +36,7 @@ export default function NormalHomePage() {
   };
 
   const handleRequestClass = () => {
-    navigate('/class/request');
+    navigate('/request');
   };
 
   const handleClassClick = (classId: string) => {
@@ -42,7 +49,15 @@ export default function NormalHomePage() {
   };
 
   const handleClassRequestClick = (classId: string) => {
-    navigate(`/class/request/${classId}`);
+    navigate(`/class/${classId}`);
+  };
+
+  const handleBannerClick = (index: number) => {
+    // 배너 클릭 시 해당 클래스로 이동
+    if (Array.isArray(homeData?.data?.ads) && homeData.data.ads[index]) {
+      const adData = homeData.data.ads[index];
+      navigate(`/class/${adData.openId}`);
+    }
   };
 
   return (
@@ -51,9 +66,17 @@ export default function NormalHomePage() {
       <div className="flex items-center justify-center mb-4">
         <img src={logo} alt="로고" className="h-16" />
       </div>
-    {/* 이미지 스와이퍼 - 로고 아래 24px 간격 */}
-    <div className="mb-[25px]">
-        <ImageSwiperComponent slides={imageFiles} setImageFiles={setImageFiles} />
+      {/* 이미지 스와이퍼 - 로고 아래 24px 간격 */}
+      <div className="mb-[25px]">
+        <ImageSwiperComponent
+          slides={
+            Array.isArray(homeData?.data?.ads)
+              ? homeData.data.ads.map(ad => ad.imageUrl)
+              : imageFiles
+          }
+          setImageFiles={setImageFiles}
+          onSlideClick={handleBannerClick}
+        />
       </div>
       <div className="px-[31px] mb-[18px]">
         <ClassSearchButton onClick={handleClassSearch} />
@@ -61,7 +84,7 @@ export default function NormalHomePage() {
 
       {/* 클래스 개설 & 클래스 요청 버튼 */}
       <div className="px-[31px] mb-[26px]">
-        <ClassActionButtons 
+        <ClassActionButtons
           onCreateClass={handleCreateClass}
           onRequestClass={handleRequestClass}
         />
@@ -79,28 +102,22 @@ export default function NormalHomePage() {
         </p>
       </div>
 
-      <CardSlider 
-        images={imageFiles} 
-        classes={[
-          {
-            id: '1',
-            title: '마카롱 만들기기기',
-            currentParticipants: 5,
-            maxParticipants: 12
-          },
-          {
-            id: '2', 
-            title: '수채화 그리기 기초기초기초기초기초기초',
-            currentParticipants: 8,
-            maxParticipants: 15
-          },
-          {
-            id: '3',
-            title: '요가 클래스',
-            currentParticipants: 12,
-            maxParticipants: 20
-          }
-        ]}
+      <ClassCardSlider
+        images={
+          Array.isArray(homeData?.data?.hots)
+            ? homeData.data.hots.map(hot => hot.imageUrl)
+            : imageFiles
+        }
+        classes={
+          Array.isArray(homeData?.data?.hots)
+            ? homeData.data.hots.map(hot => ({
+                id: hot.openId.toString(),
+                title: hot.title,
+                currentParticipants: hot.appliedCount,
+                maxParticipants: hot.capacity,
+              }))
+            : []
+        }
         onClassClick={handleClassClick}
       />
 
@@ -113,23 +130,25 @@ export default function NormalHomePage() {
 
       {/* 클래스 요청 카드들 */}
       <div className="flex flex-col items-center gap-[14px] pb-[31px] px-[31px] w-full">
-        <ClassRequestCard 
-          title="마카롱만들기마카롱만들기만들기만들기만들기"
-          currentParticipants={30}
-          maxParticipants={15}
-          onWishlistClick={() => handleWishlistClick('1')}
-          onClick={() => handleClassRequestClick('1')}
-        />
-        <ClassRequestCard 
-          title="수채화 그리기 기초"
-          currentParticipants={5}
-          maxParticipants={12}
-          onWishlistClick={() => handleWishlistClick('2')}
-          onClick={() => handleClassRequestClick('2')}
-        />
+        {Array.isArray(homeData?.data?.recruites)
+          ? homeData.data.recruites.map(recruit => (
+              <ClassRequestCard
+                key={recruit.recruitID}
+                title={recruit.title}
+                currentParticipants={recruit.joinedCount}
+                maxParticipants={15}
+                recruitId={recruit.recruitID}
+                isJoined={recruit.isJoined}
+                onWishlistClick={() =>
+                  handleWishlistClick(recruit.recruitID.toString())
+                }
+                onClick={() =>
+                  handleClassRequestClick(recruit.recruitID.toString())
+                }
+              />
+            ))
+          : []}
       </div>
     </div>
-    
-
   );
 }

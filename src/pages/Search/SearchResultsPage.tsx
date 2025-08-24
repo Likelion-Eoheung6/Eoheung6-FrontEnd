@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchClasses } from '../../hooks/search/useSearch';
 import PageHeader from '../../components/common/PageHeader';
 import ClassCard from '../../components/common/ClassCard';
 import EmptyState from '../../components/common/EmptyState';
+import LoadingScreen from '../../components/common/LoadingScreen';
 
 export default function SearchResultsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const searchClassesMutation = useSearchClasses();
 
   const keyword = searchParams.get('keyword') || '';
 
@@ -19,63 +21,47 @@ export default function SearchResultsPage() {
       return;
     }
 
-    // 실제 검색 로직 구현 (현재는 목업 데이터 사용)
+    // 실제 검색 로직 구현
     performSearch(keyword);
   }, [keyword, navigate]);
 
   const performSearch = async (searchKeyword: string) => {
-    setLoading(true);
-    
     try {
-      // 실제 API 호출 대신 목업 데이터 사용
-      const mockResults = [
-        {
-          id: 1,
-          title: '영어 회화 기초 클래스',
-          instructor: '김영어',
-          price: '50,000원',
-          location: '강남구',
-          rating: 4.8,
-          reviewCount: 127,
-          image: '/path/to/image1.jpg',
-          tags: ['영어 회화', '기초']
-        },
-        {
-          id: 2,
-          title: '비즈니스 영어 회화',
-          instructor: '박비즈니스',
-          price: '80,000원',
-          location: '서초구',
-          rating: 4.9,
-          reviewCount: 89,
-          image: '/path/to/image2.jpg',
-          tags: ['영어 회화', '비즈니스']
-        },
-        {
-          id: 3,
-          title: '도예체험 클래스',
-          instructor: '이도예',
-          price: '35,000원',
-          location: '마포구',
-          rating: 4.7,
-          reviewCount: 156,
-          image: '/path/to/image3.jpg',
-          tags: ['도예체험', '체험']
-        }
-      ];
+      let retrieveValue: string[];
+      
+      // # 기호로 시작하는 키워드는 단일 객체로 처리
+      if (searchKeyword.startsWith('#')) {
+        const singleKeyword = searchKeyword.substring(1).trim();
+        retrieveValue = [singleKeyword];
+      } else {
+        // 쉼표로 구분된 태그들을 분리하고 쉼표 제거
+        const tags = searchKeyword
+          .split(', ')
+          .map(tag => tag.trim())
+          .filter(tag => tag.length > 0);
+        
+        // 항상 배열로 전달
+        retrieveValue = tags;
+      }
 
-      // 검색어에 따라 필터링
-      const filteredResults = mockResults.filter(item => 
-        item.title.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        item.tags.some(tag => tag.toLowerCase().includes(searchKeyword.toLowerCase()))
-      );
+      const response = await searchClassesMutation.mutateAsync({
+        retrieve: retrieveValue
+      });
 
-      setSearchResults(filteredResults);
+      if (response.isSuccess) {
+        // normal과 Advertisement 클래스를 합쳐서 결과로 사용
+        const allClasses = [
+          ...response.data.normal,
+          ...response.data.Advertisement
+        ];
+        setSearchResults(allClasses);
+      } else {
+        console.error('검색 실패:', response.message);
+        setSearchResults([]);
+      }
     } catch (error) {
       console.error('검색 중 오류 발생:', error);
       setSearchResults([]);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -84,8 +70,12 @@ export default function SearchResultsPage() {
   };
 
   const handleClassClick = (classId: number) => {
-    navigate(`/open-class/apply/${classId}`);
+    navigate(`/class/${classId}`);
   };
+
+  if (searchClassesMutation.isPending) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div>
@@ -100,16 +90,17 @@ export default function SearchResultsPage() {
       {searchResults.length > 0 ? (
         <div className="px-[16px] pt-[30px]">
           <div className="space-y-[16px]">
-            {searchResults.map((classItem) => (
-              <div key={classItem.id} onClick={() => handleClassClick(classItem.id)}>
+            {searchResults.map((classItem, index) => (
+              <div key={`${classItem.openId}-${index}`}>
                 <ClassCard
                   title={classItem.title}
-                  location={classItem.location}
-                  maxParticipants={10}
-                  currentParticipants={classItem.reviewCount}
-                  price={parseInt(classItem.price.replace(/[^0-9]/g, ''))}
-                  tags={classItem.tags}
+                  location={classItem.roadAddress}
+                  maxParticipants={classItem.capacity}
+                  currentParticipants={classItem.count}
+                  price={classItem.price}
+                  tags={[...classItem.moodTagsJson, classItem.educationTagGenre]}
                   imageUrl={classItem.image}
+                  onClick={() => handleClassClick(classItem.openId)}
                 />
               </div>
             ))}

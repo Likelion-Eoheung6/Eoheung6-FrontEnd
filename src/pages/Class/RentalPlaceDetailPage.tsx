@@ -23,6 +23,7 @@ import type {
   ReserveGovPlaceRequest,
 } from '../../types/create/createTypes';
 import { useGovReservationStore } from '../../stores/useGovReservationStore';
+import LoadingScreen from '../../components/common/LoadingScreen';
 
 useGovReservationStore;
 interface ApiDay {
@@ -181,6 +182,15 @@ export default function RentalPlaceDetailPage() {
 
     fetchBookedDates();
   }, [placeId, currentMonth]);
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return <div>오류: {error}</div>;
+  }
+
   return (
     <ClassContainer>
       <ClassHeaderBar title="빈집 대여하기" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // images - 이 경로들은 실제 프로젝트 구조에 맞게 확인해주세요.
 import HomeSelectedIcon from '../../assets/common/home-selected.svg';
@@ -15,6 +15,7 @@ import MyPageIcon from '../../assets/common/mypage.svg';
 
 export default function NavBar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { pathname } = location;
 
   // 각 네비게이션 아이템을 배열로 관리하면 코드가 더 깔끔해집니다.
@@ -63,7 +64,7 @@ export default function NavBar() {
       className="
     absolute bottom-0 left-0 right-0 z-50 bg-white 
     w-full h-[9vh]
-    border-t border-[#B3B3B3] rounded-t-[20px] 
+    border border-[#E0E0E0] shadow-[0_10px_10px_10px_rgba(0,0,0,0.05)]
     flex items-center justify-between box-border 
     px-[20px] py-[14px]
     [-webkit-tap-highlight-color:transparent]
@@ -76,7 +77,15 @@ export default function NavBar() {
 
         return (
           <Link
-            to={item.path}
+            to={
+              item.path === '/'
+                ? (() => {
+                    // 홈 버튼 클릭 시 사용자의 버전에 따라 이동
+                    const userVersion = sessionStorage.getItem('userVersion');
+                    return userVersion === 'easy' ? '/?version=easy' : '/';
+                  })()
+                : item.path
+            }
             key={item.path}
             className="flex-1 h-full flex flex-col items-center justify-center no-underline relative"
           >

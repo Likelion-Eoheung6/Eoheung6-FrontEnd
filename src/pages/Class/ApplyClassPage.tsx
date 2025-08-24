@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { applyForClass, getClassDetail } from '../../apis/apply/applyApi';
+import { getWishlist } from '../../apis/wishlist/wishlistApi';
+import { useUpdateWishlist } from '../../hooks/wishlist/useWishlist';
 import BodyContainer from '../../components/common/BodyContainer';
 import ButtonComponent from '../../components/common/ButtonComponent';
 import CalendarComponent from '../../components/class/CalendarComponent';
@@ -27,6 +29,7 @@ export default function ApplyClassPage() {
   const { classInfo, setClassInfo } = useClassInfoStore();
   const { classId } = useParams();
   const navigate = useNavigate();
+  const updateWishlist = useUpdateWishlist();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,9 +72,42 @@ export default function ApplyClassPage() {
   }, [classInfo]);
 
   // 찜하기 토글 함수
-  const toggleWish = () => {
-    setIsWished(prev => !prev);
-    // TODO: 찜하기 API 호출
+  const toggleWish = async () => {
+    if (!classInfo?.openId || updateWishlist.isPending) return;
+    
+    const newWishState = !isWished;
+    
+    // 낙관적 업데이트: UI를 즉시 업데이트
+    setIsWished(newWishState);
+    
+    try {
+      // 현재 위시리스트 조회 (404 오류 처리 포함)
+      let currentWishIds: number[] = [];
+      
+      try {
+        const currentWishlist = await getWishlist();
+        currentWishIds = currentWishlist.data.WishPage.map(wish => wish.openId);
+      } catch (wishError: any) {
+        // 404 오류는 위시리스트가 비어있는 것을 의미
+        if (wishError?.response?.status === 404) {
+          currentWishIds = [];
+        } else {
+          throw wishError;
+        }
+      }
+      
+      // 현재 클래스 ID만 포함하여 요청
+      // 백엔드에서 찜이 된건지 찜 해제된건지를 처리
+      const updatedWishIds = [classInfo.openId];
+      
+      // 위시리스트 업데이트
+      await updateWishlist.mutateAsync({ ids: updatedWishIds });
+      
+    } catch (error) {
+      console.error('위시리스트 업데이트 실패:', error);
+      // 실패 시 원래 상태로 롤백
+      setIsWished(!newWishState);
+    }
   };
   const handleApply = async (): Promise<KakaoPayReadyRequest | null> => {
     if (!classId) {
@@ -258,6 +294,7 @@ export default function ApplyClassPage() {
           />
           <button
             onClick={toggleWish}
+            disabled={updateWishlist.isPending}
             className="absolute -bottom-4 right-4 flex items-center justify-center"
             aria-label="찜하기"
           >

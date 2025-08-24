@@ -27,6 +27,7 @@ import ApplyClassPage from './pages/Class/ApplyClassPage';
 import PaymentPage from './pages/Class/PaymentPage';
 import PaymentSuccessPage from './pages/Class/PaymentSuccessPage';
 import RequestClassPage from './pages/Class/RequestClassPage';
+import MyAppliedClassesPage from './pages/MyPage/MyAppliedClassesPage';
 
 const router = createBrowserRouter([
   {
@@ -51,7 +52,7 @@ const router = createBrowserRouter([
         element: <PaymentPage />,
       },
       { path: 'payment/success', element: <PaymentSuccessPage /> },
-      { path: 'request-class', element: <RequestClassPage /> },
+      { path: 'request', element: <RequestClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'search', element: <SearchPage /> },
       { path: 'search-results', element: <SearchResultsPage /> },
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
       { path: 'mypage', element: <MyPage /> },
       { path: 'my-activity', element: <MyActivityPage /> },
       { path: 'review', element: <ReviewPage /> },
+      { path: 'my-applied', element: <MyAppliedClassesPage /> },
     ],
   },
   {

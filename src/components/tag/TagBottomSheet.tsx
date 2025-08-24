@@ -9,6 +9,7 @@ interface TagBottomSheetProps {
   classData: ClassData[];
   areAllImagesLoaded: boolean;
   onImageLoad: (openId: number) => void;
+  onClassClick?: (classId: number) => void;
 }
 
 export default function TagBottomSheet({
@@ -16,7 +17,8 @@ export default function TagBottomSheet({
   onClose,
   classData,
   areAllImagesLoaded,
-  onImageLoad
+  onImageLoad,
+  onClassClick
 }: TagBottomSheetProps) {
   return (
     <div className={`fixed inset-0 z-30 transition-all duration-500 ease-out ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
@@ -54,6 +56,7 @@ export default function TagBottomSheet({
                     isRecommended={index < 2}
                     onImageLoad={() => onImageLoad(classItem.openId)}
                     onImageError={() => onImageLoad(classItem.openId)}
+                    onClick={() => onClassClick?.(classItem.openId)}
                   />
                 ))
               ) : (

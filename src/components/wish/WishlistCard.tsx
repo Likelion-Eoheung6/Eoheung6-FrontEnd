@@ -9,7 +9,11 @@ interface WishlistCardProps {
   price: string;
   location: string;
   imageUrl?: string;
-  onRemove?: () => void;
+  openId: number;
+  onToggleWish?: (openId: number, isWished: boolean) => void;
+  onClick?: () => void;
+  isWished?: boolean;
+  isLoading?: boolean;
 }
 
 export default function WishlistCard({
@@ -18,22 +22,31 @@ export default function WishlistCard({
   price,
   location,
   imageUrl,
-  onRemove,
+  openId,
+  onToggleWish,
+  onClick,
+  isWished = true, // 위시리스트에 있으므로 true로 시작
+  isLoading = false,
 }: WishlistCardProps) {
-  const [isWished, setIsWished] = useState(true); // 위시리스트에 있으므로 true로 시작
-
   const handleWishClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsWished(!isWished);
-    // onRemove는 나중에 처리하도록 주석 처리
-    // onRemove?.();
+    
+    if (isLoading) return; // 로딩 중이면 무시
+    
+    const newWishState = !isWished;
+    onToggleWish?.(openId, newWishState);
   };
+
+  const isDisabled = isLoading;
 
   return (
     <div 
       className="w-full flex items-center gap-[7px]">
       {/* 이미지 */}
-      <div className="w-[88px] h-[88px] bg-[#B3B3B3] rounded-[21px] flex-shrink-0">
+      <div 
+        className="w-[88px] h-[88px] bg-[#B3B3B3] rounded-[21px] flex-shrink-0 cursor-pointer"
+        onClick={onClick}
+      >
         {imageUrl && (
           <img 
             src={imageUrl} 
@@ -55,6 +68,7 @@ export default function WishlistCard({
       <button 
         className="w-[22px] h-[22px] rounded-full flex items-center justify-center flex-shrink-0 bg-transparent border-none p-0"
         onClick={handleWishClick}
+        disabled={isDisabled}
       >
         <img 
           src={isWished ? wishSelectedIcon : wishIcon} 
