@@ -75,8 +75,8 @@ export default function PaymentPage() {
     try {
       const response = await API.post('/kakao-pay/ready', paymentInfo);
 
-      if (response.data && response.data.data.next_redirect_pc_url) {
-        const nextRedirectUrl = response.data.data.next_redirect_pc_url;
+      if (response.data && response.data.data.next_redirect_mobile_url) {
+        const nextRedirectUrl = response.data.data.next_redirect_mobile_url;
         window.location.href = nextRedirectUrl;
 
         console.log('카카오페이: ', response.data.data);
