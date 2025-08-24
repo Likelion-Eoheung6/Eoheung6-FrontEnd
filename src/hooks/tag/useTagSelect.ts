@@ -163,6 +163,7 @@ export const useTagSelect = () => {
     handleCloseSheet,
     handleImageLoadComplete,
     areAllImagesLoaded,
-    navigate
+    navigate,
+    handleTagSave
   };
 };

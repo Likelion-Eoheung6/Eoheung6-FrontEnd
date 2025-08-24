@@ -13,14 +13,14 @@ export default function TagSelectPage() {
     setSelected,
     isSheetOpen,
     classData,
-    imageLoadingStates,
     isEasyVersion,
     requiredCount,
     handleOpenSheet,
     handleCloseSheet,
     handleImageLoadComplete,
     areAllImagesLoaded,
-    navigate
+    navigate,
+    handleTagSave
   } = useTagSelect();
   
   const tags = isEasyVersion ? EASY_TAGS : TAGS;
@@ -47,7 +47,15 @@ export default function TagSelectPage() {
           {/* 홈으로 버튼 */}
           <button
             type="button"
-            onClick={() => navigate(isEasyVersion ? '/easy' : '/home')}
+            onClick={() => {
+              // 태그가 선택되어 있으면 저장 후 홈으로 이동
+              if (selected.length >= requiredCount) {
+                handleTagSave();
+              } else {
+                // 태그가 선택되지 않았으면 바로 홈으로 이동
+                navigate(isEasyVersion ? '/easy' : '/home');
+              }
+            }}
             className="flex flex-col items-center justify-center appearance-none border-0 bg-transparent cursor-pointer pr-[2px]"
           >
             <div className="relative w-[36px] h-[36px]">
