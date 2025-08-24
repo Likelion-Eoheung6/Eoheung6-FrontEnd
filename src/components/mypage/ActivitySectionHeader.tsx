@@ -65,6 +65,14 @@ export default function ActivitySectionHeader({
     if (title === '수강한 클래스') {
       navigate('/review');
     }
+    // 신청한 클래스의 상세보기 버튼 클릭 시 클래스 상세 페이지로 이동
+    else if (title === '신청한 클래스') {
+      navigate(`/class/${classId}`);
+    }
+    // 개설한 클래스의 상세보기 버튼 클릭 시 클래스 상세 페이지로 이동
+    else if (title === '개설한 클래스') {
+      navigate(`/class/${classId}`);
+    }
   };
 
   // 섹션별 빈 상태 메시지
