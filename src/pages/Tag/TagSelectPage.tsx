@@ -47,7 +47,7 @@ export default function TagSelectPage() {
           {/* 홈으로 버튼 */}
           <button
             type="button"
-            onClick={() => navigate(isEasyVersion ? '/easy' : '/')}
+            onClick={() => navigate(isEasyVersion ? '/easy' : '/home')}
             className="flex flex-col items-center justify-center appearance-none border-0 bg-transparent cursor-pointer pr-[2px]"
           >
             <div className="relative w-[36px] h-[36px]">
@@ -64,7 +64,7 @@ export default function TagSelectPage() {
         </p>
         {!isEasyVersion && (
           <p className="mt-[45px] text-[#545454] text-[12px] font-normal leading-[1.2] tracking-[-0.025em] underline">
-            2가지 이상의 태그를 선택해 주세요
+            한가지 이상의 태그를 선택해 주세요
           </p>
         )}
 
