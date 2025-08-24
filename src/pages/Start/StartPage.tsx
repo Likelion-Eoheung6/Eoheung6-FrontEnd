@@ -2,16 +2,32 @@ import { useEffect, useState } from 'react';
 import OnLogo from '../../assets/common/logo.svg';
 
 export default function StartPage() {
+  const [isLogoVisible, setIsLogoVisible] = useState(false);
   const [isLogoSpinning, setIsLogoSpinning] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    // 2초 후에 로고가 start 페이지 위치로 이동
-    const timer = setTimeout(() => {
-      setIsTransitioning(true);
-    }, 2000);
+    // 0.5초 후에 로고가 서서히 나타남
+    const fadeInTimer = setTimeout(() => {
+      setIsLogoVisible(true);
+    }, 500);
 
-    return () => clearTimeout(timer);
+    // 3.5초 후에 로고가 start 페이지 위치로 이동
+    const transitionTimer = setTimeout(() => {
+      setIsTransitioning(true);
+    }, 3500);
+
+    // 5.1초 후에 페이지 내용이 나타남 (로고 이동 완료 후)
+    const contentTimer = setTimeout(() => {
+      setShowContent(true);
+    }, 4500);
+
+    return () => {
+      clearTimeout(fadeInTimer);
+      clearTimeout(transitionTimer);
+      clearTimeout(contentTimer);
+    };
   }, []);
 
   return (
@@ -74,13 +90,15 @@ export default function StartPage() {
             isTransitioning 
               ? 'w-[256px] h-[251px] translate-y-[-150px] scale-100' 
               : 'w-[322px] h-[315px] scale-110'
-          } ${!isTransitioning ? 'spin-smooth pulse-gentle float-subtle' : ''}`}
+          } ${!isTransitioning ? 'spin-smooth pulse-gentle float-subtle' : ''} ${
+            isLogoVisible ? 'opacity-100' : 'opacity-0'
+          }`}
         />
       </div>
       
-      {/* 페이지 내용 (로고 이동과 동시에 페이드인) */}
+      {/* 페이지 내용 (로고 안착 완료 후 페이드인) */}
       <div className={`absolute left-0 top-[202px] w-full flex flex-col items-center transition-opacity duration-1600 ease-in-out ${
-        isTransitioning ? 'opacity-100' : 'opacity-0'
+        showContent ? 'opacity-100' : 'opacity-0'
       }`}>
         <div className="w-[256px] h-[251px]"></div> {/* 로고 공간만 차지 */}
         <p className="mt-[30px] w-[324px] m-0 text-center text-[rgba(84,84,84,1)] font-medium text-[18px] leading-[1.2] tracking-[-0.025em] whitespace-pre-line">
