@@ -231,7 +231,7 @@ export default function MyPlacePage() {
               />
             </div>
           ) : (
-            <div className="flex h-full min-h-[132px] w-full items-center justify-center rounded-[1.25rem]  shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)]">
+            <div className="flex h-full min-h-[132px] w-full items-center justify-center rounded-[1.25rem] shadow-[0_4px_4px_4px_rgba(0,0,0,0.04)]">
               <button
                 className="border-none bg-transparent text-[#B3B3B3] underline"
                 onClick={() => navigate('/open-class/myplace/register')}

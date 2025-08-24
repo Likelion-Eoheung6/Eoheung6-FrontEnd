@@ -72,22 +72,23 @@ export default function CreateClassPage() {
   };
 
   const addTag = (raw: string) => {
-    const potentialTags = raw.split(/[\s,]+/).filter(Boolean);
+    // 쉼표(,)만을 기준으로 문자열을 나눕니다.
+    const potentialTags = raw.split(',').filter(Boolean);
     if (potentialTags.length === 0) return;
 
-    const newTags = potentialTags.filter(
-      (tag: string) => tag.trim() && !req.tags.includes(tag.trim())
-    );
+    // 각 태그의 앞뒤 공백을 제거하고, 중복되지 않는 태그만 필터링합니다.
+    const newTags = potentialTags
+      .map(tag => tag.trim())
+      .filter(tag => tag && !req.tags.includes(tag));
 
     if (newTags.length > 0) {
-      updateReq({ tags: [...req.tags, ...newTags.map(t => t.trim())] });
+      updateReq({ tags: [...req.tags, ...newTags] });
     }
     setTagInput('');
   };
 
   const onTagKeyUp: React.KeyboardEventHandler<HTMLInputElement> = e => {
-    // onKeyUp은 한글 조합이 끝난 후 발생하므로 isComposing 체크가 필요 없습니다.
-    if (e.key === 'Enter' || e.key === ',' || e.key === ' ') {
+    if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
       addTag(tagInput);
     } else if (
@@ -148,7 +149,6 @@ export default function CreateClassPage() {
       if (createClassResponse.isSuccess) {
         console.log('클래스 개설 성공!:', createClassResponse.data);
         clearReservation();
-        resetStore();
         // 5. 완료 페이지로 이동합니다.
         navigate('/class/done', {
           state: {

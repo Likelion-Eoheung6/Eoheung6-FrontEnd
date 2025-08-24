@@ -109,7 +109,8 @@ export default function PaymentPage() {
         customerName: paymentInfo.customerName || '고객님',
         customerEmail: paymentInfo.customerEmail,
         successUrl: `${window.location.origin}/payment/success`,
-        failUrl: `${window.location.origin}/fail`,
+        failUrl: `${window.location.origin}/payment/fail`,
+
         // 계좌이체 관련 추가 옵션
         transfer: {
           cashReceipt: {

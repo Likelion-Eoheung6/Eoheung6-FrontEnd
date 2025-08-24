@@ -9,7 +9,7 @@ import StarCharacterIcon from '../../assets/class/main-character.svg';
 import WonIcon from '../../assets/class/money.svg';
 import PeopleIcon from '../../assets/class/people.svg';
 import ButtonComponent from '../../components/common/ButtonComponent';
-import { getClassDetail } from '../../apis/apply/applyApi';
+import { confirmTossPayment, getClassDetail } from '../../apis/apply/applyApi';
 import type { ClassDetailData } from '../../types/apply/applyTypes';
 
 export default function PaymentSuccessPage() {
@@ -53,6 +53,45 @@ export default function PaymentSuccessPage() {
 
     fetchFinalDetails();
   }, []);
+
+  useEffect(() => {
+    // 1. URL에서 paymentKey, orderId, amount 값을 가져옵니다.
+    const paymentKey = searchParams.get('paymentKey');
+    const orderId = searchParams.get('orderId');
+    const amount = searchParams.get('amount');
+
+    // 2. 세 가지 값이 모두 존재하는지 확인합니다. (null이나 undefined가 아닌지 체크)
+    if (paymentKey && orderId && amount) {
+      // 3. 조건이 참일 경우, API 호출 함수를 실행합니다.
+      const handlePaymentConfirm = async () => {
+        try {
+          // 로딩 상태 시작 (필요 시)
+          // setLoading(true);
+
+          const response = await confirmTossPayment({
+            // 소괄호() 안에 객체를 전달합니다.
+            paymentKey,
+            orderId,
+            amount: Number(amount),
+          });
+
+          // API 호출 성공 후 로직
+          console.log('결제 승인 성공:', response);
+        } catch (error) {
+          // API 호출 실패 시 로직
+          console.error('결제 승인 실패:', error);
+        } finally {
+        }
+      };
+
+      handlePaymentConfirm();
+    } else {
+      // 필수 파라미터가 하나라도 없는 경우의 처리
+      console.error('필수 결제 정보가 누락되었습니다.');
+    }
+
+    // searchParams가 변경될 때마다 이 useEffect를 다시 실행합니다.
+  }, [searchParams]);
 
   return (
     <ClassContainer>
