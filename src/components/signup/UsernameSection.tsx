@@ -24,6 +24,9 @@ const UsernameSection: React.FC<UsernameSectionProps> = ({
   onCheckId
 }) => {
   const usernameValidation = validateUsername(formData.username);
+  
+  // 성공메시지 생성
+  const successMessage = isIdChecked && isIdAvailable ? "사용할 수 있는 아이디입니다." : "";
 
   return (
     <FormField 
@@ -31,6 +34,7 @@ const UsernameSection: React.FC<UsernameSectionProps> = ({
       description="영문 소문자와 숫자의 조합으로 4~12자 이내로 입력해 주세요."
       marginBottom="mb-[16px]"
       errorMessage={errorMessages.username}
+      successMessage={successMessage}
     >
       <InputWithButton
         type="text"
@@ -44,11 +48,6 @@ const UsernameSection: React.FC<UsernameSectionProps> = ({
         onButtonClick={onCheckId}
         buttonDisabled={!usernameValidation.isValid || isCheckIdLoading}
       />
-      {isIdChecked && isIdAvailable && (
-        <p className="text-[#009DFF] text-[10px] mt-[4px] ml-[10px]">
-          사용할 수 있는 아이디입니다.
-        </p>
-      )}
     </FormField>
   );
 };
