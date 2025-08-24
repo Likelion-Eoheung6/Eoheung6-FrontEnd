@@ -1,9 +1,10 @@
 import KakaoIcon from '../../assets/login/kakao.svg';
 
 export default function KakaoLoginButton() {
+  const BASE_URL = import.meta.env.VITE_KAKAO_LOGIN;
   const handleKakaoLogin = () => {
     // 카카오 OAuth 인증 URL로 이동
-    window.location.href = 'https://api.13th.shop/oauth2/authorization/kakao';
+    window.location.href = `${BASE_URL}`;
   };
 
   return (
