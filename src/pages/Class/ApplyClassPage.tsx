@@ -68,22 +68,29 @@ export default function ApplyClassPage() {
   }, [classId, setClassInfo]);
 
   useEffect(() => {
+    if (classInfo && classInfo.openAt) {
+      const initialDate = new Date(classInfo.openAt);
+      setSelectedDate(initialDate);
+    }
+  }, [classInfo]);
+
+  useEffect(() => {
     console.log('class info: ', classInfo);
   }, [classInfo]);
 
   // 찜하기 토글 함수
   const toggleWish = async () => {
     if (!classInfo?.openId || updateWishlist.isPending) return;
-    
+
     const newWishState = !isWished;
-    
+
     // 낙관적 업데이트: UI를 즉시 업데이트
     setIsWished(newWishState);
-    
+
     try {
       // 현재 위시리스트 조회 (404 오류 처리 포함)
       let currentWishIds: number[] = [];
-      
+
       try {
         const currentWishlist = await getWishlist();
         currentWishIds = currentWishlist.data.WishPage.map(wish => wish.openId);
@@ -95,14 +102,13 @@ export default function ApplyClassPage() {
           throw wishError;
         }
       }
-      
+
       // 현재 클래스 ID만 포함하여 요청
       // 백엔드에서 찜이 된건지 찜 해제된건지를 처리
       const updatedWishIds = [classInfo.openId];
-      
+
       // 위시리스트 업데이트
       await updateWishlist.mutateAsync({ ids: updatedWishIds });
-      
     } catch (error) {
       console.error('위시리스트 업데이트 실패:', error);
       // 실패 시 원래 상태로 롤백
@@ -277,6 +283,7 @@ export default function ApplyClassPage() {
             variant="selectionOnly"
             selectedDate={selectedDate}
             onDateChange={handleDateChange}
+            disabled={true}
           />
         </div>
       </div>
