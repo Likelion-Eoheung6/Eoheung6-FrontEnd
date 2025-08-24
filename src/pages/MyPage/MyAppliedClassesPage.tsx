@@ -132,7 +132,7 @@ export default function MyAppliedClassesPage() {
                       {item.title}
                     </p>
                     <p className="text-sm text-gray-800">
-                      클래스가 예약이 완료되었습니다.
+                      클래스가 신청 완료되었습니다.
                     </p>
                   </div>
                   {/* 2. 캐릭터 아이콘 */}
