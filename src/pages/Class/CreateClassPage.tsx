@@ -25,6 +25,7 @@ import type {
   ReserveGovPlaceRequest,
 } from '../../types/create/createTypes';
 import ModalContainer from '../../components/common/ModalContainer';
+import LoadingScreen from '../../components/common/LoadingScreen';
 
 export interface CreateClassPayload {
   infoId: number | null;
@@ -46,6 +47,7 @@ export default function CreateClassPage() {
   const { req, images, updateReq, setImages, resetStore } =
     useCreateClassStore();
   const { reservation, clearReservation } = useGovReservationStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   // 클래스 사진
   const imageUrls = useMemo(() => {
@@ -109,6 +111,10 @@ export default function CreateClassPage() {
   }, [req, images]);
 
   const handleSubmit = async () => {
+    if (isLoading) {
+      return <LoadingScreen />;
+    }
+
     if (!isFormComplete) {
       alert('Please fill out all required fields and add at least one image.');
       return;
@@ -117,8 +123,8 @@ export default function CreateClassPage() {
     const requestData: CreateClassRequest = {
       title: req.title,
       content: req.content,
-      mentorPlaceId: req.mentorPlaceId,
-      govReservationId: reservation?.reservationId || 0,
+      mentorPlaceId: req.mentorPlaceId || null,
+      govReservationId: reservation?.reservationId || null,
       openAt: req.openAt,
       startTime: req.startTime,
       endTime: req.endTime,
@@ -141,8 +147,8 @@ export default function CreateClassPage() {
       // 4. 클래스 개설이 성공했을 경우
       if (createClassResponse.isSuccess) {
         console.log('클래스 개설 성공!:', createClassResponse.data);
-        alert('클래스가 성공적으로 개설되었습니다!');
-
+        clearReservation();
+        resetStore();
         // 5. 완료 페이지로 이동합니다.
         navigate('/class/done', {
           state: {
@@ -170,6 +176,7 @@ export default function CreateClassPage() {
     const formattedDate = newDate.toISOString().split('T')[0];
     updateReq({ openAt: formattedDate });
   };
+
   return (
     <>
       <ClassContainer>
@@ -263,7 +270,6 @@ export default function CreateClassPage() {
               />
             </div>
             {reservation ? (
-              // If a reservation exists, show the map
               <div className="mt-4">
                 <MapComponent
                   selectedPlaceId={req.govReservationId || req.mentorPlaceId}

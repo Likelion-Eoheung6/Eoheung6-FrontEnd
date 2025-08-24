@@ -17,7 +17,11 @@ export default function EasyHomePage() {
   }
 
   if (error) {
-    return <div className="flex items-center justify-center h-screen">데이터를 불러오는 중 오류가 발생했습니다.</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        데이터를 불러오는 중 오류가 발생했습니다.
+      </div>
+    );
   }
 
   const handleStartEasy = () => {
@@ -37,7 +41,7 @@ export default function EasyHomePage() {
   };
 
   const handleRequestClass = () => {
-    navigate('/class/request');
+    navigate('/request');
   };
 
   const handleClassClick = (classId: string) => {
@@ -45,12 +49,14 @@ export default function EasyHomePage() {
   };
 
   // API 데이터를 EasyClassCard 형식으로 변환
-  const classData = Array.isArray(homeData?.data) ? homeData.data.map(item => ({
-    id: item.openId.toString(),
-    title: item.title,
-    image: item.imageUrl,
-    participants: { current: item.appliedCount, max: item.capacity }
-  })) : [];
+  const classData = Array.isArray(homeData?.data)
+    ? homeData.data.map(item => ({
+        id: item.openId.toString(),
+        title: item.title,
+        image: item.imageUrl,
+        participants: { current: item.appliedCount, max: item.capacity },
+      }))
+    : [];
 
   return (
     <div className="flex flex-col">
@@ -68,7 +74,7 @@ export default function EasyHomePage() {
 
         {/* 클래스 개설 & 클래스 요청 버튼 */}
         <div className="px-8 mb-[21px]">
-          <ClassActionButtons 
+          <ClassActionButtons
             onCreateClass={handleCreateClass}
             onRequestClass={handleRequestClass}
           />
@@ -84,7 +90,7 @@ export default function EasyHomePage() {
         {/* 쉬운 버전용 클래스 카드들 */}
         <div>
           <div className="space-y-[19px] flex flex-col items-center pb-[28px] px-[23px]">
-            {classData.map((classItem) => (
+            {classData.map(classItem => (
               <EasyClassCard
                 key={classItem.id}
                 title={classItem.title}

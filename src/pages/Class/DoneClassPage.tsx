@@ -175,10 +175,15 @@ export default function DoneClassPage() {
           <ButtonComponent
             text="홈으로 이동"
             size="small"
-            bgColor="#B3B3B3"
+            bgColor={pageType === 'application' ? '#B3B3B3' : undefined}
             onClick={() => navigate('/')}
           />
-          <ButtonComponent text="신청관리로 이동" />
+          {pageType === 'application' && (
+            <ButtonComponent
+              text="신청관리로 이동"
+              onClick={() => navigate('/my-applied')}
+            />
+          )}
         </div>
       </BodyContainer>
     </ClassContainer>

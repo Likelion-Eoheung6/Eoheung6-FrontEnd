@@ -20,7 +20,11 @@ export default function NormalHomePage() {
   }
 
   if (error) {
-    return <div className="flex items-center justify-center h-screen">데이터를 불러오는 중 오류가 발생했습니다.</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        데이터를 불러오는 중 오류가 발생했습니다.
+      </div>
+    );
   }
 
   const handleClassSearch = () => {
@@ -32,7 +36,7 @@ export default function NormalHomePage() {
   };
 
   const handleRequestClass = () => {
-    navigate('/class/request');
+    navigate('/request');
   };
 
   const handleClassClick = (classId: string) => {
@@ -62,11 +66,15 @@ export default function NormalHomePage() {
       <div className="flex items-center justify-center mb-4">
         <img src={logo} alt="로고" className="h-16" />
       </div>
-    {/* 이미지 스와이퍼 - 로고 아래 24px 간격 */}
-    <div className="mb-[25px]">
-        <ImageSwiperComponent 
-          slides={Array.isArray(homeData?.data?.ads) ? homeData.data.ads.map(ad => ad.imageUrl) : imageFiles} 
-          setImageFiles={setImageFiles} 
+      {/* 이미지 스와이퍼 - 로고 아래 24px 간격 */}
+      <div className="mb-[25px]">
+        <ImageSwiperComponent
+          slides={
+            Array.isArray(homeData?.data?.ads)
+              ? homeData.data.ads.map(ad => ad.imageUrl)
+              : imageFiles
+          }
+          setImageFiles={setImageFiles}
           onSlideClick={handleBannerClick}
         />
       </div>
@@ -76,7 +84,7 @@ export default function NormalHomePage() {
 
       {/* 클래스 개설 & 클래스 요청 버튼 */}
       <div className="px-[31px] mb-[26px]">
-        <ClassActionButtons 
+        <ClassActionButtons
           onCreateClass={handleCreateClass}
           onRequestClass={handleRequestClass}
         />
@@ -94,14 +102,22 @@ export default function NormalHomePage() {
         </p>
       </div>
 
-      <ClassCardSlider 
-        images={Array.isArray(homeData?.data?.hots) ? homeData.data.hots.map(hot => hot.imageUrl) : imageFiles} 
-        classes={Array.isArray(homeData?.data?.hots) ? homeData.data.hots.map(hot => ({
-          id: hot.openId.toString(),
-          title: hot.title,
-          currentParticipants: hot.appliedCount,
-          maxParticipants: hot.capacity
-        })) : []}
+      <ClassCardSlider
+        images={
+          Array.isArray(homeData?.data?.hots)
+            ? homeData.data.hots.map(hot => hot.imageUrl)
+            : imageFiles
+        }
+        classes={
+          Array.isArray(homeData?.data?.hots)
+            ? homeData.data.hots.map(hot => ({
+                id: hot.openId.toString(),
+                title: hot.title,
+                currentParticipants: hot.appliedCount,
+                maxParticipants: hot.capacity,
+              }))
+            : []
+        }
         onClassClick={handleClassClick}
       />
 
@@ -114,21 +130,25 @@ export default function NormalHomePage() {
 
       {/* 클래스 요청 카드들 */}
       <div className="flex flex-col items-center gap-[14px] pb-[31px] px-[31px] w-full">
-        {Array.isArray(homeData?.data?.recruites) ? homeData.data.recruites.map((recruit) => (
-          <ClassRequestCard 
-            key={recruit.recruitID}
-            title={recruit.title}
-            currentParticipants={recruit.joinedCount}
-            maxParticipants={15}
-            recruitId={recruit.recruitID}
-            isJoined={recruit.isJoined}
-            onWishlistClick={() => handleWishlistClick(recruit.recruitID.toString())}
-            onClick={() => handleClassRequestClick(recruit.recruitID.toString())}
-          />
-        )) : []}
+        {Array.isArray(homeData?.data?.recruites)
+          ? homeData.data.recruites.map(recruit => (
+              <ClassRequestCard
+                key={recruit.recruitID}
+                title={recruit.title}
+                currentParticipants={recruit.joinedCount}
+                maxParticipants={15}
+                recruitId={recruit.recruitID}
+                isJoined={recruit.isJoined}
+                onWishlistClick={() =>
+                  handleWishlistClick(recruit.recruitID.toString())
+                }
+                onClick={() =>
+                  handleClassRequestClick(recruit.recruitID.toString())
+                }
+              />
+            ))
+          : []}
       </div>
     </div>
-    
-
   );
 }

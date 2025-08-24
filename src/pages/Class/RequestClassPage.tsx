@@ -10,6 +10,7 @@ import type { ClassRequest } from '../../types/request/requestTypes';
 import { requestClass } from '../../apis/request/requestApi';
 import RequestCompleteIcon from '../../assets/loading/loadigin-1.svg';
 import ModalContainer from '../../components/common/ModalContainer';
+import LoadingScreen from '../../components/common/LoadingScreen';
 
 export interface CreateClassPayload {
   infoId: number | null;
@@ -30,6 +31,7 @@ export default function RequestClassPage() {
   const { req, images, updateReq, setImages, resetStore } =
     useCreateClassStore();
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달
+  const [isLoading, setIsLoading] = useState(false);
 
   // 클래스 사진
   const imageUrls = useMemo(() => {
@@ -39,7 +41,7 @@ export default function RequestClassPage() {
     return () => {
       imageUrls.forEach(url => URL.revokeObjectURL(url));
     };
-  }, [imageUrls]); // This effect depends on the imageUrls array
+  }, [imageUrls]);
 
   const slides = [
     ...imageUrls,
@@ -53,7 +55,9 @@ export default function RequestClassPage() {
   }, [req, images]);
 
   const handleSubmit = async () => {
-    if (!isFormComplete) return;
+    if (!isFormComplete || isLoading) {
+      return <LoadingScreen />;
+    }
     setIsModalOpen(true); // 모달 열기
 
     // 1. API 함수에 전달할 요청 데이터를 준비합니다.
@@ -73,6 +77,7 @@ export default function RequestClassPage() {
           title: response.data.title,
           content: response.data.content,
         });
+        resetStore(); // 스토어 초기화
       } else {
         // API 자체는 성공했지만, isSuccess가 false인 경우
         alert(`클래스 요청에 실패했습니다: ${response.message}`);
@@ -91,10 +96,13 @@ export default function RequestClassPage() {
     resetStore(); // 스토어 초기화
     navigate('/'); // 홈으로 이동
   };
+  useEffect(() => {
+    resetStore();
+  }, []);
   return (
     <>
       <ClassContainer>
-        <ClassHeaderBar title="클래스 개설하기" />
+        <ClassHeaderBar title="클래스 요청하기" />
 
         <BodyContainer>
           {/* 사진 등록/수정하기 */}

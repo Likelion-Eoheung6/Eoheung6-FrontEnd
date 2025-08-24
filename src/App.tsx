@@ -52,7 +52,7 @@ const router = createBrowserRouter([
         element: <PaymentPage />,
       },
       { path: 'payment/success', element: <PaymentSuccessPage /> },
-      { path: 'request-class', element: <RequestClassPage /> },
+      { path: 'request', element: <RequestClassPage /> },
       { path: 'recommend', element: <RecommendPage /> },
       { path: 'search', element: <SearchPage /> },
       { path: 'search-results', element: <SearchResultsPage /> },
