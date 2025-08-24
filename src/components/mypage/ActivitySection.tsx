@@ -43,7 +43,7 @@ export default function ActivitySection() {
             </span>
           </div>
           <div className="text-[#545454] text-[10px] font-medium leading-[120%] tracking-[-0.025em]">
-            예약한 클래스, 개설한 클래스, 수강한 클래스를 볼 수 있어요.
+            신청한 클래스, 개설한 클래스, 수강한 클래스를 볼 수 있어요.
           </div>
         </div>
         

@@ -231,18 +231,18 @@ export default function MyPage() {
             {/* 왼쪽 아이콘 영역 */}
             <div className="w-[68px] h-[68px] flex flex-col items-center justify-center">
               <div className="w-[30px] h-[30px] flex items-center justify-center mb-[2px]">
-                <img src={reservationIcon} alt="예약 아이콘" className="w-[30px] h-[30px]" />
+                <img src={reservationIcon} alt="신청 아이콘" className="w-[30px] h-[30px]" />
               </div>
-              <span className="text-[#545454] text-[12px] font-semibold leading-[120%] tracking-[-0.025em]">예약관리</span>
+              <span className="text-[#545454] text-[12px] font-semibold leading-[120%] tracking-[-0.025em]">신청관리</span>
             </div>
             
             {/* 콘텐츠 영역 */}
             <div className="flex-1">
               <div className="text-[#545454] text-[10px] font-medium leading-[120%] tracking-[-0.025em] mb-[2px]">
-                예약한 클래스
+                신청한 클래스
               </div>
               <div className="text-[#B3B3B3] text-[14px] font-normal leading-[120%] tracking-[-0.025em]">
-                예약한 클래스가 없습니다.
+                신청한 클래스가 없습니다.
               </div>
             </div>
             
