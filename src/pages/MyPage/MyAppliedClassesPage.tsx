@@ -128,7 +128,7 @@ export default function MyAppliedClassesPage() {
                     <p className="text-xl text-gray-800">
                       {nickname} <span className="text-sm">고객님의</span>
                     </p>
-                    <p className="text-2xl font-bold text-gray-900 my-1">
+                    <p className="text-xl font-bold text-gray-900 my-1">
                       {item.title}
                     </p>
                     <p className="text-sm text-gray-800">
@@ -154,13 +154,13 @@ export default function MyAppliedClassesPage() {
                   >
                     {/* 4. 클래스 상세 정보 */}
                     <div className="w-full px-4 space-y-2">
-                      <div className="w-full box-border px-3 py-2 flex items-center ">
+                      <div className="w-full box-border px-2 py-2 flex items-center ">
                         <div className="rounded-full  bg-[#009DFF] text-white text-xs font-semibold px-3.5 py-1.5 mr-3 flex-shrink-0">
                           클래스 제목
                         </div>
-                        <p className="flex-1 text-gray-800 text-sm truncate">
+                        <div className="text-gray-800 text-[12px]">
                           {item.title}
-                        </p>
+                        </div>
                       </div>
                       <div className="flex justify-between items-center text-base rounded-full p-3 shadow-md bg-white">
                         <div className="flex items-center s whitespace-nowrap">
