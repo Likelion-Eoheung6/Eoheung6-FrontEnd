@@ -15,7 +15,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   iconSrc = notIcon 
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center px-[32px]">
+    <div className="flex flex-col items-center justify-center px-[32px] pb-[154px]">
       {/* 아이콘 */}
       <div className="mt-[163px] w-[161px] h-[269px] mb-[22px] flex items-center justify-center">
         <img src={iconSrc} alt="empty state" className="w-full h-full" />

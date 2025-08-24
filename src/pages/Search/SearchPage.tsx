@@ -57,7 +57,9 @@ export default function SearchPage() {
 
   const handleKeywordClick = (keyword: string) => {
     console.log('인기 키워드 클릭:', keyword);
-    // 인기 키워드 클릭 로직 구현
+    // 인기 키워드를 검색어로 설정하고 검색 실행
+    setSearchKeyword(keyword);
+    handleSearch(keyword);
   };
 
   return (
@@ -69,7 +71,7 @@ export default function SearchPage() {
       />
 
       {/* Main Content */}
-      <div className="px-[24px] pt-[14px]">
+      <div className="px-[24px] pt-[14px] pb-[78px]">
         {/* Search Input */}
         <SearchInput 
           onSearch={handleSearch} 
